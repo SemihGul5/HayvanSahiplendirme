@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main2_activity_nav.xml"
+    app:startDestination="@id/anaSayfaFragment2">
+
+    <fragment
+        android:id="@+id/anaSayfaFragment2"
+        android:name="com.sgodi.bitirmeprojesi.fragments.AnaSayfaFragment"
+        android:label="fragment_ana_sayfa"
+        tools:layout="@layout/fragment_ana_sayfa" />
+    <fragment
+        android:id="@+id/sahiplenFragment2"
+        android:name="com.sgodi.bitirmeprojesi.fragments.SahiplenFragment"
+        android:label="fragment_sahiplen"
+        tools:layout="@layout/fragment_sahiplen" />
+    <fragment
+        android:id="@+id/ayarlarFragment2"
+        android:name="com.sgodi.bitirmeprojesi.fragments.AyarlarFragment"
+        android:label="fragment_ayarlar"
+        tools:layout="@layout/fragment_ayarlar" />
+</navigation>
