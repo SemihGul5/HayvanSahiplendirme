@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="appColor">#FCC37C</color>
+    <color name="kahverengi">#594A46</color>
+    <color name="beyaz">#F3F2F0</color>
+    <color name="yesil">#01A58D</color>
+    <color name="turuncu">#F7715D</color>
+
+</resources>
