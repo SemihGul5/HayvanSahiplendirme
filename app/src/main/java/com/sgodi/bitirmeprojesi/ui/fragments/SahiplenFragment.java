@@ -1,4 +1,4 @@
-package com.sgodi.bitirmeprojesi.fragments;
+package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.os.Bundle;
 
@@ -11,18 +11,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.databinding.FragmentAnaSayfaBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentSahiplenBinding;
 
-public class AnaSayfaFragment extends Fragment {
-    private FragmentAnaSayfaBinding binding;
+public class SahiplenFragment extends Fragment {
+    private FragmentSahiplenBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentAnaSayfaBinding.inflate(inflater, container, false);
-
-
+        binding= FragmentSahiplenBinding.inflate(inflater, container, false);
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
             private long backPressedTime = 0;
 
@@ -38,6 +36,8 @@ public class AnaSayfaFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
+
+
 
 
 

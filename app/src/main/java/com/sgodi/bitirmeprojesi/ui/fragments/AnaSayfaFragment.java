@@ -1,9 +1,10 @@
-package com.sgodi.bitirmeprojesi.fragments;
+package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +13,37 @@ import android.widget.Toast;
 
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentAnaSayfaBinding;
-import com.sgodi.bitirmeprojesi.databinding.FragmentAyarlarBinding;
 
-public class AyarlarFragment extends Fragment {
-    private FragmentAyarlarBinding binding;
+public class AnaSayfaFragment extends Fragment {
+    private FragmentAnaSayfaBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentAyarlarBinding.inflate(inflater, container, false);
+        binding= FragmentAnaSayfaBinding.inflate(inflater, container, false);
+        binding.toolbar.setTitle("AnaSayfa");
+        geriTusuIslemleri();
+
+        //bakıcı sayfasına gidiş
+        binding.imageViewBakici.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_anaSayfaFragment_to_bakiciFragment);
+        });
+
+        //hayvanlarım sayfasına gidiş
+        binding.imageViewHayvanlarim.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_anaSayfaFragment_to_hayvanlarimFragment);
+        });
 
 
+
+
+        return binding.getRoot();
+    }
+
+
+
+    private void geriTusuIslemleri() {
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
             private long backPressedTime = 0;
 
@@ -39,10 +59,5 @@ public class AyarlarFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
-
-
-
-
-        return binding.getRoot();
     }
 }

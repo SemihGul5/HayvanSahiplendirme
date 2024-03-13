@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/girisYapFragment"
-        android:name="com.sgodi.bitirmeprojesi.fragments.GirisYapFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.GirisYapFragment"
         android:label="fragment_giris_yap"
         tools:layout="@layout/fragment_giris_yap" >
         <action
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/kayitOlFragment"
-        android:name="com.sgodi.bitirmeprojesi.fragments.KayitOlFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.KayitOlFragment"
         android:label="fragment_kayit_ol"
         tools:layout="@layout/fragment_kayit_ol" >
         <action

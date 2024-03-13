@@ -7,17 +7,43 @@
 
     <fragment
         android:id="@+id/anaSayfaFragment"
-        android:name="com.sgodi.bitirmeprojesi.fragments.AnaSayfaFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.AnaSayfaFragment"
         android:label="fragment_ana_sayfa"
-        tools:layout="@layout/fragment_ana_sayfa" />
+        tools:layout="@layout/fragment_ana_sayfa" >
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_hayvanlarimFragment"
+            app:destination="@id/hayvanlarimFragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_bakiciFragment"
+            app:destination="@id/bakiciFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ayarlarFragment"
-        android:name="com.sgodi.bitirmeprojesi.fragments.AyarlarFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.AyarlarFragment"
         android:label="fragment_ayarlar"
         tools:layout="@layout/fragment_ayarlar" />
     <fragment
         android:id="@+id/sahiplenFragment"
-        android:name="com.sgodi.bitirmeprojesi.fragments.SahiplenFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.SahiplenFragment"
         android:label="fragment_sahiplen"
         tools:layout="@layout/fragment_sahiplen" />
+    <fragment
+        android:id="@+id/bakiciFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.BakiciFragment"
+        android:label="fragment_bakici"
+        tools:layout="@layout/fragment_bakici" />
+    <fragment
+        android:id="@+id/ekleEvcilFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.EkleEvcilFragment"
+        android:label="fragment_ekle_evcil"
+        tools:layout="@layout/fragment_ekle_evcil" />
+    <fragment
+        android:id="@+id/hayvanlarimFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanlarimFragment"
+        android:label="fragment_hayvanlarim"
+        tools:layout="@layout/fragment_hayvanlarim" >
+        <action
+            android:id="@+id/action_hayvanlarimFragment_to_ekleEvcilFragment"
+            app:destination="@id/ekleEvcilFragment" />
+    </fragment>
 </navigation>

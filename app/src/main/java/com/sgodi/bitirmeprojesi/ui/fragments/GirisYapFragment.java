@@ -1,4 +1,4 @@
-package com.sgodi.bitirmeprojesi.fragments;
+package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ public class GirisYapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentGirisYapBinding.inflate(inflater, container, false);
+        binding= FragmentGirisYapBinding.inflate(inflater, container, false);
         auth=FirebaseAuth.getInstance();
 
 

@@ -1,4 +1,4 @@
-package com.sgodi.bitirmeprojesi.fragments;
+package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +38,7 @@ public class KayitOlFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentKayitOlBinding.inflate(inflater, container, false);
+        binding= FragmentKayitOlBinding.inflate(inflater, container, false);
         auth=FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
 
