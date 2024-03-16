@@ -7,7 +7,7 @@ public class Hayvan {
     private String tur;
     private String irk;
     private String cinsiyet;
-    private int yas;
+    private String yas;
     private String saglik;
     private String aciklama;
     private String kisilik;
@@ -15,7 +15,7 @@ public class Hayvan {
     public Hayvan() {
     }
 
-    public Hayvan(String email, String foto, String ad, String tur, String irk, String cinsiyet, int yas, String saglik, String aciklama, String kisilik) {
+    public Hayvan(String email, String foto, String ad, String tur, String irk, String cinsiyet, String yas, String saglik, String aciklama, String kisilik) {
         this.email = email;
         this.foto = foto;
         this.ad = ad;
@@ -76,11 +76,11 @@ public class Hayvan {
         this.cinsiyet = cinsiyet;
     }
 
-    public int getYas() {
+    public String getYas() {
         return yas;
     }
 
-    public void setYas(int yas) {
+    public void setYas(String yas) {
         this.yas = yas;
     }
 

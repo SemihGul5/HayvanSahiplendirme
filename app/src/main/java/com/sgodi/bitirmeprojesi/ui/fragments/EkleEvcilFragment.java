@@ -59,18 +59,10 @@ public class EkleEvcilFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEkleEvcilBinding.inflate(inflater, container, false);
         binding.toolbarHayvanEkle.setTitle("Hayvan Ekle");
-        // Tür bölümü başlatılması
-        ArrayList<String> turler= new ArrayList<>();
-        turler.add("Kedi");
-        turler.add("Köpek");
-        turler.add("Kuş");
-        turler.add("Balık");
-        turler.add("Hamster");
-        turler.add("Tavşan");
-        turler.add("Kaplumbağa");
-        turler.add("Diğer");
-        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,turler);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
+        // Tür, kisilik ve yaş bölümü başlatılması
+        turBaslat();
+        kisilikBaslat();
+        yasBaslat();
         //
         registerLauncher();
         binding.imageView.setOnClickListener(view -> {
@@ -92,10 +84,49 @@ public class EkleEvcilFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void turBaslat() {
+        ArrayList<String> turler= new ArrayList<>();
+        turler.add("Kedi");
+        turler.add("Köpek");
+        turler.add("Kuş");
+        turler.add("Balık");
+        turler.add("Hamster");
+        turler.add("Tavşan");
+        turler.add("Kaplumbağa");
+        turler.add("Diğer");
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,turler);
+        binding.autoCompleteTextView.setAdapter(arrayAdapter);
+    }
+    private void kisilikBaslat(){
+        ArrayList<String> kisilik= new ArrayList<>();
+        kisilik.add("Güvenilir");
+        kisilik.add("Ciddi");
+        kisilik.add("Sorumlu");
+        kisilik.add("Dışadönük");
+        kisilik.add("Arkadaş Canlısı");
+
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,kisilik);
+        binding.autoCompleteTextViewHayvanKisilik.setAdapter(arrayAdapter);
+    }
+    private void yasBaslat(){
+        ArrayList<String> yas= new ArrayList<>();
+        yas.add("Yavru");
+        yas.add("Genç");
+        yas.add("Orta");
+        yas.add("Yaşlı");
+
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,yas);
+        binding.autoCompleteTextViewHayvanYas.setAdapter(arrayAdapter);
+    }
+
     private void hayvan_kaydet(View view) {
-        if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty() || binding.autoCompleteTextView.getText().toString().isEmpty()
-                || binding.editTextHayvanIrk.getText().toString().isEmpty() || binding.radioGroupCinsiyet.getCheckedRadioButtonId() == -1
-                || binding.editTextHayvanYas.getText().toString().isEmpty() || binding.editTextHayvanSaglik.getText().toString().isEmpty()) {
+        if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty()
+                || binding.autoCompleteTextView.getText().toString().isEmpty()
+                || binding.editTextHayvanIrk.getText().toString().isEmpty()
+                || binding.radioGroupCinsiyet.getCheckedRadioButtonId() == -1
+                || binding.autoCompleteTextViewHayvanYas.getText().toString().isEmpty()
+                || binding.editTextHayvanSaglik.getText().toString().isEmpty()
+                || binding.autoCompleteTextViewHayvanKisilik.getText().toString().isEmpty()) {
             Toast.makeText(getContext(), "Açıklama hariç tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -124,10 +155,13 @@ public class EkleEvcilFragment extends Fragment {
                     } else {
                         cinsiyet = "Dişi";
                     }
-                    int yas = Integer.parseInt(binding.editTextHayvanYas.getText().toString());
+                    String yas= binding.autoCompleteTextViewHayvanYas.getText().toString();
                     String saglik = binding.editTextHayvanSaglik.getText().toString();
                     String aciklama = binding.editTextHayvanAciklama.getText().toString().isEmpty() ? "yok" : binding.editTextHayvanAciklama.getText().toString();
-                    String kisilik = "Normal";
+                    String kisilik = binding.autoCompleteTextView.getText().toString();
+                    if (kisilik.equals("Arkadaş Canlısı")){
+                        kisilik="canlı";
+                    }
                     HashMap<String, Object> postData = new HashMap<>();
                     postData.put("email", email);
                     postData.put("aciklama", aciklama);
@@ -166,8 +200,6 @@ public class EkleEvcilFragment extends Fragment {
 
         }
     }
-
-
 
     //izin işlemleri
     public void fotografTiklandi(View view) {
@@ -257,10 +289,10 @@ public class EkleEvcilFragment extends Fragment {
         binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
         binding.radioButtonErkek.setChecked(false);
         binding.radioButtonDisi.setChecked(false);
-        binding.autoCompleteTextView.clearListSelection();
+        binding.autoCompleteTextViewHayvanKisilik.clearListSelection();
         binding.editTextHayvanAd.setText("");
         binding.editTextHayvanIrk.setText("");
-        binding.editTextHayvanYas.setText("");
+        binding.autoCompleteTextViewHayvanYas.clearListSelection();
         binding.editTextHayvanSaglik.setText("");
         binding.editTextHayvanAciklama.setText("");
     }
