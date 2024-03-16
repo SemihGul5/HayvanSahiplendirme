@@ -1,27 +1,269 @@
 package com.sgodi.bitirmeprojesi.ui.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentEkleEvcilBinding;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
 public class EkleEvcilFragment extends Fragment {
     private FragmentEkleEvcilBinding binding;
+    ActivityResultLauncher<Intent> activityResultLauncher;
+    ActivityResultLauncher<String> permissionLauncher;
+    Uri imageData=null;
+    FirebaseAuth auth;
+    FirebaseStorage firebaseStorage;
+    FirebaseFirestore firebaseFirestore;
+    StorageReference storageReference;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentEkleEvcilBinding.inflate(inflater, container, false);
+        binding = FragmentEkleEvcilBinding.inflate(inflater, container, false);
         binding.toolbarHayvanEkle.setTitle("Hayvan Ekle");
+        // Tür bölümü başlatılması
+        ArrayList<String> turler= new ArrayList<>();
+        turler.add("Kedi");
+        turler.add("Köpek");
+        turler.add("Kuş");
+        turler.add("Balık");
+        turler.add("Hamster");
+        turler.add("Tavşan");
+        turler.add("Kaplumbağa");
+        turler.add("Diğer");
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,turler);
+        binding.autoCompleteTextView.setAdapter(arrayAdapter);
+        //
+        registerLauncher();
+        binding.imageView.setOnClickListener(view -> {
+            fotografTiklandi(view);
+        });
+        // başlatılmalar
+        auth = FirebaseAuth.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = firebaseStorage.getReference();// görseli depoda nereye kaydediceğimizi gösteren bir değişken
+
+        //kaydet butonu tıklanması
+        binding.buttonHayvanEkle.setOnClickListener(view -> {
+            hayvan_kaydet(view);
+        });
 
 
 
         return binding.getRoot();
     }
+
+    private void hayvan_kaydet(View view) {
+        if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty() || binding.autoCompleteTextView.getText().toString().isEmpty()
+                || binding.editTextHayvanIrk.getText().toString().isEmpty() || binding.radioGroupCinsiyet.getCheckedRadioButtonId() == -1
+                || binding.editTextHayvanYas.getText().toString().isEmpty() || binding.editTextHayvanSaglik.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), "Açıklama hariç tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.progressBarHayvanEkle.setVisibility(View.VISIBLE);
+        binding.buttonHayvanEkle.setEnabled(false);
+        try {
+            //unique bir id oluşturur
+            UUID uuid = UUID.randomUUID();
+            String path = "images/" + uuid + ".jpg";
+            storageReference.child(path).putFile(imageData).addOnSuccessListener(taskSnapshot -> {
+                //görseli storage'a kaydettik, onSuccess de veritabanına kaydetme işlemleri, ilgili kullanıcının
+                //direkt o kaydedilen resmi eşleştiriyoruz
+                StorageReference reference = firebaseStorage.getReference(path);
+                reference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    //veritabanına koyma işlemleri
+                    FirebaseUser user = auth.getCurrentUser();
+                    String email = user.getEmail();
+                    String foto = uri.toString();
+                    String ad = binding.editTextHayvanAd.getText().toString();
+                    String tur = binding.autoCompleteTextView.getText().toString();
+                    String irk = binding.editTextHayvanIrk.getText().toString();
+                    String cinsiyet = "";
+                    int cinsiyetID = binding.radioGroupCinsiyet.getCheckedRadioButtonId();
+                    if (cinsiyetID == R.id.radioButtonErkek) {
+                        cinsiyet = "Erkek";
+                    } else {
+                        cinsiyet = "Dişi";
+                    }
+                    int yas = Integer.parseInt(binding.editTextHayvanYas.getText().toString());
+                    String saglik = binding.editTextHayvanSaglik.getText().toString();
+                    String aciklama = binding.editTextHayvanAciklama.getText().toString().isEmpty() ? "yok" : binding.editTextHayvanAciklama.getText().toString();
+                    String kisilik = "Normal";
+                    HashMap<String, Object> postData = new HashMap<>();
+                    postData.put("email", email);
+                    postData.put("aciklama", aciklama);
+                    postData.put("ad", ad);
+                    postData.put("cinsiyet", cinsiyet);
+                    postData.put("foto", foto);
+                    postData.put("kisilik", kisilik);
+                    postData.put("saglik", saglik);
+                    postData.put("tur", tur);
+                    postData.put("yas", yas);
+                    postData.put("ırk", irk);
+
+                    //firebase koleksiyonuna yükleme işlemi ve sonucunun ne olduğunu değerlendirme
+                    firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+                        temizle();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }).addOnCompleteListener(task -> {
+                        binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+                        binding.buttonHayvanEkle.setEnabled(true);
+
+                    });
+                });
+
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+                binding.buttonHayvanEkle.setEnabled(true);
+
+            });
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+            binding.buttonHayvanEkle.setEnabled(true);
+
+        }
+    }
+
+
+
+    //izin işlemleri
+    public void fotografTiklandi(View view) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher.launch(intentToGallery);
+            }
+        }
+        else{
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher.launch(intentToGallery);
+            }
+        }
+    }
+
+    private void registerLauncher() {
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intentFromResult = result.getData();
+                    if (intentFromResult != null) {
+                        imageData = intentFromResult.getData();
+                        binding.imageView.setImageURI(imageData);
+                    }
+                }
+            }
+        });
+
+        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    activityResultLauncher.launch(intent);
+                } else {
+                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void temizle(){
+        binding.autoCompleteTextView.clearListSelection();
+        binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
+        binding.radioButtonErkek.setChecked(false);
+        binding.radioButtonDisi.setChecked(false);
+        binding.autoCompleteTextView.clearListSelection();
+        binding.editTextHayvanAd.setText("");
+        binding.editTextHayvanIrk.setText("");
+        binding.editTextHayvanYas.setText("");
+        binding.editTextHayvanSaglik.setText("");
+        binding.editTextHayvanAciklama.setText("");
+    }
+
+
 }
