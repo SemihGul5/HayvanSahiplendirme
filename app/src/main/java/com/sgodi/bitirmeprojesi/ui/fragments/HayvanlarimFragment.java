@@ -1,5 +1,6 @@
 package com.sgodi.bitirmeprojesi.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -57,12 +58,12 @@ public class HayvanlarimFragment extends Fragment {
     }
 
     private void getData() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
         String userEmail = auth.getCurrentUser().getEmail();
 
         firestore.collection("kullanici_hayvanlari")
-                .whereEqualTo("userEmail", userEmail)
+                .whereEqualTo("email", userEmail)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (error != null) {
@@ -75,13 +76,13 @@ public class HayvanlarimFragment extends Fragment {
                             for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
                                 Map<String, Object> data = documentSnapshot.getData();
 
-                                String email = (String) data.get("userEmail");
+                                String email = (String) data.get("email");
                                 String foto = (String) data.get("foto");
                                 String ad = (String) data.get("ad");
                                 String tur = (String) data.get("tur");
                                 String irk = (String) data.get("ırk");
-                                String cinsiyet = (String) data.get("cinsiyet");
-                                String yas = (String) data.get("yas");
+                                String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                String yas = String.valueOf(data.get("yas"));
                                 String saglik = (String) data.get("saglik");
                                 String aciklama = (String) data.get("aciklama");
                                 String kisilik = (String) data.get("kisilik");

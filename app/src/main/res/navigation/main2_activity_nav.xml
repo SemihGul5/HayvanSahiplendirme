@@ -21,7 +21,20 @@
         android:id="@+id/ayarlarFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.AyarlarFragment"
         android:label="fragment_ayarlar"
-        tools:layout="@layout/fragment_ayarlar" />
+        tools:layout="@layout/fragment_ayarlar" >
+        <action
+            android:id="@+id/action_ayarlarFragment_to_girisYapFragment2"
+            app:destination="@id/girisYapFragment2" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_bizeUlasFragment"
+            app:destination="@id/bizeUlasFragment" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_kisilikTestFragment"
+            app:destination="@id/kisilikTestFragment" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_profilimFragment"
+            app:destination="@id/profilimFragment" />
+    </fragment>
     <fragment
         android:id="@+id/sahiplenFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.SahiplenFragment"
@@ -31,7 +44,11 @@
         android:id="@+id/bakiciFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.BakiciFragment"
         android:label="fragment_bakici"
-        tools:layout="@layout/fragment_bakici" />
+        tools:layout="@layout/fragment_bakici" >
+        <action
+            android:id="@+id/action_bakiciFragment_to_bakiciOlFragment"
+            app:destination="@id/bakiciOlFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ekleEvcilFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.EkleEvcilFragment"
@@ -46,4 +63,29 @@
             android:id="@+id/action_hayvanlarimFragment_to_ekleEvcilFragment"
             app:destination="@id/ekleEvcilFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/girisYapFragment2"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.GirisYapFragment"
+        android:label="fragment_giris_yap"
+        tools:layout="@layout/fragment_giris_yap" />
+    <fragment
+        android:id="@+id/bizeUlasFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.BizeUlasFragment"
+        android:label="fragment_bize_ulas"
+        tools:layout="@layout/fragment_bize_ulas" />
+    <fragment
+        android:id="@+id/kisilikTestFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.KisilikTestFragment"
+        android:label="fragment_kisilik_test"
+        tools:layout="@layout/fragment_kisilik_test" />
+    <fragment
+        android:id="@+id/profilimFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.ProfilimFragment"
+        android:label="fragment_profilim"
+        tools:layout="@layout/fragment_profilim" />
+    <fragment
+        android:id="@+id/bakiciOlFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.BakiciOlFragment"
+        android:label="fragment_bakici_ol"
+        tools:layout="@layout/fragment_bakici_ol" />
 </navigation>

@@ -4,7 +4,9 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:statusBarColor">@color/yesil</item>
-
+        <item name="colorPrimary">@color/yesil</item>
+        <item name="colorPrimaryVariant">@color/yesil</item>
+        <item name="colorSecondaryContainer">#79D1D0D0</item>
     </style>
 
     <style name="Theme.BitirmeProjesi" parent="Base.Theme.BitirmeProjesi" />
