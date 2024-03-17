@@ -55,7 +55,6 @@ public class KayitOlFragment extends Fragment {
 
 
 
-
         return binding.getRoot();
     }
 
@@ -116,9 +115,16 @@ public class KayitOlFragment extends Fragment {
         StringBuffer ad2 = new StringBuffer(ad);
         ad2.setCharAt(0, Character.toUpperCase(ad2.charAt(0)));
         String adson = ad2.toString();
+
+        StringBuffer soyad2 = new StringBuffer(soyad);
+        soyad2.setCharAt(0, Character.toUpperCase(soyad2.charAt(0)));
+        String soyad3 = soyad2.toString();
+
         data.put("ad",adson);
-        data.put("soyad",soyad);
+        data.put("soyad",soyad3);
         data.put("email",email);
+        data.put("tel","");
+        data.put("kişilik","");
 
 
         firestore.collection("kullanicilar").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

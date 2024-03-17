@@ -5,23 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.fragments.ProfilimFragment">
+    tools:context=".ui.fragments.SifreDegisFragment" >
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbarProfilim"
+        android:id="@+id/materialToolbarSifreDegis"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@color/white"
         android:theme="?attr/actionBarTheme"
+        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout9"
+        android:id="@+id/textInputLayout12"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -29,17 +28,18 @@
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbarProfilim">
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbarSifreDegis">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textProfilAd"
+            android:id="@+id/textSifreDegisMevcut"
             android:layout_width="match_parent"
+            android:inputType="textPassword"
             android:layout_height="wrap_content"
-            android:hint="Ad" />
+            android:hint="Mevcut Şifre" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout10"
+        android:id="@+id/textInputLayout14"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -47,17 +47,18 @@
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout9">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout12">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textProfilSoyad"
+            android:id="@+id/textSifreDegisYeni"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Soyad" />
+            android:inputType="textPassword"
+            android:hint="Yeni Şifre" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout11"
+        android:id="@+id/textInputLayout15"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -65,57 +66,25 @@
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout10">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textProfilEmail"
+            android:id="@+id/textSifreDegisYeniTekrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="email" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout13"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/extProfilTel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:hint="tel" />
+            android:hint="Yeni Şifre Tekrar"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/buttonProfilGuncelle"
+        android:id="@+id/buttonSifreDegis"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:fontFamily="@font/volkhov"
         android:layout_marginEnd="32dp"
-        android:text="KAYDET"
+        android:text="DEĞİŞTİR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSifreDegis" />
-
-    <TextView
-        android:id="@+id/textViewSifreDegis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:text="Şifre Değiştir"
-        android:textStyle="italic"
-        android:fontFamily="@font/volkhov_bold"
-        android:textColor="@color/yesil"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout13" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout15" />
 </androidx.constraintlayout.widget.ConstraintLayout>

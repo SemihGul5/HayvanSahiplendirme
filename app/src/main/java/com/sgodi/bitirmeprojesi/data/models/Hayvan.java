@@ -1,6 +1,8 @@
 package com.sgodi.bitirmeprojesi.data.models;
 
-public class Hayvan {
+import java.io.Serializable;
+
+public class Hayvan implements Serializable {
     private String email;
     private String foto;
     private String ad;
