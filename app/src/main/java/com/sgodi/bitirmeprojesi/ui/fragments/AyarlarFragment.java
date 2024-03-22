@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -16,11 +17,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.Firebase;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.databinding.FragmentAnaSayfaBinding;
 import com.sgodi.bitirmeprojesi.databinding.FragmentAyarlarBinding;
 
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ public class AyarlarFragment extends Fragment {
     ArrayList<String>ayarlarListesi;
     ArrayAdapter<String> arrayAdapter;
     FirebaseAuth auth;
+    FirebaseFirestore firestore;
 
 
     @Override
@@ -38,6 +43,7 @@ public class AyarlarFragment extends Fragment {
         // Inflate the layout for this fragment
         binding= FragmentAyarlarBinding.inflate(inflater, container, false);
         binding.materialToolbarAyarlar.setTitle("Ayarlar");
+        firestore=FirebaseFirestore.getInstance();
         ayarlarListesi=new ArrayList<>();
         ayarlarListesi.add("Profilim");
         ayarlarListesi.add("Kişilik Testi");
@@ -84,7 +90,7 @@ public class AyarlarFragment extends Fragment {
         String secilen=arrayAdapter.getItem(i);
         if(secilen.equals("Profilim")) {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_profilimFragment);
-        } else if (secilen.equals("Anket")) {
+        } else if (secilen.equals("Kişilik Testi")) {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_kisilikTestFragment);
         } else if (secilen.equals("Paylaş")) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -97,7 +103,18 @@ public class AyarlarFragment extends Fragment {
         } else if (secilen.equals("Çıkış Yap")) {
             cikisYap(view);
         } else if (secilen.equals("Bakıcı İlanımı kaldır")) {
-            Toast.makeText(getContext(), "BAKICI İLANI KALDIRMA İŞLEMLERİ YAPILACAK", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder alert=new AlertDialog.Builder(getContext());
+            alert.setTitle("İlanı kaldır");
+            alert.setMessage("İlanı kaldırmak istediğinizden emin misiniz?");
+            alert.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    bakiciIlanKaldir(firestore);
+                    bakici_druum_guncelle(firestore);
+                }
+            });
+            alert.show();
+
         } else{
             Toast.makeText(getContext(), "Hata", Toast.LENGTH_SHORT).show();
         }
@@ -105,6 +122,32 @@ public class AyarlarFragment extends Fragment {
 
 
     }
+
+    private void bakiciIlanKaldir(FirebaseFirestore firestore) {
+        firestore.collection("bakici")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Her belgeyi silebilirsiniz
+                            firestore.collection("bakici").document(document.getId()).delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Silme işlemi başarılıysa yapılacak işlemleri burada gerçekleştirin
+                                        Toast.makeText(getContext(),"İlanınız başarılı bir şekilde kaldırıldı",Toast.LENGTH_LONG).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Silme işlemi başarısız olursa yapılacak işlemleri burada gerçekleştirin
+                                        Toast.makeText(getContext(),"İlanın silme işlemi sırasında hata meydana geldi",Toast.LENGTH_LONG).show();
+                                    });
+                        }
+                    } else {
+                        // Belge alınırken hata oluşursa yapılacak işlemleri burada gerçekleştirin
+                        Toast.makeText(getContext(),"İlanın belgesine ulaşılamadı",Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 
     private void cikisYap(View view) {
 
@@ -121,5 +164,22 @@ public class AyarlarFragment extends Fragment {
         });
         alert.show();
     }
-
+    private void bakici_druum_guncelle( FirebaseFirestore firebaseFirestore) {
+        Query query=firebaseFirestore.collection("kullanicilar").whereEqualTo("email",auth.getCurrentUser().getEmail());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    // Belirli bir kritere uyan belgeyi güncelle
+                    String userId = document.getId();
+                    firebaseFirestore.collection("kullanicilar").document(userId).update("bakici_durum", "false");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(),"Bakıcı durum güncellenemedi! "+e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

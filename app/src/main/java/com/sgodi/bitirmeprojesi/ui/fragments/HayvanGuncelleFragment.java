@@ -9,20 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.databinding.FragmentKisilikTestBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanGuncelleBinding;
 
-public class KisilikTestFragment extends Fragment {
-    private FragmentKisilikTestBinding binding;
+public class HayvanGuncelleFragment extends Fragment {
+    private FragmentHayvanGuncelleBinding binding;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentKisilikTestBinding.inflate(inflater, container, false);
-        binding.materialToolbarAnket.setTitle("Anket");
-
-
-
-
+        binding=FragmentHayvanGuncelleBinding.inflate(inflater, container, false);
+        binding.materialToolbarHayvanGuncelle.setTitle("Hayvan Güncelle");
 
 
 
@@ -35,6 +31,5 @@ public class KisilikTestFragment extends Fragment {
 
 
         return binding.getRoot();
-
     }
 }

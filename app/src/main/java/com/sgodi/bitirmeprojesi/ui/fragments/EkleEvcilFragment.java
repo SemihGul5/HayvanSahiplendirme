@@ -5,6 +5,8 @@ import static android.app.Activity.RESULT_OK;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,8 +39,18 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.sgodi.bitirmeprojesi.R;
+import com.sgodi.bitirmeprojesi.data.models.ImageUtil;
 import com.sgodi.bitirmeprojesi.databinding.FragmentEkleEvcilBinding;
+import com.sgodi.bitirmeprojesi.ml.Model;
+import com.sgodi.bitirmeprojesi.ml.ModelUnquant;
 
+import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -52,6 +64,7 @@ public class EkleEvcilFragment extends Fragment {
     FirebaseStorage firebaseStorage;
     FirebaseFirestore firebaseFirestore;
     StorageReference storageReference;
+    Bitmap img;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -265,7 +278,62 @@ public class EkleEvcilFragment extends Fragment {
                     Intent intentFromResult = result.getData();
                     if (intentFromResult != null) {
                         imageData = intentFromResult.getData();
-                        binding.imageView.setImageURI(imageData);
+                        //binding.imageView.setImageURI(imageData);
+                        try {
+                            img  = ImageUtil.uriToBitmap(getContext(), imageData);
+                            imageData=null;
+                            // Bitmap'i kullanabilirsiniz
+
+                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
+                            try {
+                                Model model = Model.newInstance(getContext());
+
+                                // Creates inputs for reference.
+                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
+                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
+                                tensorImage.load(img);
+                                ByteBuffer byteBuffer=tensorImage.getBuffer();
+                                inputFeature0.loadBuffer(byteBuffer);
+
+                                // Runs model inference and gets result.
+                                Model.Outputs outputs = model.process(inputFeature0);
+                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                                StringBuilder resultBuilder = new StringBuilder();
+                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
+                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
+
+                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
+                                    if (i == 5 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf hayvan fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                        binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
+                                        imageData=null;
+                                    }
+                                    if(i==0 && resultValue==255.f){
+                                        binding.autoCompleteTextView.setText("Kedi");
+                                        binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    if(i==1 && resultValue==255.f){
+                                        binding.autoCompleteTextView.setText("Köpek");
+                                        binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    else{
+                                        imageData = intentFromResult.getData();
+                                        binding.imageView.setImageBitmap(img);
+                                    }
+                                }
+                                // Releases model resources if no longer used.
+                                model.close();
+                            } catch (IOException e) {
+                                // TODO Handle the exception
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 }
             }

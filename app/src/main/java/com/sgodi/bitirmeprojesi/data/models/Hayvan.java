@@ -13,11 +13,12 @@ public class Hayvan implements Serializable {
     private String saglik;
     private String aciklama;
     private String kisilik;
+    private String docID;
 
     public Hayvan() {
     }
 
-    public Hayvan(String email, String foto, String ad, String tur, String irk, String cinsiyet, String yas, String saglik, String aciklama, String kisilik) {
+    public Hayvan(String email, String foto, String ad, String tur, String irk, String cinsiyet, String yas, String saglik, String aciklama, String kisilik,String docID) {
         this.email = email;
         this.foto = foto;
         this.ad = ad;
@@ -28,6 +29,7 @@ public class Hayvan implements Serializable {
         this.saglik = saglik;
         this.aciklama = aciklama;
         this.kisilik = kisilik;
+        this.docID=docID;
     }
 
     public String getEmail() {
@@ -108,5 +110,13 @@ public class Hayvan implements Serializable {
 
     public void setKisilik(String kisilik) {
         this.kisilik = kisilik;
+    }
+
+    public String getDocID() {
+        return docID;
+    }
+
+    public void setDocID(String docID) {
+        this.docID = docID;
     }
 }

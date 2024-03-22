@@ -2,9 +2,14 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +20,12 @@ import com.squareup.picasso.Picasso;
 
 public class HayvanimAyrintiFragment extends Fragment {
     private FragmentHayvanimAyrintiBinding binding;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Fragmentin bir menüsü olduğunu belirt
+        setHasOptionsMenu(true);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,4 +54,5 @@ public class HayvanimAyrintiFragment extends Fragment {
 
         return binding.getRoot();
     }
+
 }
