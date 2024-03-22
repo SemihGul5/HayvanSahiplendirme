@@ -123,9 +123,12 @@ public class KayitOlFragment extends Fragment {
         data.put("ad",adson);
         data.put("soyad",soyad3);
         data.put("email",email);
-        data.put("tel","");
-        data.put("kişilik","");
-
+        data.put("tel","null");
+        data.put("kişilik","null");
+        data.put("konum","null");
+        data.put("aciklama","null");
+        data.put("kisilik_durum","false");
+        data.put("bakici_durum","false");
 
         firestore.collection("kullanicilar").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

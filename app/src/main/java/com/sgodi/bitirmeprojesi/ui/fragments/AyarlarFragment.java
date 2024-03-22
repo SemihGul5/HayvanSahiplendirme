@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.sgodi.bitirmeprojesi.R;
@@ -39,7 +40,8 @@ public class AyarlarFragment extends Fragment {
         binding.materialToolbarAyarlar.setTitle("Ayarlar");
         ayarlarListesi=new ArrayList<>();
         ayarlarListesi.add("Profilim");
-        ayarlarListesi.add("Anket");
+        ayarlarListesi.add("Kişilik Testi");
+        ayarlarListesi.add("Bakıcı İlanımı kaldır");
         ayarlarListesi.add("Paylaş");
         ayarlarListesi.add("Bize Ulaşın");
         ayarlarListesi.add("Çıkış Yap");
@@ -94,7 +96,9 @@ public class AyarlarFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_bizeUlasFragment);
         } else if (secilen.equals("Çıkış Yap")) {
             cikisYap(view);
-        }else{
+        } else if (secilen.equals("Bakıcı İlanımı kaldır")) {
+            Toast.makeText(getContext(), "BAKICI İLANI KALDIRMA İŞLEMLERİ YAPILACAK", Toast.LENGTH_SHORT).show();
+        } else{
             Toast.makeText(getContext(), "Hata", Toast.LENGTH_SHORT).show();
         }
         
