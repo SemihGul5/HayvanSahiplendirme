@@ -13,9 +13,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -28,13 +30,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentBakiciOlBinding;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -63,6 +72,11 @@ public class BakiciOlFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = firebaseStorage.getReference();// görseli depoda nereye kaydediceğimizi gösteren bir değişken
 
+        binding.editTextBakiciAd.setEnabled(false);
+        binding.editTextBakiciSoyad.setEnabled(false);
+        binding.editTextBakiciKisilik.setEnabled(false);
+        getBilgiler(firebaseFirestore);
+
         binding.buttonBakiciOl.setOnClickListener(view -> {
             bakici_kaydet(view);
 
@@ -71,6 +85,35 @@ public class BakiciOlFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    private void getBilgiler(FirebaseFirestore firebaseFirestore) {
+            // Belirli bir e-postaya sahip kullanıcıyı Firestore'dan al
+            String email = auth.getCurrentUser().getEmail();
+            firebaseFirestore.collection("kullanicilar").whereEqualTo("email", email)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if (value != null) {
+                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                    Map<String, Object> data = documentSnapshot.getData();
+                                    String ad = (String) data.get("ad");
+                                    String soyad = (String) data.get("soyad");
+                                    String kisilik=(String) data.get("kişilik");
+                                    binding.editTextBakiciAd.setText(ad);
+                                    binding.editTextBakiciSoyad.setText(soyad);
+                                    binding.editTextBakiciKisilik.setText(kisilik);
+
+                                }
+                            }
+                        }
+                    });
+
+    }
+
     private void bakici_kaydet(View view) {
         if (imageData == null || binding.editTextBakiciAd.getText().toString().isEmpty()
                 || binding.editTextBakiciSoyad.getText().toString().isEmpty()
@@ -129,6 +172,7 @@ public class BakiciOlFragment extends Fragment {
                         bakici_druum_guncelle(email,firebaseFirestore);
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
                         temizle();
+                        Navigation.findNavController(view).navigate(R.id.action_bakiciOlFragment_to_anaSayfaFragment);
                     }).addOnFailureListener(e -> {
                         Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }).addOnCompleteListener(task -> {
@@ -153,24 +197,24 @@ public class BakiciOlFragment extends Fragment {
     }
 
     private void bakici_druum_guncelle(String email, FirebaseFirestore firebaseFirestore) {
-        firebaseFirestore.collection("kullanicilar").document(email)
-                .update("bakici_durum", "true")
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Başarıyla güncellendiğinde yapılacak işlemler
-                        Toast.makeText(getContext(), "Bakıcı durumu güncellendi", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Güncelleme başarısız olduğunda yapılacak işlemler
-                        Toast.makeText(getContext(), "Bakıcı durumu güncellenirken bir hata oluştu", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+        Query query=firebaseFirestore.collection("kullanicilar").whereEqualTo("email",email);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    // Belirli bir kritere uyan belgeyi güncelle
+                    String userId = document.getId();
+                    firebaseFirestore.collection("kullanicilar").document(userId).update("bakici_durum", "true");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(),"Bakıcı durum güncellenemedi! "+e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     //izin işlemleri
     public void fotografTiklandi(View view) {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
 import com.sgodi.bitirmeprojesi.databinding.BakiciCardBinding;
+import com.sgodi.bitirmeprojesi.ui.fragments.BakiciFragmentDirections;
 import com.sgodi.bitirmeprojesi.ui.fragments.HayvanlarimFragmentDirections;
 import com.squareup.picasso.Picasso;
 
@@ -49,9 +50,9 @@ public class BakiciAdapter extends RecyclerView.Adapter<BakiciAdapter.BakiciCard
         });
     }
     private void gitAyrinti(View view, Bakici bakici, BakiciCardHolder holder) {
-        //HayvanlarimFragmentDirections.ActionHayvanlarimFragmentToHayvanimAyrintiFragment gecis=
-        //        HayvanlarimFragmentDirections.actionHayvanlarimFragmentToHayvanimAyrintiFragment(hayvan);
-        //Navigation.findNavController(view).navigate(gecis);
+        BakiciFragmentDirections.ActionBakiciFragmentToBakiciAyrintiFragment gecis
+                =BakiciFragmentDirections.actionBakiciFragmentToBakiciAyrintiFragment(bakici);
+        Navigation.findNavController(view).navigate(gecis);
     }
 
     @Override

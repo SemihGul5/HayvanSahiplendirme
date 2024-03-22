@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_bakiciFragment_to_bakiciOlFragment"
             app:destination="@id/bakiciOlFragment" />
+        <action
+            android:id="@+id/action_bakiciFragment_to_bakiciAyrintiFragment"
+            app:destination="@id/bakiciAyrintiFragment" />
     </fragment>
     <fragment
         android:id="@+id/ekleEvcilFragment"
@@ -94,7 +97,11 @@
         android:id="@+id/bakiciOlFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.BakiciOlFragment"
         android:label="fragment_bakici_ol"
-        tools:layout="@layout/fragment_bakici_ol" />
+        tools:layout="@layout/fragment_bakici_ol" >
+        <action
+            android:id="@+id/action_bakiciOlFragment_to_anaSayfaFragment"
+            app:destination="@id/anaSayfaFragment" />
+    </fragment>
     <fragment
         android:id="@+id/hayvanimAyrintiFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanimAyrintiFragment"
@@ -109,4 +116,13 @@
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.SifreDegisFragment"
         android:label="fragment_sifre_degis"
         tools:layout="@layout/fragment_sifre_degis" />
+    <fragment
+        android:id="@+id/bakiciAyrintiFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.BakiciAyrintiFragment"
+        android:label="fragment_bakici_ayrinti"
+        tools:layout="@layout/fragment_bakici_ayrinti" >
+        <argument
+            android:name="bakici"
+            app:argType="com.sgodi.bitirmeprojesi.data.models.Bakici" />
+    </fragment>
 </navigation>
