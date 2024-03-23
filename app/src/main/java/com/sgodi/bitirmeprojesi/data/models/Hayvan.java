@@ -15,13 +15,15 @@ public class Hayvan implements Serializable {
     private String kisilik;
     private String docID;
     private String sahipliMi;
+    private String ilandaMi;
 
     public Hayvan() {
     }
 
     public Hayvan(String email, String foto, String ad, String tur,
                   String irk, String cinsiyet, String yas, String saglik,
-                  String aciklama, String kisilik,String docID,String sahipliMi) {
+                  String aciklama, String kisilik,String docID,String sahipliMi,
+                  String ilandaMi) {
         this.email = email;
         this.foto = foto;
         this.ad = ad;
@@ -34,6 +36,7 @@ public class Hayvan implements Serializable {
         this.kisilik = kisilik;
         this.docID=docID;
         this.sahipliMi=sahipliMi;
+        this.ilandaMi=ilandaMi;
     }
 
     public String getEmail() {
@@ -130,5 +133,13 @@ public class Hayvan implements Serializable {
 
     public void setSahipliMi(String sahipliMi) {
         this.sahipliMi = sahipliMi;
+    }
+
+    public String getIlandaMi() {
+        return ilandaMi;
+    }
+
+    public void setIlandaMi(String ilandaMi) {
+        this.ilandaMi = ilandaMi;
     }
 }

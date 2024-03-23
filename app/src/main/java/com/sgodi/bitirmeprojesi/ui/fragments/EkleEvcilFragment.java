@@ -112,11 +112,11 @@ public class EkleEvcilFragment extends Fragment {
     }
     private void kisilikBaslat(){
         ArrayList<String> kisilik= new ArrayList<>();
-        kisilik.add("Güvenilir");
-        kisilik.add("Ciddi");
-        kisilik.add("Sorumlu");
-        kisilik.add("Dışadönük");
-        kisilik.add("Arkadaş Canlısı");
+        kisilik.add("Açıklık");
+        kisilik.add("Sorumluluk");
+        kisilik.add("Dışa Dönüklük");
+        kisilik.add("Uyum");
+        kisilik.add("Duyarlılık");
 
         ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,kisilik);
         binding.autoCompleteTextViewHayvanKisilik.setAdapter(arrayAdapter);
@@ -171,10 +171,7 @@ public class EkleEvcilFragment extends Fragment {
                     String yas= binding.autoCompleteTextViewHayvanYas.getText().toString();
                     String saglik = binding.editTextHayvanSaglik.getText().toString();
                     String aciklama = binding.editTextHayvanAciklama.getText().toString().isEmpty() ? "yok" : binding.editTextHayvanAciklama.getText().toString();
-                    String kisilik = binding.autoCompleteTextView.getText().toString();
-                    if (kisilik.equals("Arkadaş Canlısı")){
-                        kisilik="canlı";
-                    }
+                    String kisilik = binding.autoCompleteTextViewHayvanKisilik.getText().toString();
                     HashMap<String, Object> postData = new HashMap<>();
                     postData.put("email", email);
                     postData.put("aciklama", aciklama);
@@ -186,7 +183,8 @@ public class EkleEvcilFragment extends Fragment {
                     postData.put("tur", tur);
                     postData.put("yas", yas);
                     postData.put("ırk", irk);
-
+                    postData.put("sahipli_mi","false");
+                    postData.put("ilanda_mi","false");
                     //firebase koleksiyonuna yükleme işlemi ve sonucunun ne olduğunu değerlendirme
                     firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();

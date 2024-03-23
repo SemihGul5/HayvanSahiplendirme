@@ -86,9 +86,12 @@ public class HayvanlarimFragment extends Fragment {
                                 String saglik = (String) data.get("saglik");
                                 String aciklama = (String) data.get("aciklama");
                                 String kisilik = (String) data.get("kisilik");
+                                String sahipliMi = (String) data.get("sahipli_mi");
+                                String ilandaMi = (String) data.get("ilanda_mi");
                                 String docid=documentSnapshot.getId();
 
-                                Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama, kisilik,docid);
+                                Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                        kisilik,docid,sahipliMi,ilandaMi);
                                 hayvanListesi.add(hayvan);
                             }
                             adapter.notifyDataSetChanged();
