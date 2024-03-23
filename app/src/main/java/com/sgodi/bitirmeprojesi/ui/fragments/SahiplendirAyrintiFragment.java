@@ -9,58 +9,43 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sgodi.bitirmeprojesi.R;
+import com.sgodi.bitirmeprojesi.data.models.Hayvan;
+import com.sgodi.bitirmeprojesi.databinding.FragmentSahiplendirAyrintiBinding;
+import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SahiplendirAyrintiFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SahiplendirAyrintiFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SahiplendirAyrintiFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SahiplendirAyrintiFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SahiplendirAyrintiFragment newInstance(String param1, String param2) {
-        SahiplendirAyrintiFragment fragment = new SahiplendirAyrintiFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private FragmentSahiplendirAyrintiBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sahiplendir_ayrinti, container, false);
+        binding=FragmentSahiplendirAyrintiBinding.inflate(inflater, container, false);
+        binding.materialToolbarSahiplendirAyrinti.setTitle("Ayrıntı");
+
+        SahiplendirAyrintiFragmentArgs bundle=SahiplendirAyrintiFragmentArgs.fromBundle(getArguments());
+        Hayvan hayvan= bundle.getHayvan();
+
+        Picasso.get().load(hayvan.getFoto()).into(binding.imageViewHayvanimAyrinti);
+        binding.hayvanAyrintiAD.setText(hayvan.getAd());
+        binding.hayvanAyrintiTUR.setText(hayvan.getTur());
+        binding.hayvanAyrintiIRK.setText(hayvan.getIrk());
+        binding.hayvanAyrintiCINSIYET.setText(hayvan.getCinsiyet());
+        binding.hayvanAyrintiYAS.setText(hayvan.getYas());
+        binding.hayvanAyrintiSAGLIK.setText(hayvan.getSaglik());
+        binding.hayvanAyrintiKISILIK.setText(hayvan.getKisilik());
+        binding.hayvanAyrintiHAKKINDA.setText(hayvan.getAciklama());
+
+
+
+
+
+
+
+
+
+
+
+        return binding.getRoot();
     }
 }

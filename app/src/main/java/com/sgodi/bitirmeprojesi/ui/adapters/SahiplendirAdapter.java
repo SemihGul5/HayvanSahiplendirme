@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
 import com.sgodi.bitirmeprojesi.databinding.SahiplendirHayvanlarCardBinding;
+import com.sgodi.bitirmeprojesi.ui.fragments.HayvanlarimFragmentDirections;
+import com.sgodi.bitirmeprojesi.ui.fragments.SahiplenFragmentDirections;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,12 +46,18 @@ public class SahiplendirAdapter extends RecyclerView.Adapter<SahiplendirAdapter.
         // hayvan kart tasarımına tıklandığında
         holder.binding.sahiplendirCard.setOnClickListener(view -> {
             gitAyrinti(view,hayvan,holder);
-            Toast.makeText(context, hayvan.getAd(), Toast.LENGTH_SHORT).show();
         });
+
+        String sahipliMi=hayvan.getSahipliMi();
+        if(sahipliMi.equals("true")){
+            holder.binding.textViewSahiplendiMi.setText("SAHİPLENDİRİLDİ");
+        }
     }
 
     private void gitAyrinti(View view, Hayvan hayvan, SahiplendirCardTutucu holder) {
-
+        SahiplenFragmentDirections.ActionSahiplenFragmentToSahiplendirAyrintiFragment gecis=
+                SahiplenFragmentDirections.actionSahiplenFragmentToSahiplendirAyrintiFragment(hayvan);
+        Navigation.findNavController(view).navigate(gecis);
     }
 
     @Override

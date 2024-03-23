@@ -73,7 +73,7 @@ public class HayvanimAyrintiFragment extends Fragment {
             String buttonText = binding.buttonSahiplenmeIslemi.getText().toString();
             if (buttonText.equals("SAHİPLENDİR")) {
                 //ilana koyulacak
-                ilanGuncelle(firestore,auth,hayvan,"true");
+                //ilanGuncelle(firestore,auth,hayvan,"true");
                 binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİ");
 
             } else if (buttonText.equals("SAHİPLENDİ")) {
