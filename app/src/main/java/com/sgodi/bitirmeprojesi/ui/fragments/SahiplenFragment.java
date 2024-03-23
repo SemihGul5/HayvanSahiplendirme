@@ -24,8 +24,6 @@ public class SahiplenFragment extends Fragment {
         binding.materialToolbarSahiplen.setTitle("Sahiplen");
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
             private long backPressedTime = 0;
-
-
             @Override
             public void handleOnBackPressed() {
                 long currentTime = System.currentTimeMillis();

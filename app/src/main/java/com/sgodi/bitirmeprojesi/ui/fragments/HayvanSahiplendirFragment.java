@@ -9,16 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanGuncelleBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanSahiplendirBinding;
 
-public class HayvanGuncelleFragment extends Fragment {
-    private FragmentHayvanGuncelleBinding binding;
+
+public class HayvanSahiplendirFragment extends Fragment {
+    private FragmentHayvanSahiplendirBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentHayvanGuncelleBinding.inflate(inflater, container, false);
-        binding.materialToolbarHayvanGuncelle.setTitle("Hayvan Güncelle");
+        binding=FragmentHayvanSahiplendirBinding.inflate(inflater, container, false);
+
+
+
+
+
+
 
 
 

@@ -148,7 +148,7 @@ public class BakiciFragment extends Fragment {
                         if ("false".equals(kisilik_durum)) {
                             Snackbar.make(view, "Lütfen kişilik testini yapınız.", Snackbar.LENGTH_LONG).show();
                         } else {
-                            if ("nevrotiklik".equals(kisilik)) {
+                            if ("Duyarlılık".equals(kisilik)) {
                                 Snackbar.make(view, "Bakıcı olmaya uygun değilsiniz.", Snackbar.LENGTH_LONG).show();
                             } else {
                                 Navigation.findNavController(view).navigate(R.id.action_bakiciFragment_to_bakiciOlFragment);
