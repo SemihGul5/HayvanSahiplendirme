@@ -10,6 +10,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbarProfilim"
         android:layout_width="0dp"
+        android:fontFamily="@font/roboto"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/roboto"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +36,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textProfilAd"
             android:layout_width="match_parent"
+            android:fontFamily="@font/roboto"
             android:layout_height="wrap_content"
             android:hint="Ad" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -44,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/roboto"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +57,7 @@
             android:id="@+id/textProfilSoyad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
             android:hint="Soyad" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,6 +65,7 @@
         android:id="@+id/textInputLayout11"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
@@ -70,6 +76,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textProfilEmail"
             android:layout_width="match_parent"
+            android:fontFamily="@font/roboto"
             android:layout_height="wrap_content"
             android:hint="email" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -81,6 +88,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:fontFamily="@font/roboto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
@@ -90,6 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
+            android:fontFamily="@font/roboto"
             android:hint="tel" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:fontFamily="@font/volkhov"
+        android:fontFamily="@font/roboto"
         android:layout_marginEnd="32dp"
         android:text="KAYDET"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +123,7 @@
         android:layout_marginEnd="32dp"
         android:text="Şifre Değiştir"
         android:textStyle="italic"
-        android:fontFamily="@font/volkhov_bold"
+        android:fontFamily="@font/roboto"
         android:textColor="@color/yesil"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout13" />

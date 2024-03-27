@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fontFamily="@font/roboto"
     android:background="@color/white"
     tools:context=".ui.fragments.BakiciFragment">
 
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/yesil"
         android:minHeight="?attr/actionBarSize"
+        android:fontFamily="@font/roboto"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,6 +25,7 @@
         android:id="@+id/recyclerViewBakicilar"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -30,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/extended_fab_bakiciOl"
+        android:id="@+id/extendedFabBakiciOl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -43,6 +46,6 @@
         app:layout_anchorGravity="bottom|end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-         />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
+import com.sgodi.bitirmeprojesi.data.models.Hayvan;
 import com.sgodi.bitirmeprojesi.databinding.FragmentKisilikTestBinding;
 
 import org.json.JSONException;
@@ -45,6 +46,7 @@ public class KisilikTestFragment extends Fragment {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     String kisilik="";
+    String aciklama="";
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -63,7 +65,8 @@ public class KisilikTestFragment extends Fragment {
                 if (!kisilikValue.equals("null")) {
                     binding.kisilikTestButton.setEnabled(false);
                     binding.anketDurumText.setTextColor(getResources().getColor(R.color.yesil));
-                    binding.anketDurumText.setText("Kişilik durum testi tamamlandı : " + kisilikValue);
+                    binding.anketDurumText.setText("Kişilik durum testi tamamlandı : " + kisilikValue+" : "+getKisilikAciklama(kisilikValue,kisilikValue));
+                    kisilikGuncelle(firestore,auth,"true");
                 } else {
                     binding.kisilikTestButton.setOnClickListener(view -> {
                         if (!checkSeekBarValues()) {
@@ -106,6 +109,35 @@ public class KisilikTestFragment extends Fragment {
     interface KisilikCallback {
         void onKisilikReceived(String kisilikValue);
     }
+    private void kisilikGuncelle(FirebaseFirestore firestore, FirebaseAuth auth, String aTrue) {
+        String email = auth.getCurrentUser().getEmail();
+
+        // Kullanıcının e-posta adresine göre belgeyi sorgula
+        firestore.collection("kullanicilar")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // İlgili belgeyi güncelle
+                            String belgeId = document.getId();
+                            firestore.collection("kullanici").document(belgeId)
+                                    .update("kisilik_durum", aTrue)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Başarılı bir şekilde güncelleme yapıldığında yapılacak işlemler
+                                        // Örneğin, kullanıcıya bilgi verme veya UI güncelleme
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Güncelleme sırasında hata oluştuğunda yapılacak işlemler
+                                        // Örneğin, kullanıcıya hata mesajı gösterme
+                                    });
+                        }
+                    } else {
+                        // Belge bulunamadığında veya sorgulama başarısız olduğunda yapılacak işlemler
+                        // Örneğin, kullanıcıya hata mesajı gösterme
+                    }
+                });
+    }
 
     @SuppressLint("ResourceAsColor")
     private void sendTestResults() {
@@ -139,7 +171,7 @@ public class KisilikTestFragment extends Fragment {
                             String highestProbabilityTrait = findHighestProbabilityTrait(jsonObject);
 
                             // TextView'da gösterme işlemi burada gerçekleştirilebilir
-                            binding.anketDurumText.setText(highestProbabilityTrait+" : "+getKisilikAciklama(highestProbabilityTrait));
+                            binding.anketDurumText.setText(highestProbabilityTrait+" : "+getKisilikAciklama(highestProbabilityTrait,highestProbabilityTrait));
                             binding.anketDurumText.setTextColor(getResources().getColor(R.color.yesil));
                             kisilikDurumGuncelle(highestProbabilityTrait,firestore);
                             binding.kisilikTestButton.setEnabled(false);
@@ -176,20 +208,18 @@ public class KisilikTestFragment extends Fragment {
         });
     }
 
-    private String getKisilikAciklama(String highestProbabilityTrait) {
-        String aciklama="";
-        if(highestProbabilityTrait=="Açıklık"){
+    private String getKisilikAciklama(String highestProbabilityTrait,String kisilik) {
+
+        if(highestProbabilityTrait=="Açıklık"||kisilik=="Açıklık"){
             aciklama="Yeniliklere açık olma, hayal gücü, sanatsal hassasiyet, zeka ve maceraperestlik gibi özellikleri içerir. Açık kişiler yeni deneyimlerden hoşlanır, farklı düşüncelere ve duygulara açıktırlar.";
-        } else if (highestProbabilityTrait=="Sorumluluk") {
+        } else if (highestProbabilityTrait=="Sorumluluk"||kisilik=="Sorumluluk") {
             aciklama="Disiplin, düzen, kararlılık, hedef odaklılık gibi özellikleri içerir. Sorumlu kişiler genellikle düzenli, organize ve güvenilir bireylerdir.";
-        } else if (highestProbabilityTrait=="Dışa Dönüklük") {
+        } else if (highestProbabilityTrait=="Dışa Dönüklük"||kisilik=="Dışa Dönüklük") {
             aciklama="Sosyallik, enerji, konuşkanlık, dışadönüklük ve risk alma gibi özellikleri içerir. Dışa dönük kişiler genellikle toplum içinde aktif, heyecanlı ve enerjik olarak tanımlanır.";
-        } else if (highestProbabilityTrait=="Uyum") {
+        } else if (highestProbabilityTrait=="Uyum"||kisilik=="Uyum") {
             aciklama=" İyi niyetlilik, yardımseverlik, işbirliğine açıklık, merhamet ve hoşgörü gibi özellikleri içerir. Uyumlu kişiler genellikle nazik, sempatik ve başkalarıyla uyum içinde olmaya eğilimlidirler.";
-        } else if (highestProbabilityTrait=="Duyarlılık") {
+        } else if (highestProbabilityTrait=="Duyarlılık"||kisilik=="Duyarlılık") {
             aciklama="Kaygı, depresyon, duygusal dengesizlik gibi özellikleri içerir. Duyarlı bireyler stres ve olumsuz duygulara daha duyarlı olabilirler.";
-        }else {
-            aciklama="";
         }
         return aciklama;
     }

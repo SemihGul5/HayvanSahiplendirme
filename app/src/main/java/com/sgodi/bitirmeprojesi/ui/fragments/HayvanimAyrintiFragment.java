@@ -73,14 +73,18 @@ public class HayvanimAyrintiFragment extends Fragment {
             String buttonText = binding.buttonSahiplenmeIslemi.getText().toString();
             if (buttonText.equals("SAHİPLENDİR")) {
                 //ilana koyulacak
-                //ilanGuncelle(firestore,auth,hayvan,"true");
+                ilanGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"true");
+                //ilanGuncelle("kullanici_hayvanlari_sahiplendir",firestore,auth,hayvan,"true");
                 binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİ");
+                Toast.makeText(getContext(), "Artık sahiplendir sayfasında bulabilirsiniz.", Toast.LENGTH_SHORT).show();
 
             } else if (buttonText.equals("SAHİPLENDİ")) {
                 //Sahiplendirme işlemi tamamlandı bildirimi
                 //ilandan çıkartılacak, sahiplimi=true olacak
-                sahipliMiGuncelle(firestore,auth,hayvan,"true");
-                ilanGuncelle(firestore,auth,hayvan,"false");
+                sahipliMiGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"true");
+                //sahipliMiGuncelle("kullanici_hayvanlari_sahiplendir",firestore,auth,hayvan,"true");
+                ilanGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"false");
+                //ilanGuncelle("kullanici_hayvanlari_sahiplendir",firestore,auth,hayvan,"false");
                 binding.buttonSahiplenmeIslemi.setText("ARTIK SAHİBİM VAR");
                 binding.buttonSahiplenmeIslemi.setEnabled(false);
             }
@@ -94,13 +98,13 @@ public class HayvanimAyrintiFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void ilanGuncelle(FirebaseFirestore firestore, FirebaseAuth auth, Hayvan hayvan, String aTrue) {
+    private void ilanGuncelle(String collectionPath,FirebaseFirestore firestore, FirebaseAuth auth, Hayvan hayvan, String aTrue) {
         String email=auth.getCurrentUser().getEmail();
-        firestore.collection("kullanici_hayvanlari").document(hayvan.getDocID()).update("ilanda_mi",aTrue)
+        firestore.collection(collectionPath).document(hayvan.getDocID()).update("ilanda_mi",aTrue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Başarılı", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "İlan güncelleme", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -111,9 +115,9 @@ public class HayvanimAyrintiFragment extends Fragment {
 
     }
 
-    private void sahipliMiGuncelle(FirebaseFirestore firestore, FirebaseAuth auth, Hayvan hayvan, String aTrue) {
+    private void sahipliMiGuncelle(String collectionPath,FirebaseFirestore firestore, FirebaseAuth auth, Hayvan hayvan, String aTrue) {
         String email=auth.getCurrentUser().getEmail();
-        firestore.collection("kullanici_hayvanlari").document(hayvan.getDocID()).update("sahipli_mi",aTrue)
+        firestore.collection(collectionPath).document(hayvan.getDocID()).update("sahipli_mi",aTrue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

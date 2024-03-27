@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:fontFamily="@font/roboto"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:titleTextColor="@color/white"
@@ -26,6 +27,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:fontFamily="@font/roboto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbarSifreDegis">
@@ -33,6 +35,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textSifreDegisMevcut"
             android:layout_width="match_parent"
+            android:fontFamily="@font/roboto"
             android:inputType="textPassword"
             android:layout_height="wrap_content"
             android:hint="Mevcut Şifre" />
@@ -43,6 +46,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:fontFamily="@font/roboto"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +57,7 @@
             android:id="@+id/textSifreDegisYeni"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
             android:inputType="textPassword"
             android:hint="Yeni Şifre" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -61,6 +66,7 @@
         android:id="@+id/textInputLayout15"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
@@ -72,6 +78,7 @@
             android:id="@+id/textSifreDegisYeniTekrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
             android:hint="Yeni Şifre Tekrar"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -82,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/roboto"
         android:layout_marginEnd="32dp"
         android:text="DEĞİŞTİR"
         app:layout_constraintEnd_toEndOf="parent"

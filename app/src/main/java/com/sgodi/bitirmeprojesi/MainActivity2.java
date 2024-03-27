@@ -8,6 +8,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.View;
 
 import com.sgodi.bitirmeprojesi.databinding.ActivityMain2Binding;
 
@@ -28,6 +29,7 @@ public class MainActivity2 extends AppCompatActivity {
         NavHostFragment navHostFragment=(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView2);
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navHostFragment.getNavController());
 
+        
 
     }
 

@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            android:fontFamily="@font/roboto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView">
@@ -47,12 +48,14 @@
             <RadioButton
                 android:id="@+id/radioButtonBakiciErkek"
                 android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:layout_height="wrap_content"
                 android:text="Erkek" />
 
             <RadioButton
                 android:id="@+id/radioButtonBakiciKadin"
                 android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:layout_height="wrap_content"
                 android:text="Kadın" />
 
@@ -67,11 +70,13 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/roboto"
             app:layout_constraintTop_toBottomOf="@+id/radioGroupBakiciCinsiyet">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextBakiciAd"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/roboto"
                 android:layout_height="wrap_content"
                 android:hint="Ad" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -81,6 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:fontFamily="@font/roboto"
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +94,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextBakiciSoyad"
+                android:fontFamily="@font/roboto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Soyad" />
@@ -97,6 +104,7 @@
             android:id="@+id/textInputLayout18"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,6 +115,7 @@
                 android:id="@+id/editTextBakiciKisilik"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:hint="Kişilik" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:fontFamily="@font/roboto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout18">
@@ -123,6 +133,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextBakiciKonum"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/roboto"
                 android:layout_height="wrap_content"
                 android:hint="Konum" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -132,6 +143,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:fontFamily="@font/roboto"
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -141,6 +153,7 @@
                 android:id="@+id/editTextBakiciTel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:hint="Telefon" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -150,6 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:fontFamily="@font/roboto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout20">
@@ -159,6 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Açıklamanız"
+                android:fontFamily="@font/roboto"
                 android:inputType="textMultiLine"
                 android:lines="5"
                 android:minLines="3" />
@@ -170,6 +185,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto"
             android:layout_marginEnd="32dp"
             android:text="BAKICI OL"
             app:layout_constraintEnd_toEndOf="parent"

@@ -82,44 +82,51 @@ public class SahiplenFragment extends Fragment {
         getKullaniciKisilik(firestore, auth, new KisilikCallback() {
             @Override
             public void onKisilikReceived(String kisilik) {
-                firestore.collection("kullanici_hayvanlari")
-                        .whereEqualTo("kisilik", kisilik)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @SuppressLint("NotifyDataSetChanged")
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                if (error != null) {
-                                    Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                hayvanListesi.clear();
 
-                                if (value != null) {
-                                    for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                        Map<String, Object> data = documentSnapshot.getData();
+                getIlandami(firestore, auth, new ilanCallback() {
+                    @Override
+                    public void onIlanReceived(String ilanValue) {
+                        firestore.collection("kullanici_hayvanlari")
+                                .whereEqualTo("kisilik", kisilik)
+                                .whereEqualTo("ilanda_mi","true")
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        if (error != null) {
+                                            Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        hayvanListesi.clear();
 
-                                        String email = (String) data.get("email");
-                                        String foto = (String) data.get("foto");
-                                        String ad = (String) data.get("ad");
-                                        String tur = (String) data.get("tur");
-                                        String irk = (String) data.get("ırk");
-                                        String cinsiyet = String.valueOf(data.get("cinsiyet"));
-                                        String yas = String.valueOf(data.get("yas"));
-                                        String saglik = (String) data.get("saglik");
-                                        String aciklama = (String) data.get("aciklama");
-                                        String kisilik = (String) data.get("kisilik");
-                                        String sahipliMi = (String) data.get("sahipli_mi");
-                                        String ilandaMi = (String) data.get("ilanda_mi");
-                                        String docid = documentSnapshot.getId();
+                                        if (value != null) {
+                                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                                Map<String, Object> data = documentSnapshot.getData();
 
-                                        Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
-                                                kisilik, docid, sahipliMi, ilandaMi);
-                                        hayvanListesi.add(hayvan);
+                                                String email = (String) data.get("email");
+                                                String foto = (String) data.get("foto");
+                                                String ad = (String) data.get("ad");
+                                                String tur = (String) data.get("tur");
+                                                String irk = (String) data.get("ırk");
+                                                String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                                String yas = String.valueOf(data.get("yas"));
+                                                String saglik = (String) data.get("saglik");
+                                                String aciklama = (String) data.get("aciklama");
+                                                String kisilik = (String) data.get("kisilik");
+                                                String sahipliMi = (String) data.get("sahipli_mi");
+                                                String ilandaMi = (String) data.get("ilanda_mi");
+                                                String docid = documentSnapshot.getId();
+
+                                                Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                        kisilik, docid, sahipliMi, ilandaMi);
+                                                hayvanListesi.add(hayvan);
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }
                                     }
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        });
+                                });
+                    }
+                });
             }
         });
     }
@@ -144,11 +151,31 @@ public class SahiplenFragment extends Fragment {
                     }
                 });
     }
-
-
+    private void getIlandami(FirebaseFirestore firestore, FirebaseAuth auth,ilanCallback callback) {
+        String currentUserEmail = auth.getCurrentUser().getEmail();
+        firestore.collection("kullanicilar").whereEqualTo("email", currentUserEmail)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (value != null) {
+                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                Map<String, Object> data = documentSnapshot.getData();
+                                String ilan = (String) data.get("ilanda_mi");
+                                callback.onIlanReceived(ilan);
+                            }
+                        }
+                    }
+                });
+    }
     public interface KisilikCallback {
         void onKisilikReceived(String kisilikValue);
     }
 
-
+    public interface ilanCallback {
+        void onIlanReceived(String ilanValue);
+    }
 }

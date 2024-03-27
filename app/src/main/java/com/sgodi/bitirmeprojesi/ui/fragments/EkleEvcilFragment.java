@@ -194,7 +194,15 @@ public class EkleEvcilFragment extends Fragment {
                     }).addOnCompleteListener(task -> {
                         binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
                         binding.buttonHayvanEkle.setEnabled(true);
-
+                    });
+                    firebaseFirestore.collection("kullanici_hayvanlari_sahiplendir").add(postData).addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+                        temizle();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }).addOnCompleteListener(task -> {
+                        binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+                        binding.buttonHayvanEkle.setEnabled(true);
                     });
                 });
 

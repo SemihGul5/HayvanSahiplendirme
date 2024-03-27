@@ -2,6 +2,7 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -11,7 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +28,7 @@ import com.sgodi.bitirmeprojesi.databinding.FragmentProfilimBinding;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class ProfilimFragment extends Fragment {
@@ -57,14 +63,32 @@ public class ProfilimFragment extends Fragment {
     private void sifreDegis(View view) {
         Navigation.findNavController(view).navigate(R.id.action_profilimFragment_to_sifreDegisFragment);
     }
+    private Boolean bosMu(String ad,String soyAd,String email,String tel){
+        Boolean kontrol;
+        if(ad.equals("")&&soyAd.equals("")&&email.equals("")&&tel.equals("")){
+            kontrol=true;
+        }else{
+            kontrol=false;
+        }
+        return kontrol;
+    }
 
     private void guncelle(View view) {
         String yeniAd = binding.textProfilAd.getText().toString();
         String yeniSoyad = binding.textProfilSoyad.getText().toString();
         String yeniTel = binding.extProfilTel.getText().toString();
         String email = auth.getCurrentUser().getEmail();
+        if(!bosMu(yeniAd,yeniSoyad,email,yeniTel)){
 
-        // Güncellenecek bilgileri içeren bir Map oluştur
+            bilgileriKaydet(yeniAd,yeniSoyad,email,yeniTel);
+
+        }
+        else{
+            Snackbar.make(view,"Tüm alanları doldurun.",Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private void bilgileriKaydet(String yeniAd,String yeniSoyad,String email,String yeniTel) {
         Map<String, Object> guncellenmisBilgiler = new HashMap<>();
         guncellenmisBilgiler.put("ad", yeniAd);
         guncellenmisBilgiler.put("soyad", yeniSoyad);
@@ -91,8 +115,8 @@ public class ProfilimFragment extends Fragment {
                     // Belge bulunamadığında veya bir hata oluştuğunda
                     Toast.makeText(getContext(), "Belge bulunamadı veya bir hata oluştu", Toast.LENGTH_SHORT).show();
                 });
-    }
 
+    }
 
 
     private void getData() {

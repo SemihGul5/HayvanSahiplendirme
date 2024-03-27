@@ -11,6 +11,7 @@
         android:id="@+id/toolbarHayvanlarim"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
         android:background="@color/yesil"
         app:titleTextColor="@color/white"
         android:minHeight="?attr/actionBarSize"

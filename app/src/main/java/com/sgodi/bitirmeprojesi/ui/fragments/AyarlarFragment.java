@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.sgodi.bitirmeprojesi.MainActivity2;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentAyarlarBinding;
 
@@ -150,19 +152,26 @@ public class AyarlarFragment extends Fragment {
 
 
     private void cikisYap(View view) {
+        try {
+            AlertDialog.Builder alert=new AlertDialog.Builder(getContext());
+            alert.setTitle("Çıkıs Yap");
+            alert.setMessage("Emin misiniz?");
+            alert.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Toast.makeText(getContext(), "Çıkış Yapılıyor.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_girisYapFragment2);
 
-        AlertDialog.Builder alert=new AlertDialog.Builder(getContext());
-        alert.setTitle("Çıkıs Yap");
-        alert.setMessage("Emin misiniz?");
-        alert.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getContext(), "Çıkış Yapılıyor.", Toast.LENGTH_SHORT).show();
-                auth.signOut();
-                Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_girisYapFragment2);
-            }
-        });
-        alert.show();
+                    auth.signOut();
+
+                }
+            });
+            alert.show();
+        }catch (Exception e){
+            Log.i("Çıkış hatası: ",e.getMessage());
+        }
+
+
     }
     private void bakici_druum_guncelle( FirebaseFirestore firebaseFirestore) {
         Query query=firebaseFirestore.collection("kullanicilar").whereEqualTo("email",auth.getCurrentUser().getEmail());
