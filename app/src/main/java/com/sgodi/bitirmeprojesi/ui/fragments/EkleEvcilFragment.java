@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -94,8 +95,15 @@ public class EkleEvcilFragment extends Fragment {
 
 
 
+        binding.imageViewKonum.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_mapsFragment);
+        });
+
+
         return binding.getRoot();
     }
+
+
 
     private void turBaslat() {
         ArrayList<String> turler= new ArrayList<>();

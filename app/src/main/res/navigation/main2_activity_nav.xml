@@ -60,7 +60,11 @@
         android:id="@+id/ekleEvcilFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.EkleEvcilFragment"
         android:label="fragment_ekle_evcil"
-        tools:layout="@layout/fragment_ekle_evcil" />
+        tools:layout="@layout/fragment_ekle_evcil" >
+        <action
+            android:id="@+id/action_ekleEvcilFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/hayvanlarimFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanlarimFragment"
@@ -137,5 +141,14 @@
         <argument
             android:name="hayvan"
             app:argType="com.sgodi.bitirmeprojesi.data.models.Hayvan" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_ekleEvcilFragment"
+            app:destination="@id/ekleEvcilFragment" />
     </fragment>
 </navigation>
