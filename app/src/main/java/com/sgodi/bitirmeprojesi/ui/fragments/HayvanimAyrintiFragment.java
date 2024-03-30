@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class HayvanimAyrintiFragment extends Fragment {
     private FragmentHayvanimAyrintiBinding binding;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
+    private String enlem,boylam;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,9 @@ public class HayvanimAyrintiFragment extends Fragment {
         binding.hayvanAyrintiSAGLIK.setText(hayvan.getSaglik());
         binding.hayvanAyrintiKISILIK.setText(hayvan.getKisilik());
         binding.hayvanAyrintiHAKKINDA.setText(hayvan.getAciklama());
+        enlem=hayvan.getEnlem();
+        boylam=hayvan.getBoylam();
+        binding.hayvanAyrintiSehir.setText(hayvan.getSehir()+" / "+hayvan.getIlce());
 
         String sahipliMi= hayvan.getSahipliMi();
         String ilandaMi=hayvan.getIlandaMi();
@@ -91,6 +96,13 @@ public class HayvanimAyrintiFragment extends Fragment {
         });
 
 
+        //hayvan konumunu aç
+        binding.hayvanAyrintiKonum.setOnClickListener(view -> {
+            HayvanimAyrintiFragmentDirections.ActionHayvanimAyrintiFragmentToMapsFragmentHayvanimAyrinti gecis=
+                    HayvanimAyrintiFragmentDirections.actionHayvanimAyrintiFragmentToMapsFragmentHayvanimAyrinti(enlem,boylam);
+            Navigation.findNavController(view).navigate(gecis);
+
+        });
 
 
 

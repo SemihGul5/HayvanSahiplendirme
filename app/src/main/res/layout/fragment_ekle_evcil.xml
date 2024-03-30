@@ -16,14 +16,34 @@
         tools:context=".ui.fragments.EkleEvcilFragment">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
+            android:id="@+id/imageViewCheckPass"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewKonum"
+            app:layout_constraintStart_toEndOf="@+id/imageViewKonum"
+            app:layout_constraintTop_toTopOf="@+id/imageViewKonum"
+            app:srcCompat="@drawable/close" />
+
+        <ImageView
+            android:id="@+id/imageViewKonum"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarHayvanEkle"
+            app:srcCompat="@drawable/location" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewKonum"
             app:srcCompat="@drawable/baseline_add_a_photo_24" />
 
         <androidx.appcompat.widget.Toolbar
@@ -160,7 +180,7 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewKonum">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextHayvanAciklama"
@@ -216,37 +236,6 @@
                 android:text="Kişilik" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
-        <ImageView
-            android:id="@+id/imageViewKonum"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-            app:srcCompat="@drawable/location" />
-
-        <ImageView
-            android:id="@+id/imageViewCheckPass"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewKonum"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-            app:srcCompat="@drawable/close" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="23dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarHayvanEkle" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

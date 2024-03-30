@@ -16,6 +16,10 @@ public class Hayvan implements Serializable {
     private String docID;
     private String sahipliMi;
     private String ilandaMi;
+    private String enlem;
+    private String boylam;
+    private String sehir;
+    private String ilce;
 
     public Hayvan() {
     }
@@ -23,7 +27,7 @@ public class Hayvan implements Serializable {
     public Hayvan(String email, String foto, String ad, String tur,
                   String irk, String cinsiyet, String yas, String saglik,
                   String aciklama, String kisilik,String docID,String sahipliMi,
-                  String ilandaMi) {
+                  String ilandaMi, String enlem,String boylam, String sehir,String ilce) {
         this.email = email;
         this.foto = foto;
         this.ad = ad;
@@ -37,6 +41,10 @@ public class Hayvan implements Serializable {
         this.docID=docID;
         this.sahipliMi=sahipliMi;
         this.ilandaMi=ilandaMi;
+        this.enlem=enlem;
+        this.boylam=boylam;
+        this.sehir=sehir;
+        this.ilce=ilce;
     }
 
     public String getEmail() {
@@ -141,5 +149,37 @@ public class Hayvan implements Serializable {
 
     public void setIlandaMi(String ilandaMi) {
         this.ilandaMi = ilandaMi;
+    }
+
+    public String getEnlem() {
+        return enlem;
+    }
+
+    public void setEnlem(String enlem) {
+        this.enlem = enlem;
+    }
+
+    public String getBoylam() {
+        return boylam;
+    }
+
+    public void setBoylam(String boylam) {
+        this.boylam = boylam;
+    }
+
+    public String getSehir() {
+        return sehir;
+    }
+
+    public void setSehir(String sehir) {
+        this.sehir = sehir;
+    }
+
+    public String getIlce() {
+        return ilce;
+    }
+
+    public void setIlce(String ilce) {
+        this.ilce = ilce;
     }
 }

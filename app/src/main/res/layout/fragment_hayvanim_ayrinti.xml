@@ -271,6 +271,41 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
+
+            <TextView
+                android:id="@+id/text8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text="ŞEHİR"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteY="102dp" />
+
+            <TextView
+                android:id="@+id/hayvan_ayrinti_Sehir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text=""
+                android:textAlignment="viewEnd"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout13"
@@ -282,7 +317,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15">
 
             <TextView
                 android:id="@+id/hayvan_ayrinti_HAKKINDA"
@@ -297,7 +332,34 @@
                 tools:layout_editor_absoluteY="102dp" />
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout13">
 
+            <TextView
+                android:id="@+id/hayvan_ayrinti_konum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto"
+                android:textStyle="bold"
+                android:text="KONUM"
+                android:textColor="@color/mavi"
+                android:textSize="15sp"
+                tools:layout_editor_absoluteY="102dp" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imageViewHayvanimAyrinti"
@@ -321,7 +383,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout14" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

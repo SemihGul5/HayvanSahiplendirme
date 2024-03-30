@@ -115,10 +115,14 @@ public class SahiplenFragment extends Fragment {
                                                 String kisilik = (String) data.get("kisilik");
                                                 String sahipliMi = (String) data.get("sahipli_mi");
                                                 String ilandaMi = (String) data.get("ilanda_mi");
+                                                String enlem = (String) data.get("enlem");
+                                                String boylam = (String) data.get("boylam");
+                                                String sehir = (String) data.get("sehir");
+                                                String ilce = (String) data.get("ilce");
                                                 String docid = documentSnapshot.getId();
 
                                                 Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
-                                                        kisilik, docid, sahipliMi, ilandaMi);
+                                                        kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                 hayvanListesi.add(hayvan);
                                             }
                                             adapter.notifyDataSetChanged();

@@ -2,13 +2,9 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +13,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -35,18 +28,13 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.ImageUtil;
 import com.sgodi.bitirmeprojesi.databinding.FragmentEkleEvcilBinding;
 import com.sgodi.bitirmeprojesi.ml.Model;
-import com.sgodi.bitirmeprojesi.ml.ModelUnquant;
-import com.sgodi.bitirmeprojesi.ui.interfaces.LocationDataTransferInterface;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.image.TensorImage;
@@ -59,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class EkleEvcilFragment extends Fragment implements LocationDataTransferInterface {
+public class EkleEvcilFragment extends Fragment{
     private FragmentEkleEvcilBinding binding;
     ActivityResultLauncher<Intent> activityResultLauncher;
     ActivityResultLauncher<String> permissionLauncher;
@@ -69,8 +57,8 @@ public class EkleEvcilFragment extends Fragment implements LocationDataTransferI
     FirebaseFirestore firebaseFirestore;
     StorageReference storageReference;
     Bitmap img;
-    boolean info;
-    SharedPreferences sharedPreferences;
+    String latitude,longitude,sehir,ilce;
+    boolean secildiMi=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,34 +84,27 @@ public class EkleEvcilFragment extends Fragment implements LocationDataTransferI
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String latitude = bundle.getString("la");
-            String longitude = bundle.getString("lo");
+            latitude = bundle.getString("la");
+            longitude = bundle.getString("lo");
+            sehir = bundle.getString("sehir");
+            ilce = bundle.getString("ilce");
             //binding.textView4.setText(latitude+"   "+longitude);
-            binding.textView4.setText(latitude);
             if (latitude==null){
                 //Toast.makeText(getContext(), "boş", Toast.LENGTH_SHORT).show();
                 binding.imageViewCheckPass.setImageResource(R.drawable.close);
+                secildiMi=false;
             }else{
                 //Toast.makeText(getContext(), "dolu", Toast.LENGTH_SHORT).show();
                 binding.imageViewCheckPass.setImageResource(R.drawable.check);
+                secildiMi=true;
             }
 
             // Veri alındı, burada işlemleri yapabilirsiniz
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (secildiMi){
+            binding.imageViewKonum.setEnabled(false);
+        }
 
 
         //kaydet butonu tıklanması
@@ -179,6 +160,7 @@ public class EkleEvcilFragment extends Fragment implements LocationDataTransferI
         binding.autoCompleteTextViewHayvanYas.setAdapter(arrayAdapter);
     }
 
+
     private void hayvan_kaydet(View view) {
         if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty()
                 || binding.autoCompleteTextView.getText().toString().isEmpty()
@@ -232,6 +214,10 @@ public class EkleEvcilFragment extends Fragment implements LocationDataTransferI
                     postData.put("ırk", irk);
                     postData.put("sahipli_mi","false");
                     postData.put("ilanda_mi","false");
+                    postData.put("enlem",latitude);
+                    postData.put("boylam",longitude);
+                    postData.put("sehir",sehir);
+                    postData.put("ilce",ilce);
                     //firebase koleksiyonuna yükleme işlemi ve sonucunun ne olduğunu değerlendirme
                     firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
@@ -419,8 +405,4 @@ public class EkleEvcilFragment extends Fragment implements LocationDataTransferI
     }
 
 
-    @Override
-    public void onLocationDataReceived(String latitude, String longitude) {
-        binding.textView4.setText(latitude+"   "+longitude);
-    }
 }
