@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import android.Manifest;
 import android.content.Context;
@@ -19,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,13 +38,17 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentBakiciBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentMapsBinding;
+import com.sgodi.bitirmeprojesi.ui.interfaces.LocationDataTransferInterface;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements LocationDataTransferInterface {
     ActivityResultLauncher<String> permissionLauncher;
     LocationManager locationManager;
     LocationListener locationListener;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
+    private @NonNull FragmentMapsBinding binding;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
@@ -53,8 +61,6 @@ public class MapsFragment extends Fragment {
                 // Konumu al
                 getLocation(googleMap);
             }
-
-
         }
     };
 
@@ -63,7 +69,8 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        binding = FragmentMapsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -78,6 +85,50 @@ public class MapsFragment extends Fragment {
 
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        binding.buttonKonumKaydet.setOnClickListener(view1 -> {
+            // Butona tıklandığında o anki konumu al
+            if (locationManager != null && locationListener != null) {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    return;
+                }
+                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (lastLocation != null) {
+                    double latitude = lastLocation.getLatitude();
+                    double longitude = lastLocation.getLongitude();
+                    String latitudeStr = String.valueOf(latitude);
+                    String longitudeStr = String.valueOf(longitude);
+
+                    onLocationDataReceived(latitudeStr,longitudeStr);
+                    binding.textView5.setText(latitudeStr+"   "+longitudeStr);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("la", latitudeStr); // Key, alıcı fragment'ta bu veriyi almak için kullanılacak
+                    bundle.putString("lo", longitudeStr);
+                    EkleEvcilFragment ekleEvcilFragment = new EkleEvcilFragment();
+                    ekleEvcilFragment.setArguments(bundle);
+
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.constMAP, ekleEvcilFragment);
+                    fragmentTransaction.commit();
+
+                    //MapsFragmentDirections.ActionMapsFragmentToEkleEvcilFragment gecis=MapsFragmentDirections
+                    //       .actionMapsFragmentToEkleEvcilFragment(latitudeStr,longitudeStr);
+                    //Navigation.findNavController(view).navigate(R.id.action_mapsFragment_to_ekleEvcilFragment);
+
+
+
+
+                    // Toast ile kullanıcıya bilgi ver
+                    Toast.makeText(getContext(), "Konum başarıyla kaydedildi", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Konum bulunamadı", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Konum izni verilmedi", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void registerLauncher() {
@@ -109,6 +160,7 @@ public class MapsFragment extends Fragment {
 
                     // Firestore'da konumu güncelle
                     //updateLocationInFirestore(latitudeStr, longitudeStr);
+                    onLocationDataReceived(latitudeStr, longitudeStr);
 
                     // Haritada konumu göster
                     LatLng currentLocation = new LatLng(latitude, longitude);
@@ -164,5 +216,12 @@ public class MapsFragment extends Fragment {
         if (locationManager != null && locationListener != null) {
             locationManager.removeUpdates(locationListener);
         }
+        binding = null;
     }
+
+    @Override
+    public void onLocationDataReceived(String latitude, String longitude) {
+
+    }
+
 }

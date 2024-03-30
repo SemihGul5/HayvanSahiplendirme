@@ -3,7 +3,9 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,6 +46,7 @@ import com.sgodi.bitirmeprojesi.data.models.ImageUtil;
 import com.sgodi.bitirmeprojesi.databinding.FragmentEkleEvcilBinding;
 import com.sgodi.bitirmeprojesi.ml.Model;
 import com.sgodi.bitirmeprojesi.ml.ModelUnquant;
+import com.sgodi.bitirmeprojesi.ui.interfaces.LocationDataTransferInterface;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.image.TensorImage;
@@ -56,7 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class EkleEvcilFragment extends Fragment {
+public class EkleEvcilFragment extends Fragment implements LocationDataTransferInterface {
     private FragmentEkleEvcilBinding binding;
     ActivityResultLauncher<Intent> activityResultLauncher;
     ActivityResultLauncher<String> permissionLauncher;
@@ -66,6 +69,8 @@ public class EkleEvcilFragment extends Fragment {
     FirebaseFirestore firebaseFirestore;
     StorageReference storageReference;
     Bitmap img;
+    boolean info;
+    SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +93,39 @@ public class EkleEvcilFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = firebaseStorage.getReference();// görseli depoda nereye kaydediceğimizi gösteren bir değişken
 
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String latitude = bundle.getString("la");
+            String longitude = bundle.getString("lo");
+            //binding.textView4.setText(latitude+"   "+longitude);
+            binding.textView4.setText(latitude);
+            if (latitude==null){
+                //Toast.makeText(getContext(), "boş", Toast.LENGTH_SHORT).show();
+                binding.imageViewCheckPass.setImageResource(R.drawable.close);
+            }else{
+                //Toast.makeText(getContext(), "dolu", Toast.LENGTH_SHORT).show();
+                binding.imageViewCheckPass.setImageResource(R.drawable.check);
+            }
+
+            // Veri alındı, burada işlemleri yapabilirsiniz
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //kaydet butonu tıklanması
         binding.buttonHayvanEkle.setOnClickListener(view -> {
             hayvan_kaydet(view);
@@ -96,6 +134,7 @@ public class EkleEvcilFragment extends Fragment {
 
 
         binding.imageViewKonum.setOnClickListener(view -> {
+
             Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_mapsFragment);
         });
 
@@ -380,4 +419,8 @@ public class EkleEvcilFragment extends Fragment {
     }
 
 
+    @Override
+    public void onLocationDataReceived(String latitude, String longitude) {
+        binding.textView4.setText(latitude+"   "+longitude);
+    }
 }

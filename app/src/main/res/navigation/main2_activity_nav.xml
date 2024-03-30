@@ -64,6 +64,12 @@
         <action
             android:id="@+id/action_ekleEvcilFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <argument
+            android:name="latitude"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/hayvanlarimFragment"
