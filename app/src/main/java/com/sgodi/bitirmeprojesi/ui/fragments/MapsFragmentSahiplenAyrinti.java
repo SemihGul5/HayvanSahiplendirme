@@ -20,14 +20,18 @@ import com.sgodi.bitirmeprojesi.databinding.FragmentMapsSahiplenAyrintiBinding;
 
 public class MapsFragmentSahiplenAyrinti extends Fragment {
     private FragmentMapsSahiplenAyrintiBinding binding;
+    private String enlem, boylam;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng location = new LatLng(Double.parseDouble(enlem), Double.parseDouble(boylam));
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(location)
+                    .title("Hayvanının Konumu");
+            googleMap.addMarker(markerOptions);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
         }
     };
 
@@ -40,7 +44,11 @@ public class MapsFragmentSahiplenAyrinti extends Fragment {
 
 
 
-
+        // Gelen verileri al
+        if (getArguments() != null) {
+            enlem = MapsFragmentHayvanimAyrintiArgs.fromBundle(getArguments()).getEnlem();
+            boylam = MapsFragmentHayvanimAyrintiArgs.fromBundle(getArguments()).getBoylam();
+        }
 
         return binding.getRoot();
 

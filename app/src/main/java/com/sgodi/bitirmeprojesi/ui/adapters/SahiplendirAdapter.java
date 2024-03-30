@@ -41,7 +41,13 @@ public class SahiplendirAdapter extends RecyclerView.Adapter<SahiplendirAdapter.
         Picasso.get().load(hayvan.getFoto()).resize(150,150)
                 .into(holder.binding.imageViewHayvanimFoto);
         holder.binding.textViewHayvanimAd.setText(hayvan.getAd());
-        holder.binding.textViewHayvanimCinsiyet.setText(hayvan.getCinsiyet());
+        holder.binding.textViewHayvanimKonum.setText(hayvan.getSehir()+" / "+hayvan.getIlce());
+        if (hayvan.getCinsiyet().equals("Erkek")){
+            holder.binding.imageViewCinsiyet.setImageResource(R.drawable.mars);
+        }else{
+            holder.binding.imageViewCinsiyet.setImageResource(R.drawable.femenine);
+        }
+
 
         // hayvan kart tasarımına tıklandığında
         holder.binding.sahiplendirCard.setOnClickListener(view -> {

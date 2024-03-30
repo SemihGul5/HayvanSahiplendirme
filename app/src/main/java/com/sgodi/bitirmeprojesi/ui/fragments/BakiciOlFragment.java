@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,6 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.databinding.FragmentBakiciOlBinding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -71,10 +73,11 @@ public class BakiciOlFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = firebaseStorage.getReference();// görseli depoda nereye kaydediceğimizi gösteren bir değişken
-
+        sehirBaslat();
         binding.editTextBakiciAd.setEnabled(false);
         binding.editTextBakiciSoyad.setEnabled(false);
         binding.editTextBakiciKisilik.setEnabled(false);
+        binding.editTextBakiciTel.setEnabled(false);
         getBilgiler(firebaseFirestore);
 
         binding.buttonBakiciOl.setOnClickListener(view -> {
@@ -103,22 +106,110 @@ public class BakiciOlFragment extends Fragment {
                                     String ad = (String) data.get("ad");
                                     String soyad = (String) data.get("soyad");
                                     String kisilik=(String) data.get("kişilik");
+                                    String tel=(String) data.get("tel");
                                     binding.editTextBakiciAd.setText(ad);
                                     binding.editTextBakiciSoyad.setText(soyad);
                                     binding.editTextBakiciKisilik.setText(kisilik);
-
+                                    binding.editTextBakiciTel.setText(tel);
                                 }
                             }
                         }
                     });
 
     }
+    private void sehirBaslat(){
+        ArrayList<String> sehirler=new ArrayList<>();
+        sehirler.add("Adana");
+        sehirler.add("Adıyaman");
+        sehirler.add("Afyonkarahisar");
+        sehirler.add("Ağrı");
+        sehirler.add("Amasya");
+        sehirler.add("Ankara");
+        sehirler.add("Antalya");
+        sehirler.add("Artvin");
+        sehirler.add("Aydın");
+        sehirler.add("Balıkesir");
+        sehirler.add("Bilecik");
+        sehirler.add("Bingöl");
+        sehirler.add("Bitlis");
+        sehirler.add("Bolu");
+        sehirler.add("Burdur");
+        sehirler.add("Bursa");
+        sehirler.add("Çanakkale");
+        sehirler.add("Çankırı");
+        sehirler.add("Çorum");
+        sehirler.add("Denizli");
+        sehirler.add("Diyarbakır");
+        sehirler.add("Edirne");
+        sehirler.add("Elazığ");
+        sehirler.add("Erzincan");
+        sehirler.add("Erzurum");
+        sehirler.add("Eskişehir");
+        sehirler.add("Gaziantep");
+        sehirler.add("Giresun");
+        sehirler.add("Gümüşhane");
+        sehirler.add("Hakkari");
+        sehirler.add("Hatay");
+        sehirler.add("Isparta");
+        sehirler.add("Mersin");
+        sehirler.add("İstanbul");
+        sehirler.add("İzmir");
+        sehirler.add("Kars");
+        sehirler.add("Kastamonu");
+        sehirler.add("Kayseri");
+        sehirler.add("Kırklareli");
+        sehirler.add("Kırşehir");
+        sehirler.add("Kocaeli");
+        sehirler.add("Konya");
+        sehirler.add("Kütahya");
+        sehirler.add("Malatya");
+        sehirler.add("Manisa");
+        sehirler.add("Kahramanmaraş");
+        sehirler.add("Mardin");
+        sehirler.add("Muğla");
+        sehirler.add("Muş");
+        sehirler.add("Nevşehir");
+        sehirler.add("Niğde");
+        sehirler.add("Ordu");
+        sehirler.add("Rize");
+        sehirler.add("Sakarya");
+        sehirler.add("Samsun");
+        sehirler.add("Siirt");
+        sehirler.add("Sinop");
+        sehirler.add("Sivas");
+        sehirler.add("Tekirdağ");
+        sehirler.add("Tokat");
+        sehirler.add("Trabzon");
+        sehirler.add("Tunceli");
+        sehirler.add("Şanlıurfa");
+        sehirler.add("Uşak");
+        sehirler.add("Van");
+        sehirler.add("Yozgat");
+        sehirler.add("Zonguldak");
+        sehirler.add("Aksaray");
+        sehirler.add("Bayburt");
+        sehirler.add("Karaman");
+        sehirler.add("Kırıkkale");
+        sehirler.add("Batman");
+        sehirler.add("Şırnak");
+        sehirler.add("Bartın");
+        sehirler.add("Ardahan");
+        sehirler.add("Iğdır");
+        sehirler.add("Yalova");
+        sehirler.add("Karabük");
+        sehirler.add("Kilis");
+        sehirler.add("Osmaniye");
+        sehirler.add("Düzce");
 
+
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,sehirler);
+        binding.autoCompleteTextViewSehir.setAdapter(arrayAdapter);
+    }
     private void bakici_kaydet(View view) {
         if (imageData == null || binding.editTextBakiciAd.getText().toString().isEmpty()
                 || binding.editTextBakiciSoyad.getText().toString().isEmpty()
                 || binding.editTextBakiciKisilik.getText().toString().isEmpty()
-                || binding.editTextBakiciKonum.getText().toString().isEmpty()
+                || binding.autoCompleteTextViewSehir.getText().toString().isEmpty()
                 || binding.radioGroupBakiciCinsiyet.getCheckedRadioButtonId() == -1
                 || binding.editTextBakiciTel.getText().toString().isEmpty()
                 || binding.editTextBakiciAciklama.getText().toString().isEmpty()) {
@@ -143,7 +234,7 @@ public class BakiciOlFragment extends Fragment {
                     String ad = binding.editTextBakiciAd.getText().toString();
                     String soyad = binding.editTextBakiciSoyad.getText().toString();
                     String kisilik = binding.editTextBakiciKisilik.getText().toString();
-                    String konum= binding.editTextBakiciKonum.getText().toString();
+                    String konum= binding.autoCompleteTextViewSehir.getText().toString();
                     String tel = binding.editTextBakiciTel.getText().toString();
                     String aciklama = binding.editTextBakiciAciklama.getText().toString();
                     String cinsiyet="";
@@ -160,7 +251,7 @@ public class BakiciOlFragment extends Fragment {
                     postData.put("foto", foto);
                     postData.put("ad", ad);
                     postData.put("soyad", soyad);
-                    postData.put("kişilik", kisilik);
+                    postData.put("kisilik", kisilik);
                     postData.put("konum", konum);
                     postData.put("tel", tel);
                     postData.put("aciklama", aciklama);
@@ -304,7 +395,7 @@ public class BakiciOlFragment extends Fragment {
         binding.editTextBakiciAd.setText("");
         binding.editTextBakiciSoyad.setText("");
         binding.editTextBakiciKisilik.setText("");
-        binding.editTextBakiciKonum.setText("");
+        binding.autoCompleteTextViewSehir.setText("");
         binding.editTextBakiciTel.setText("");
         binding.editTextBakiciAciklama.setText("");
     }

@@ -7,9 +7,16 @@
         <item name="colorPrimary">@color/yesil</item>
         <item name="colorPrimaryVariant">@color/yesil</item>
         <item name="colorSecondaryContainer">#79D1D0D0</item>
+
+
+
     </style>
 
     <style name="Theme.BitirmeProjesi" parent="Base.Theme.BitirmeProjesi" />
+
+
+
+
 </resources>
 
 

@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.SahiplendirAyrintiFragment">
+    tools:context=".ui.fragments.SahiplendirAyrintiFragment"
+    tools:menu="@menu/sahiplen_ayrinti_menu">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        >
+        android:background="@color/white">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialToolbarSahiplendirAyrinti"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:outlineSpotShadowColor="@color/white"
             android:background="?attr/colorPrimary"
             android:fontFamily="@font/roboto"
-            app:titleTextColor="@color/white"
+
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/sahiplen_ayrinti_menu"
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
         <LinearLayout
             android:id="@+id/linearLayout5"
@@ -273,7 +277,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout13"
+            android:id="@+id/linearLayout15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -285,19 +289,83 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
 
             <TextView
+                android:id="@+id/text8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text="ŞEHİR"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteY="102dp" />
+
+            <TextView
+                android:id="@+id/hayvan_ayrinti_Sehir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text=""
+                android:textAlignment="viewEnd"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15">
+
+            <TextView
                 android:id="@+id/hayvan_ayrinti_HAKKINDA"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto"
                 android:text="HAKKINDA"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 tools:layout_editor_absoluteY="102dp" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout13">
+
+            <TextView
+                android:id="@+id/hayvan_ayrinti_konum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text="KONUM"
+                android:textAlignment="center"
+                android:textColor="@color/mavi"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteY="102dp" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imageViewHayvanimAyrinti"

@@ -46,7 +46,7 @@ public class HayvanimAdapter extends RecyclerView.Adapter<HayvanimAdapter.Hayvan
         Picasso.get().load(hayvan.getFoto()).resize(150,150)
                 .into(holder.binding.imageViewHayvanimFoto);
         holder.binding.textViewHayvanimAd.setText(hayvan.getAd());
-        holder.binding.textViewHayvanimCinsiyet.setText(hayvan.getCinsiyet());
+        holder.binding.textViewHayvanimKonum.setText(hayvan.getSehir()+" / "+hayvan.getIlce());
 
         // hayvan kart tasarımına tıklandığında
         holder.binding.hayvanimCard.setOnClickListener(view -> {

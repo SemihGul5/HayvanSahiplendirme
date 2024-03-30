@@ -43,6 +43,7 @@ public class HayvanimAyrintiFragment extends Fragment {
         binding.toolbarAyrinti.setTitle("Ayrıntılar");
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
+        binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
         // hayvan kartına tıklandığında gelen bilgileri alınması - hayvanim adapterdan
         HayvanimAyrintiFragmentArgs bundle=HayvanimAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan= bundle.getHayvan();
@@ -64,12 +65,14 @@ public class HayvanimAyrintiFragment extends Fragment {
         String ilandaMi=hayvan.getIlandaMi();
         if(sahipliMi.equals("true")){
             binding.buttonSahiplenmeIslemi.setText("ARTIK SAHİBİM VAR");
+            binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
             binding.buttonSahiplenmeIslemi.setEnabled(false);
         }else{
             if(ilandaMi.equals("false")){
                 binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİR");
             }else{
                 binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİ");
+                binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.VISIBLE);
             }
         }
 
@@ -81,6 +84,7 @@ public class HayvanimAyrintiFragment extends Fragment {
                 ilanGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"true");
                 //ilanGuncelle("kullanici_hayvanlari_sahiplendir",firestore,auth,hayvan,"true");
                 binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİ");
+                binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Artık sahiplendir sayfasında bulabilirsiniz.", Toast.LENGTH_SHORT).show();
 
             } else if (buttonText.equals("SAHİPLENDİ")) {
@@ -91,10 +95,17 @@ public class HayvanimAyrintiFragment extends Fragment {
                 ilanGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"false");
                 //ilanGuncelle("kullanici_hayvanlari_sahiplendir",firestore,auth,hayvan,"false");
                 binding.buttonSahiplenmeIslemi.setText("ARTIK SAHİBİM VAR");
+                binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
                 binding.buttonSahiplenmeIslemi.setEnabled(false);
             }
         });
 
+        binding.buttonSahiplenmeIslemiGeriAl.setOnClickListener(view -> {
+            ilanGuncelle("kullanici_hayvanlari",firestore,auth,hayvan,"false");
+            Toast.makeText(getContext(), "Sahiplendir sayfasından kaldırıldı", Toast.LENGTH_SHORT).show();
+            binding.buttonSahiplenmeIslemi.setText("SAHİPLENDİR");
+            binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
+        });
 
         //hayvan konumunu aç
         binding.hayvanAyrintiKonum.setOnClickListener(view -> {
