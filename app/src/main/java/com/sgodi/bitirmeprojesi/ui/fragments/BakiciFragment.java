@@ -44,7 +44,6 @@ public class BakiciFragment extends Fragment {
     private FirebaseAuth auth;
     ArrayList<Bakici> bakiciList;
     BakiciAdapter adapter;
-    ArrayAdapter<String> sehirAdapter;
     String secilenSehir="",secilenCinsiyet="";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -224,7 +223,29 @@ public class BakiciFragment extends Fragment {
     }
 
 
-
+    private void getKullaniciKisilik(FirebaseFirestore firestore, FirebaseAuth auth, SahiplenFragment.KisilikCallback callback) {
+        String currentUserEmail = auth.getCurrentUser().getEmail();
+        firestore.collection("bakici").whereEqualTo("email", currentUserEmail)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (value != null) {
+                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                Map<String, Object> data = documentSnapshot.getData();
+                                String kisilik = (String) data.get("kisilik");
+                                callback.onKisilikReceived(kisilik);
+                            }
+                        }
+                    }
+                });
+    }
+    public interface KisilikCallback {
+        void onKisilikReceived(String kisilikValue);
+    }
     private void sehirBaslat(ListView listView){
         ArrayList<String> sehirler=new ArrayList<>();
         sehirler.add("Adana");
@@ -314,143 +335,147 @@ public class BakiciFragment extends Fragment {
         listView.setAdapter(arrayAdapter);
     }
     private void getData(@Nullable String sehir,@Nullable String cinsiyet) {
-        if (sehir.equals("")&&cinsiyet.equals("")){
-            db.collection("bakici")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            bakiciList.clear();
+        getKullaniciKisilik(db, auth, new SahiplenFragment.KisilikCallback() {
+            @Override
+            public void onKisilikReceived(String kisilikValue) {
+                if (sehir.equals("")&&cinsiyet.equals("")){
+                    db.collection("bakici").whereEqualTo("kisilik",kisilikValue)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
 
-                            if (value != null) {
-                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                    Map<String, Object> data = documentSnapshot.getData();
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
 
-                                    String email = (String) data.get("email");
-                                    String aciklama = (String) data.get("aciklama");
-                                    String ad = (String) data.get("ad");
-                                    String cinsiyet = (String) data.get("cinsiyet");
-                                    String foto=(String) data.get("foto");
-                                    String kisilik = (String) data.get("kisilik");
-                                    String konum = (String) data.get("konum");
-                                    String soyad = (String) data.get("soyad");
-                                    String tel = (String) data.get("tel");
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
 
-                                    Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
-                                    bakiciList.add(bakici);
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
+                            });
 
-        } else if (sehir.equals("")) {
-            db.collection("bakici").whereEqualTo("cinsiyet",cinsiyet)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            bakiciList.clear();
+                } else if (sehir.equals("")) {
+                    db.collection("bakici").whereEqualTo("cinsiyet",cinsiyet).whereEqualTo("kisilik",kisilikValue)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
 
-                            if (value != null) {
-                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                    Map<String, Object> data = documentSnapshot.getData();
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
 
-                                    String email = (String) data.get("email");
-                                    String aciklama = (String) data.get("aciklama");
-                                    String ad = (String) data.get("ad");
-                                    String cinsiyet = (String) data.get("cinsiyet");
-                                    String foto=(String) data.get("foto");
-                                    String kisilik = (String) data.get("kisilik");
-                                    String konum = (String) data.get("konum");
-                                    String soyad = (String) data.get("soyad");
-                                    String tel = (String) data.get("tel");
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
 
-                                    Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
-                                    bakiciList.add(bakici);
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
+                            });
 
-        } else if (cinsiyet.equals("")) {
-            db.collection("bakici").whereEqualTo("konum",sehir)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            bakiciList.clear();
+                } else if (cinsiyet.equals("")) {
+                    db.collection("bakici").whereEqualTo("konum",sehir).whereEqualTo("kisilik",kisilikValue)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
 
-                            if (value != null) {
-                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                    Map<String, Object> data = documentSnapshot.getData();
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
 
-                                    String email = (String) data.get("email");
-                                    String aciklama = (String) data.get("aciklama");
-                                    String ad = (String) data.get("ad");
-                                    String cinsiyet = (String) data.get("cinsiyet");
-                                    String foto=(String) data.get("foto");
-                                    String kisilik = (String) data.get("kisilik");
-                                    String konum = (String) data.get("konum");
-                                    String soyad = (String) data.get("soyad");
-                                    String tel = (String) data.get("tel");
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
 
-                                    Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
-                                    bakiciList.add(bakici);
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
+                            });
 
-        }else {
-            db.collection("bakici").whereEqualTo("konum",sehir).whereEqualTo("cinsiyet",cinsiyet)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            bakiciList.clear();
+                }else {
+                    db.collection("bakici").whereEqualTo("konum",sehir).whereEqualTo("cinsiyet",cinsiyet)
+                            .whereEqualTo("kisilik",kisilikValue)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
 
-                            if (value != null) {
-                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                    Map<String, Object> data = documentSnapshot.getData();
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
 
-                                    String email = (String) data.get("email");
-                                    String aciklama = (String) data.get("aciklama");
-                                    String ad = (String) data.get("ad");
-                                    String cinsiyet = (String) data.get("cinsiyet");
-                                    String foto=(String) data.get("foto");
-                                    String kisilik = (String) data.get("kisilik");
-                                    String konum = (String) data.get("konum");
-                                    String soyad = (String) data.get("soyad");
-                                    String tel = (String) data.get("tel");
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
 
-                                    Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
-                                    bakiciList.add(bakici);
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
-        }
-
-
+                            });
+                }
+            }
+        });
     }
 }

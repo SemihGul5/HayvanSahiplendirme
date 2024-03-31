@@ -12,14 +12,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@color/white"
         android:fontFamily="@font/roboto"
+        android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:titleTextColor="@color/white" />
 
 
 
@@ -32,5 +31,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbarSahiplen" />
+
+    <ImageView
+        android:id="@+id/imageViewsahiplenfiltre"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/baseline_filter_list_alt_24"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarSahiplen"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarSahiplen"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarSahiplen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
