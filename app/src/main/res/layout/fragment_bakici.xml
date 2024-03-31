@@ -13,8 +13,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/yesil"
-        android:minHeight="?attr/actionBarSize"
         android:fontFamily="@font/roboto"
+        android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,5 +47,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+    <ImageView
+        android:id="@+id/imageViewBakiciFiltre"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar2"
+        app:layout_constraintTop_toTopOf="@+id/toolbar2"
+        app:srcCompat="@drawable/baseline_filter_list_alt_24"
+        tools:src="@tools:sample/avatars"
+        tools:srcCompat="@drawable/baseline_filter_list_alt_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
