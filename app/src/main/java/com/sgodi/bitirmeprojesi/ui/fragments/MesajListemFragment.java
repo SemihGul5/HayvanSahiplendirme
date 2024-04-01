@@ -9,24 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanSahiplendirBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentMesajListemBinding;
 
 
-public class HayvanSahiplendirFragment extends Fragment {
-    private FragmentHayvanSahiplendirBinding binding;
+public class MesajListemFragment extends Fragment {
+    private FragmentMesajListemBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentHayvanSahiplendirBinding.inflate(inflater, container, false);
-
-
-
-
-
-
-
+        binding=FragmentMesajListemBinding.inflate(inflater, container, false);
 
 
 

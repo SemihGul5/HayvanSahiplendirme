@@ -7,6 +7,10 @@
         <item name="colorPrimary">@color/yesil</item>
         <item name="colorPrimaryVariant">@color/yesil</item>
         <item name="colorSecondaryContainer">#79D1D0D0</item>
+        <item name="actionOverflowButtonStyle">@style/optColor</item>
+        <item name="android:actionOverflowMenuStyle">@style/AcikOverflowMenuStyle</item>
+
+
 
 
 
@@ -15,7 +19,14 @@
     <style name="Theme.BitirmeProjesi" parent="Base.Theme.BitirmeProjesi" />
 
 
-
+    <style name="optColor" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="tint">@color/white</item>
+    </style>
+    <style name="AcikOverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <!-- Taşma menüsü için özelleştirmeler -->
+        <item name="android:popupBackground">@drawable/beyaz_overflow_menu_background</item>
+        <!-- Diğer özellikler -->
+    </style>
 
 </resources>
 

@@ -98,6 +98,10 @@ public class SahiplendirAyrintiFragment extends Fragment {
         });
 
 
+        binding.buttonMesaj.setOnClickListener(view -> {
+            //mesaj sayfasına git
+        });
+
 
 
 

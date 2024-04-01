@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/sahiplen_ayrinti_menu"
         app:titleTextColor="@color/white" />
 
     <ImageView
@@ -241,6 +242,40 @@
             android:textColor="@color/black"
             android:textSize="15sp" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutb11">
+
+        <Button
+            android:id="@+id/buttonAra"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ara"
+            android:layout_margin="8dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto" />
+
+        <Button
+            android:id="@+id/buttonMesaj"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:text="Mesaj Gönder"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto" />
+    </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

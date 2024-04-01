@@ -49,6 +49,7 @@ public class AyarlarFragment extends Fragment {
         ayarlarListesi=new ArrayList<>();
         ayarlarListesi.add("Profilim");
         ayarlarListesi.add("Kişilik Testi");
+        ayarlarListesi.add("Mesajlar");
         ayarlarListesi.add("Bakıcı İlanımı kaldır");
         ayarlarListesi.add("Paylaş");
         ayarlarListesi.add("Bize Ulaşın");
@@ -116,6 +117,9 @@ public class AyarlarFragment extends Fragment {
                 }
             });
             alert.show();
+
+        } else if (secilen.equals("Mesajlar")) {
+
 
         } else{
             Toast.makeText(getContext(), "Hata", Toast.LENGTH_SHORT).show();
