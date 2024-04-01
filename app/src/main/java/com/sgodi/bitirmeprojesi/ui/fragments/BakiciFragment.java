@@ -225,7 +225,7 @@ public class BakiciFragment extends Fragment {
 
     private void getKullaniciKisilik(FirebaseFirestore firestore, FirebaseAuth auth, SahiplenFragment.KisilikCallback callback) {
         String currentUserEmail = auth.getCurrentUser().getEmail();
-        firestore.collection("bakici").whereEqualTo("email", currentUserEmail)
+        firestore.collection("kullanicilar").whereEqualTo("email", currentUserEmail)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -236,7 +236,7 @@ public class BakiciFragment extends Fragment {
                         if (value != null) {
                             for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
                                 Map<String, Object> data = documentSnapshot.getData();
-                                String kisilik = (String) data.get("kisilik");
+                                String kisilik = (String) data.get("kişilik");
                                 callback.onKisilikReceived(kisilik);
                             }
                         }

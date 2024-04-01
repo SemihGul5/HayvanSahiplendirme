@@ -61,7 +61,9 @@ public class BakiciAyrintiFragment extends Fragment {
         });
 
         binding.buttonMesaj.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.action_bakiciAyrintiFragment_to_mesajFragment);
+            BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=
+                    BakiciAyrintiFragmentDirections.actionBakiciAyrintiFragmentToMesajFragment(bakici);
+            Navigation.findNavController(view).navigate(gecis);
 
         });
 

@@ -10,7 +10,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/sahiplendir_card"
+        android:id="@+id/sahiplendirCard"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_margin="5dp"
@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textViewAliciAdSoyad"
+                android:id="@+id/textViewHayvanimAd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -31,7 +31,7 @@
                 android:fontFamily="@font/roboto"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/textViewSonGonderilenMesaj"
+                app:layout_constraintBottom_toTopOf="@+id/textViewHayvanimKonum"
                 app:layout_constraintStart_toEndOf="@+id/imageViewHayvanimFoto"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +47,7 @@
                 app:srcCompat="@drawable/pets" />
 
             <TextView
-                android:id="@+id/textViewSonGonderilenMesaj"
+                android:id="@+id/textViewHayvanimKonum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -57,7 +57,7 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageViewHayvanimFoto"
-                app:layout_constraintTop_toBottomOf="@+id/textViewAliciAdSoyad" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewHayvanimAd" />
 
             <TextView
                 android:id="@+id/textViewSahiplendiMi"

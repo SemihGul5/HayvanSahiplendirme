@@ -194,5 +194,9 @@
         android:id="@+id/mesajFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.MesajFragment"
         android:label="fragment_mesaj"
-        tools:layout="@layout/fragment_mesaj" />
+        tools:layout="@layout/fragment_mesaj" >
+        <argument
+            android:name="bakici"
+            app:argType="com.sgodi.bitirmeprojesi.data.models.Bakici" />
+    </fragment>
 </navigation>
