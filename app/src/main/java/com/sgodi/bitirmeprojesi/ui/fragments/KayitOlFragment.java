@@ -127,7 +127,7 @@ public class KayitOlFragment extends Fragment {
         data.put("kişilik","null");
         data.put("konum","null");
         data.put("aciklama","null");
-        data.put("kisilik_durum","false");
+        data.put("kisilik_durum","true");
         data.put("bakici_durum","false");
 
         firestore.collection("kullanicilar").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

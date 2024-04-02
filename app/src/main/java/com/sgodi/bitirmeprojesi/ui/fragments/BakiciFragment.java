@@ -113,15 +113,15 @@ public class BakiciFragment extends Fragment {
 
         try {
             String kisilik = (String) data.get("kişilik");
-            String kisilik_durum = (String) data.get("kisilik_durum");
+            //String kisilik_durum = (String) data.get("kisilik_durum");
             String bakici_durum=(String) data.get("bakici_durum");
             String tel=(String) data.get("tel");
             // kisilik_durum'un null olabileceğini kontrol et
-            if (kisilik_durum != null&&bakici_durum!=null) {
+            if (kisilik != null&&bakici_durum!=null) {
                     if (bakici_durum.equals("true")){
                         Snackbar.make(view, "Zaten bakıcı ilanınız var, kaldırmak istiyorsanız ayarlara gidiniz.", Snackbar.LENGTH_LONG).show();
                     }else{
-                        if ("false".equals(kisilik_durum)) {
+                        if ("null".equals(kisilik)) {
                             Snackbar.make(view, "Lütfen kişilik testini yapınız.", Snackbar.LENGTH_LONG).show();
                         } else {
                             if ("Duyarlılık".equals(kisilik)) {

@@ -11,7 +11,7 @@
         android:id="@+id/cardMesajlarLsitesi"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         app:cardCornerRadius="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,13 +36,13 @@
                 android:id="@+id/textViewSonGonderilenMesaj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="TextView"
                 android:fontFamily="@font/roboto"
-                android:textSize="14sp"
+                android:text="TextView"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/textViewAliciAdSoyad"
-                app:layout_constraintStart_toStartOf="@+id/textViewAliciAdSoyad"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewAliciAdSoyad" />
 
             <ImageView

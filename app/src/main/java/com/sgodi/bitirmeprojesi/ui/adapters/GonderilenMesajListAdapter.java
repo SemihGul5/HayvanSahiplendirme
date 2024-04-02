@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
 import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.MesajlarimListesiBinding;
+import com.sgodi.bitirmeprojesi.ui.fragments.MesajListemFragment;
+import com.sgodi.bitirmeprojesi.ui.fragments.MesajListemFragmentDirections;
 
 import java.util.List;
 
@@ -46,6 +49,9 @@ public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenM
 
         holder.binding.cardMesajlarLsitesi.setOnClickListener(view -> {
             //o konuşmayı aç
+            MesajListemFragmentDirections.ActionMesajListemFragmentToMesajFragment gecis=
+                    MesajListemFragmentDirections.actionMesajListemFragmentToMesajFragment(bakici);
+            Navigation.findNavController(view).navigate(gecis);
         });
     }
 

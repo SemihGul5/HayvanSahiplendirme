@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,7 +65,7 @@ public class KisilikTestFragment extends Fragment {
             public void onKisilikReceived(String kisilikValue) {
                 if (!kisilikValue.equals("null")) {
                     binding.kisilikTestButton.setEnabled(false);
-                    binding.anketDurumText.setTextColor(getResources().getColor(R.color.yesil));
+                    binding.anketDurumText.setTextColor(ContextCompat.getColor(requireContext(), R.color.yesil));
                     binding.anketDurumText.setText("Kişilik durum testi tamamlandı : " + kisilikValue+" : "+getKisilikAciklama(kisilikValue,kisilikValue));
                     kisilikGuncelle(firestore,auth,"true");
                 } else {
@@ -172,7 +173,8 @@ public class KisilikTestFragment extends Fragment {
 
                             // TextView'da gösterme işlemi burada gerçekleştirilebilir
                             binding.anketDurumText.setText(highestProbabilityTrait+" : "+getKisilikAciklama(highestProbabilityTrait,highestProbabilityTrait));
-                            binding.anketDurumText.setTextColor(getResources().getColor(R.color.yesil));
+                            binding.anketDurumText.setTextColor(ContextCompat.getColor(requireContext(), R.color.yesil));
+
                             kisilikDurumGuncelle(highestProbabilityTrait,firestore);
                             binding.kisilikTestButton.setEnabled(false);
                             Toast.makeText(getContext(), "Kişilik analizi tamamlandı", Toast.LENGTH_SHORT).show();

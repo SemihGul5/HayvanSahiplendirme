@@ -119,6 +119,7 @@ public class AyarlarFragment extends Fragment {
             alert.show();
 
         } else if (secilen.equals("Mesajlar")) {
+            Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mesajListemFragment);
 
 
         } else{

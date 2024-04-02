@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,8 +33,10 @@ import com.sgodi.bitirmeprojesi.databinding.FragmentMesajBinding;
 import com.sgodi.bitirmeprojesi.ui.adapters.MesajAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class MesajFragment extends Fragment {
@@ -42,8 +45,9 @@ public class MesajFragment extends Fragment {
     FirebaseFirestore firestore;
     String gonderen_ad;
     ArrayList<Mesaj> mesajArrayList;
-    MesajAdapter adapter;
-
+    MesajAdapter mAdapter;
+    Bakici bakici;
+    boolean isAtBottom=false;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -58,12 +62,12 @@ public class MesajFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         mesajArrayList=new ArrayList<>();
-        binding.recyclerViewKisiselMesaj.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter=new MesajAdapter(getContext(),mesajArrayList,auth.getCurrentUser().getEmail());
-        binding.recyclerViewKisiselMesaj.setAdapter(adapter);
-
+        //binding.recyclerViewKisiselMesaj.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,true));
+        //adapter=new MesajAdapter(getContext(),mesajArrayList,auth.getCurrentUser().getEmail());
+        //binding.recyclerViewKisiselMesaj.setAdapter(adapter);
+        initRecyclerView();
         MesajFragmentArgs bundle=MesajFragmentArgs.fromBundle(getArguments());
-        Bakici bakici= bundle.getBakici();
+        bakici= bundle.getBakici();
 
         String alici_ad= bakici.getAd()+" "+bakici.getSoyad();
         String alici_email=bakici.getEmail();
@@ -93,6 +97,16 @@ public class MesajFragment extends Fragment {
             gonder.put("okunduMu",okunduMu);
             gonder.put("tarih", FieldValue.serverTimestamp());
 
+            Calendar calendar = Calendar.getInstance();
+            int saat = calendar.get(Calendar.HOUR_OF_DAY);
+            int dakika = calendar.get(Calendar.MINUTE);
+
+            // Saati ve dakikayı string formatına dönüştür
+            String zaman = String.format(Locale.getDefault(), "%02d:%02d", saat, dakika);
+
+            // Saat ve dakikayı HashMap'e ekle
+            gonder.put("saat", zaman);
+
             firestore.collection("mesaj").add(gonder).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
@@ -119,9 +133,53 @@ public class MesajFragment extends Fragment {
 
         return binding.getRoot();
     }
+    private void initRecyclerView() {
+        mAdapter = new MesajAdapter(getContext(),mesajArrayList,auth.getCurrentUser().getEmail());
+        binding.recyclerViewKisiselMesaj.setAdapter(mAdapter);
 
+        //Creates layout manager and makes it feed new RecyclerView views from the bottom
+
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setStackFromEnd(true);
+
+        //Makes RecyclerView scroll to bottom when notifyItemInserted is called from adapter and RecyclerView is already at bottom
+
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+
+
+                if (isAtBottom) {
+                    binding.recyclerViewKisiselMesaj.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                }
+            }
+        };
+
+        //Adds logic to see if RecyclerView is at bottom or not
+
+        binding.recyclerViewKisiselMesaj.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    isAtBottom = true;
+                } else {
+                    isAtBottom = false;
+                }
+            }
+        });
+
+        //Assigns observer to adapter and LayoutManager to RecyclerView
+
+        mAdapter.registerAdapterDataObserver(observer);
+        binding.recyclerViewKisiselMesaj.setLayoutManager(linearLayoutManager);
+
+    }
     private void getData(Bakici bakici) {
-        firestore.collection("mesaj").whereEqualTo("alici_email",bakici.getEmail())
+        firestore.collection("mesaj")
                 .orderBy("tarih", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -134,22 +192,30 @@ public class MesajFragment extends Fragment {
                                     Toast.makeText(getContext(), "Mesaj Yok", Toast.LENGTH_SHORT).show();
                                 } else {
                                     mesajArrayList.clear();
+
+
                                     for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
                                         Map<String, Object> data = documentSnapshot.getData();
-
-                                        String alici_ad = (String) data.get("alici_ad");
                                         String alici_email = (String) data.get("alici_email");
-                                        String gonderen_ad = (String) data.get("gonderen_ad");
                                         String gonderen_email = (String) data.get("gonderen_email");
-                                        String mesaj = (String) data.get("mesaj");
-                                        String okunduMu = (String) data.get("okunduMu");
+                                        String email=auth.getCurrentUser().getEmail();
 
-                                        Mesaj mesaj1=new Mesaj(alici_ad,alici_email,gonderen_ad,gonderen_email,mesaj,okunduMu);
-                                        mesajArrayList.add(mesaj1);
+                                        if (gonderen_email.equals(bakici.getEmail()) && alici_email.equals(email)
+                                                ||gonderen_email.equals(email)&&alici_email.equals(bakici.getEmail())){
+                                            String alici_ad = (String) data.get("alici_ad");
+                                            String gonderen_ad = (String) data.get("gonderen_ad");
+                                            String mesaj = (String) data.get("mesaj");
+                                            String okunduMu = (String) data.get("okunduMu");
+                                            String saat = (String) data.get("saat");
 
+                                            Mesaj mesaj1=new Mesaj(alici_ad,alici_email,gonderen_ad,gonderen_email,mesaj,okunduMu,saat);
+                                            mesajArrayList.add(mesaj1);
+                                        }
 
                                     }
-                                    adapter.notifyDataSetChanged();
+                                    mAdapter.notifyDataSetChanged();
+                                    binding.recyclerViewKisiselMesaj.scrollToPosition(mesajArrayList.size() - 1);
+
                                 }
                             }
                         }
