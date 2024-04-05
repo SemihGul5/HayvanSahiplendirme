@@ -50,7 +50,7 @@ public class MesajListemFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         bakiciList=new ArrayList<>();
-        adapter=new GonderilenMesajListAdapter(getContext(),bakiciList);
+        adapter=new GonderilenMesajListAdapter(getContext(),bakiciList,firestore);
         binding.recyclerViewGelenMesajListesi.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewGelenMesajListesi.setAdapter(adapter);
 

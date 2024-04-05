@@ -343,8 +343,9 @@ public class EkleEvcilFragment extends Fragment{
                                     resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
 
                                     // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f) {
-                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf hayvan fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
+                                    i==4 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
                                         binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
                                         imageData=null;
                                     }

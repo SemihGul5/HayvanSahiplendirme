@@ -1,6 +1,7 @@
 package com.sgodi.bitirmeprojesi.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +10,31 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
 import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.MesajlarimListesiBinding;
 import com.sgodi.bitirmeprojesi.ui.fragments.MesajListemFragment;
 import com.sgodi.bitirmeprojesi.ui.fragments.MesajListemFragmentDirections;
 
+import java.util.Date;
 import java.util.List;
 
 public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenMesajListAdapter.GonderilenMesajListesiCardHolder> {
 
     private Context context;
     private List<Bakici> bakiciList;
+    private FirebaseFirestore firestore;
 
-    public GonderilenMesajListAdapter(Context context, List<Bakici> bakiciList) {
+    public GonderilenMesajListAdapter(Context context, List<Bakici> bakiciList,FirebaseFirestore firestore) {
         this.context = context;
         this.bakiciList = bakiciList;
+        this.firestore=firestore;
     }
     public void add(Bakici bakici){
         bakiciList.add(bakici);
@@ -43,9 +53,9 @@ public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenM
 
     @Override
     public void onBindViewHolder(@NonNull GonderilenMesajListesiCardHolder holder, int position) {
+        firestore=FirebaseFirestore.getInstance();
         Bakici bakici= bakiciList.get(position);
         holder.binding.textViewAliciAdSoyad.setText(bakici.getAd()+" "+bakici.getSoyad());
-        holder.binding.textViewSonGonderilenMesaj.setText(bakici.getKisilik());
 
         holder.binding.cardMesajlarLsitesi.setOnClickListener(view -> {
             //o konuşmayı aç
@@ -53,6 +63,8 @@ public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenM
                     MesajListemFragmentDirections.actionMesajListemFragmentToMesajFragment(bakici);
             Navigation.findNavController(view).navigate(gecis);
         });
+
+
     }
 
     @Override

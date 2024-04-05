@@ -48,6 +48,12 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.MesajHolder>
         holder.binding.textViewCardMesaj.setText(mesaj.getMesaj());
         holder.binding.textViewMesajSaati.setText(mesaj.getSaat());
 
+        if (mesaj.getOkunduMu().equals("true")){
+            holder.binding.imageViewOkunduMu.setImageResource(R.drawable.baseline_check_24);
+        }else{
+            holder.binding.imageViewOkunduMu.setImageResource(R.drawable.baseline_check_gri);
+        }
+
         // Mesajın gönderildiği tarafı belirle
         if (mesaj.getGonderen_email().equals(userEmail)) {
             // Mesaj kullanıcı tarafından gönderildiyse, sağa yasla ve arkaplan rengini ayarla

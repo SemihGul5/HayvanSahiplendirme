@@ -48,6 +48,7 @@ public class MesajFragment extends Fragment {
     MesajAdapter mAdapter;
     Bakici bakici;
     boolean isAtBottom=false;
+    String mesajId;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -55,19 +56,60 @@ public class MesajFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    // Tüm mesajları otomatik olarak okundu olarak işaretle
+    private void markAllMessagesAsRead(String mesajId) {
+        for (Mesaj mesaj : mesajArrayList) {
+            if (mesaj.getOkunduMu().equals("false")) {
+                firestore.collection("mesaj").document(mesajId)
+                        .update("okunduMu", "true")
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Mesaj başarıyla güncellendiğinde yapılacak işlemler
+                                Log.d("Mesaj", "Mesaj okundu olarak işaretlendi.");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Hata durumunda yapılacak işlemler
+                                Log.e("Mesaj", "Mesaj okundu olarak işaretlenirken hata oluştu: " + e.getMessage());
+                            }
+                        });
+            }
+        }
+    }
+
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentMesajBinding.inflate(inflater, container, false);
-        firestore=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
-        mesajArrayList=new ArrayList<>();
+
         //binding.recyclerViewKisiselMesaj.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,true));
         //adapter=new MesajAdapter(getContext(),mesajArrayList,auth.getCurrentUser().getEmail());
         //binding.recyclerViewKisiselMesaj.setAdapter(adapter);
-        initRecyclerView();
+        firestore=FirebaseFirestore.getInstance();
+        auth=FirebaseAuth.getInstance();
+        mesajArrayList=new ArrayList<>();
         MesajFragmentArgs bundle=MesajFragmentArgs.fromBundle(getArguments());
         bakici= bundle.getBakici();
+        binding.toolbarOzelMesaj.setTitle(bakici.getAd()+" "+bakici.getSoyad());
+
+        getData(bakici);
+        if (mesajId!=null){
+            markAllMessagesAsRead(mesajId);
+        }
+        initRecyclerView();
+
 
         String alici_ad= bakici.getAd()+" "+bakici.getSoyad();
         String alici_email=bakici.getEmail();
@@ -126,13 +168,14 @@ public class MesajFragment extends Fragment {
 
 
 
-        getData(bakici);
+
 
 
 
 
         return binding.getRoot();
     }
+
     private void initRecyclerView() {
         mAdapter = new MesajAdapter(getContext(),mesajArrayList,auth.getCurrentUser().getEmail());
         binding.recyclerViewKisiselMesaj.setAdapter(mAdapter);
@@ -207,8 +250,8 @@ public class MesajFragment extends Fragment {
                                             String mesaj = (String) data.get("mesaj");
                                             String okunduMu = (String) data.get("okunduMu");
                                             String saat = (String) data.get("saat");
-
-                                            Mesaj mesaj1=new Mesaj(alici_ad,alici_email,gonderen_ad,gonderen_email,mesaj,okunduMu,saat);
+                                            mesajId = documentSnapshot.getId();
+                                            Mesaj mesaj1=new Mesaj(alici_ad,alici_email,gonderen_ad,gonderen_email,mesaj,okunduMu,saat,mesajId);
                                             mesajArrayList.add(mesaj1);
                                         }
 

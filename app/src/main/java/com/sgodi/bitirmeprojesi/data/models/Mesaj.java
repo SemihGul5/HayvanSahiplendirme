@@ -8,12 +8,14 @@ public class Mesaj {
     private String mesaj;
     private String okunduMu;
     private String saat;
+    private String mesajId;
 
 
     public Mesaj() {
     }
 
-    public Mesaj(String alici_ad, String alici_email, String gonderen_ad, String gonderen_email, String mesaj, String okunduMu, String saat) {
+    public Mesaj(String alici_ad, String alici_email, String gonderen_ad, String gonderen_email, String mesaj, String okunduMu, String saat
+    ,String mesajId) {
         this.alici_ad = alici_ad;
         this.alici_email = alici_email;
         this.gonderen_ad = gonderen_ad;
@@ -21,7 +23,7 @@ public class Mesaj {
         this.mesaj = mesaj;
         this.okunduMu = okunduMu;
         this.saat=saat;
-
+        this.mesajId=mesajId;
     }
 
     public String getAlici_ad() {
@@ -78,5 +80,13 @@ public class Mesaj {
 
     public void setSaat(String saat) {
         this.saat = saat;
+    }
+
+    public String getMesajId() {
+        return mesajId;
+    }
+
+    public void setMesajId(String mesajId) {
+        this.mesajId = mesajId;
     }
 }
