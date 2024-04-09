@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +22,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
+import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.FragmentBakiciAyrintiBinding;
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +36,7 @@ import java.util.Map;
 
 public class BakiciAyrintiFragment extends Fragment {
     private FragmentBakiciAyrintiBinding binding;
+    FirebaseFirestore firestore;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,9 +66,37 @@ public class BakiciAyrintiFragment extends Fragment {
         });
 
         binding.buttonMesaj.setOnClickListener(view -> {
-            BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=
-                    BakiciAyrintiFragmentDirections.actionBakiciAyrintiFragmentToMesajFragment(bakici);
-            Navigation.findNavController(view).navigate(gecis);
+            firestore.collection("kullanicilar").whereEqualTo("email",bakici.getEmail())
+                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    String aciklama = documentSnapshot.getString("aciklama");
+                                    String ad = documentSnapshot.getString("ad");
+                                    String bakici_durum = documentSnapshot.getString("bakici_durum");
+                                    String email = documentSnapshot.getString("email");
+                                    String kisilik_durum = documentSnapshot.getString("kisilik_durum");
+                                    String kisilik = documentSnapshot.getString("kişilik");
+                                    String konum = documentSnapshot.getString("konum");
+                                    String soyad = documentSnapshot.getString("soyad");
+                                    String tel = documentSnapshot.getString("tel");
+                                    Kullanici bakici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum);
+                                    BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=
+                                            BakiciAyrintiFragmentDirections.actionBakiciAyrintiFragmentToMesajFragment(bakici);
+                                    Navigation.findNavController(view).navigate(gecis);
+                                }
+                            } else {
+                                // Belirtilen e-posta adresine sahip kullanıcı bulunamadı
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("Mesaj",e.getMessage());
+                        }
+                    });
+
 
         });
 

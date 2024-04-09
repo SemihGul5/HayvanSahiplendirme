@@ -28,15 +28,15 @@ import java.util.List;
 public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenMesajListAdapter.GonderilenMesajListesiCardHolder> {
 
     private Context context;
-    private List<Bakici> bakiciList;
+    private List<Kullanici> bakiciList;
     private FirebaseFirestore firestore;
 
-    public GonderilenMesajListAdapter(Context context, List<Bakici> bakiciList,FirebaseFirestore firestore) {
+    public GonderilenMesajListAdapter(Context context, List<Kullanici> bakiciList,FirebaseFirestore firestore) {
         this.context = context;
         this.bakiciList = bakiciList;
         this.firestore=firestore;
     }
-    public void add(Bakici bakici){
+    public void add(Kullanici bakici){
         bakiciList.add(bakici);
     }
     public void clear(){
@@ -54,7 +54,7 @@ public class GonderilenMesajListAdapter extends RecyclerView.Adapter<GonderilenM
     @Override
     public void onBindViewHolder(@NonNull GonderilenMesajListesiCardHolder holder, int position) {
         firestore=FirebaseFirestore.getInstance();
-        Bakici bakici= bakiciList.get(position);
+        Kullanici bakici= bakiciList.get(position);
         holder.binding.textViewAliciAdSoyad.setText(bakici.getAd()+" "+bakici.getSoyad());
 
         holder.binding.cardMesajlarLsitesi.setOnClickListener(view -> {

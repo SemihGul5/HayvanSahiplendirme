@@ -28,6 +28,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
+import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.data.models.Mesaj;
 import com.sgodi.bitirmeprojesi.databinding.FragmentMesajBinding;
 import com.sgodi.bitirmeprojesi.ui.adapters.MesajAdapter;
@@ -46,9 +47,9 @@ public class MesajFragment extends Fragment {
     String gonderen_ad;
     ArrayList<Mesaj> mesajArrayList;
     MesajAdapter mAdapter;
-    Bakici bakici;
+    Kullanici bakici;
     boolean isAtBottom=false;
-    String mesajId;
+    String mesajId,alici_ad,alici_email;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -101,18 +102,23 @@ public class MesajFragment extends Fragment {
         auth=FirebaseAuth.getInstance();
         mesajArrayList=new ArrayList<>();
         MesajFragmentArgs bundle=MesajFragmentArgs.fromBundle(getArguments());
-        bakici= bundle.getBakici();
-        binding.toolbarOzelMesaj.setTitle(bakici.getAd()+" "+bakici.getSoyad());
+        bakici= bundle.getKullanici();
 
-        getData(bakici);
-        if (mesajId!=null){
-            markAllMessagesAsRead(mesajId);
+        if (bakici!=null){
+            binding.toolbarOzelMesaj.setTitle(bakici.getAd()+" "+bakici.getSoyad());
+
+            getData(bakici);
+            if (mesajId!=null){
+                markAllMessagesAsRead(mesajId);
+            }
+            initRecyclerView();
+
+
+            alici_ad= bakici.getAd()+" "+bakici.getSoyad();
+            alici_email=bakici.getEmail();
         }
-        initRecyclerView();
 
 
-        String alici_ad= bakici.getAd()+" "+bakici.getSoyad();
-        String alici_email=bakici.getEmail();
 
         getKullaniciAd(firestore, auth, new AdCallback() {
             @Override
@@ -221,7 +227,7 @@ public class MesajFragment extends Fragment {
         binding.recyclerViewKisiselMesaj.setLayoutManager(linearLayoutManager);
 
     }
-    private void getData(Bakici bakici) {
+    private void getData(Kullanici bakici) {
         firestore.collection("mesaj")
                 .orderBy("tarih", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override

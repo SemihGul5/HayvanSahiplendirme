@@ -388,7 +388,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:layout_margin="8dp"
-                android:text="Mesaj Gönder"
+                android:text="İlgili Kişiye Mesaj Gönder"
                 android:fontFamily="@font/roboto" />
         </LinearLayout>
 

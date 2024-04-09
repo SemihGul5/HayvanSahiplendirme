@@ -124,16 +124,13 @@ public class BakiciFragment extends Fragment {
                         if ("null".equals(kisilik)) {
                             Snackbar.make(view, "Lütfen kişilik testini yapınız.", Snackbar.LENGTH_LONG).show();
                         } else {
-                            if ("Duyarlılık".equals(kisilik)) {
-                                Snackbar.make(view, "Bakıcı olmaya uygun değilsiniz.", Snackbar.LENGTH_LONG).show();
-                            } else {
-                                if (tel.equals("null")){
-                                    Snackbar.make(view, "Telefon numaranızı sisteme kayıt etmelisiniz.", Snackbar.LENGTH_LONG).show();
-                                }
-                                else{
-                                    Navigation.findNavController(view).navigate(R.id.action_bakiciFragment_to_bakiciOlFragment);
-                                }
+                            if (tel.equals("null")){
+                                Snackbar.make(view, "Telefon numaranızı sisteme kayıt etmelisiniz.", Snackbar.LENGTH_LONG).show();
                             }
+                            else{
+                                Navigation.findNavController(view).navigate(R.id.action_bakiciFragment_to_bakiciOlFragment);
+                            }
+
                         }
                     }
                 }

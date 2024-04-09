@@ -165,7 +165,7 @@ public class AyarlarFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Toast.makeText(getContext(), "Çıkış Yapılıyor.", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_girisYapFragment2);
+                    Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mainActivity);
 
                     auth.signOut();
 

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Bakici;
+import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.FragmentMesajListemBinding;
 import com.sgodi.bitirmeprojesi.ui.adapters.GonderilenMesajListAdapter;
 
@@ -38,7 +39,7 @@ public class MesajListemFragment extends Fragment {
     GonderilenMesajListAdapter adapter;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
-    ArrayList<Bakici> bakiciList;
+    ArrayList<Kullanici> bakiciList;
     String gonderenEmail,aliciEmail;
 
     @Override
@@ -97,7 +98,7 @@ public class MesajListemFragment extends Fragment {
 
                             // Her bir benzersiz e-posta adresi için bakıcıları al
                             for (String email : uniqueEmails) {
-                                firestore.collection("bakici")
+                                firestore.collection("kullanicilar")
                                         .whereEqualTo("email", email)
                                         .get()
                                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -116,7 +117,7 @@ public class MesajListemFragment extends Fragment {
                                                     String soyad = (String) data.get("soyad");
                                                     String tel = (String) data.get("tel");
 
-                                                    Bakici bakici=new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                                    Kullanici bakici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
                                                     bakiciList.add(bakici);
                                                 }
                                                 adapter.notifyDataSetChanged();

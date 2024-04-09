@@ -10,10 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.view.ContextMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
+import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.FragmentSahiplendirAyrintiBinding;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +35,8 @@ import java.util.Map;
 
 public class SahiplendirAyrintiFragment extends Fragment {
     private FragmentSahiplendirAyrintiBinding binding;
+    FirebaseFirestore firestore;
+
 
     @SuppressLint("ResourceType")
     @Override
@@ -42,6 +45,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
         // Inflate the layout for this fragment
         binding=FragmentSahiplendirAyrintiBinding.inflate(inflater, container, false);
         binding.materialToolbarSahiplendirAyrinti.setTitle("Ayrıntı");
+        firestore=FirebaseFirestore.getInstance();
 
 
 
@@ -99,6 +103,8 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
 
         binding.buttonMesaj.setOnClickListener(view -> {
+            kullaniciBul(hayvan.getEmail());
+
             //mesaj sayfasına git
         });
 
@@ -108,6 +114,44 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    private void kullaniciBul(String email) {
+        firestore.collection("kullanicilar")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // E-postaya sahip kullanıcılar varsa
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                String aciklama = documentSnapshot.getString("aciklama");
+                                String ad = documentSnapshot.getString("ad");
+                                String bakici_durum = documentSnapshot.getString("bakici_durum");
+                                String kisilik_durum = documentSnapshot.getString("kisilik_durum");
+                                String kisilik = documentSnapshot.getString("kişilik");
+                                String konum = documentSnapshot.getString("konum");
+                                String soyad = documentSnapshot.getString("soyad");
+                                String tel = documentSnapshot.getString("tel");
+                                Kullanici kullanici= new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum);
+                                SahiplendirAyrintiFragmentDirections.ActionSahiplendirAyrintiFragmentToMesajFragment gecis=
+                                        SahiplendirAyrintiFragmentDirections.actionSahiplendirAyrintiFragmentToMesajFragment(kullanici);
+                                Navigation.findNavController(getView()).navigate(gecis);
+                            }
+                        } else {
+                            // Belirtilen e-posta adresine sahip kullanıcı bulunamadı
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Hata durumunda buraya düşer
+                        Log.e("Mesaj", "Kullanıcı bulunurken hata oluştu: " + e.getMessage());
+                    }
+                });
+    }
+
 
     private void firestoreBildir(String email, String docID) {
         // Firestore bağlantısını başlat

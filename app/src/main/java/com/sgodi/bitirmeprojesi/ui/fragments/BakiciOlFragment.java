@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -237,15 +238,11 @@ public class BakiciOlFragment extends Fragment {
                     String konum= binding.autoCompleteTextViewSehir.getText().toString();
                     String tel = binding.editTextBakiciTel.getText().toString();
                     String aciklama = binding.editTextBakiciAciklama.getText().toString();
-                    String cinsiyet="";
-                    int cinsiyetID = binding.radioGroupBakiciCinsiyet.getCheckedRadioButtonId();
-                    if (cinsiyetID == R.id.radioButtonErkek) {
-                        cinsiyet = "Erkek";
-                    } else {
-                        cinsiyet = "Kadın";
+                    String cinsiyet = "";
+                    RadioButton selectedRadioButton = view.findViewById(binding.radioGroupBakiciCinsiyet.getCheckedRadioButtonId());
+                    if (selectedRadioButton != null) {
+                        cinsiyet = selectedRadioButton.getText().toString();
                     }
-
-
                     HashMap<String, Object> postData = new HashMap<>();
                     postData.put("email", email);
                     postData.put("foto", foto);

@@ -23,9 +23,6 @@
         android:label="fragment_ayarlar"
         tools:layout="@layout/fragment_ayarlar" >
         <action
-            android:id="@+id/action_ayarlarFragment_to_girisYapFragment2"
-            app:destination="@id/girisYapFragment2" />
-        <action
             android:id="@+id/action_ayarlarFragment_to_bizeUlasFragment"
             app:destination="@id/bizeUlasFragment" />
         <action
@@ -37,6 +34,11 @@
         <action
             android:id="@+id/action_ayarlarFragment_to_mesajListemFragment"
             app:destination="@id/mesajListemFragment" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_mainActivity"
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/ayarlarFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/sahiplenFragment"
@@ -86,11 +88,6 @@
             android:id="@+id/action_hayvanlarimFragment_to_hayvanimAyrintiFragment"
             app:destination="@id/hayvanimAyrintiFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/girisYapFragment2"
-        android:name="com.sgodi.bitirmeprojesi.ui.fragments.GirisYapFragment"
-        android:label="fragment_giris_yap"
-        tools:layout="@layout/fragment_giris_yap" />
     <fragment
         android:id="@+id/bizeUlasFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.BizeUlasFragment"
@@ -159,6 +156,9 @@
         <action
             android:id="@+id/action_sahiplendirAyrintiFragment_to_mapsFragmentSahiplenAyrinti"
             app:destination="@id/mapsFragmentSahiplenAyrinti" />
+        <action
+            android:id="@+id/action_sahiplendirAyrintiFragment_to_mesajFragment"
+            app:destination="@id/mesajFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -199,8 +199,8 @@
         android:label="fragment_mesaj"
         tools:layout="@layout/fragment_mesaj" >
         <argument
-            android:name="bakici"
-            app:argType="com.sgodi.bitirmeprojesi.data.models.Bakici" />
+            android:name="kullanici"
+            app:argType="com.sgodi.bitirmeprojesi.data.models.Kullanici" />
     </fragment>
     <fragment
         android:id="@+id/mesajListemFragment"
@@ -211,4 +211,9 @@
             android:id="@+id/action_mesajListemFragment_to_mesajFragment"
             app:destination="@id/mesajFragment" />
     </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.sgodi.bitirmeprojesi.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
 </navigation>
