@@ -52,6 +52,27 @@ public class GirisYapFragment extends Fragment {
             startActivity(intent);
         }
 
+        binding.textViewSifreyiUnuttum.setOnClickListener(view -> {
+            eMail=binding.userEmailText.getText().toString();
+            if (eMail.equals("")){
+                Snackbar.make(view,"E-mail alanı dolu olmalıdır!",Snackbar.LENGTH_SHORT).show();
+            }else{
+                auth.sendPasswordResetEmail(eMail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Snackbar.make(view,"Şifre sıfırlama e-mail'i gönderildi.",Snackbar.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(view,e.getLocalizedMessage(),Snackbar.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+        });
+
 
         binding.girisYapButton.setOnClickListener(view -> {
             if (binding.userEmailText.equals("")||binding.userPasswordText.equals("")){
