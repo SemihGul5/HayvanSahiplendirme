@@ -3,6 +3,7 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,12 +71,17 @@ public class KisilikTestFragment extends Fragment {
                     kisilikGuncelle(firestore,auth,"true");
                 } else {
                     binding.kisilikTestButton.setOnClickListener(view -> {
-                        if (!checkSeekBarValues()) {
-                            Snackbar.make(view, "Tüm değerler 0'dan büyük olmalıdır", Snackbar.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getContext(), "İşleniyor...", Toast.LENGTH_SHORT).show();
-                            sendTestResults();
+                        try {
+                            if (!checkSeekBarValues()) {
+                                Snackbar.make(view, "Tüm değerler 0'dan büyük olmalıdır", Snackbar.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getContext(), "İşleniyor...", Toast.LENGTH_SHORT).show();
+                                sendTestResults();
+                            }
+                        }catch (Exception e){
+                            Log.i("Mesaj",e.getMessage());
                         }
+
                     });
                 }
             }

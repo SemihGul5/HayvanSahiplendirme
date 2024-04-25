@@ -365,6 +365,16 @@ public class BakiciFragment extends Fragment {
                                             bakiciList.add(bakici);
                                         }
                                         adapter.notifyDataSetChanged();
+                                        binding.recyclerViewBakicilar.setVisibility(View.VISIBLE);
+                                        binding.imageViewBakiciYok.setVisibility(View.GONE);
+                                        binding.textViewBakiciYokYaz.setVisibility(View.GONE);
+                                    }
+                                    else{
+                                        binding.recyclerViewBakicilar.setVisibility(View.INVISIBLE);
+                                        binding.imageViewBakiciYok.setImageResource(R.drawable.not_found_bakici);
+                                        binding.imageViewBakiciYok.setVisibility(View.VISIBLE);
+                                        binding.textViewBakiciYokYaz.setText("Hiç bakıcı yok mu? Belkide kişilik testini yapmalısınız.");
+                                        binding.textViewBakiciYokYaz.setVisibility(View.VISIBLE);
                                     }
                                 }
                             });

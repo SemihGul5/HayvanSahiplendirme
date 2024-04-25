@@ -42,9 +42,10 @@ public class SahiplenFragment extends Fragment {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private ArrayList<Hayvan> hayvanListesi;
+    private ArrayList<Hayvan> hayvanListesifiltre;
     SahiplendirAdapter adapter;
     String kisilik="";
-    String secilenSehir="",secilenCinsiyet="";
+    String secilenSehir="",secilenCinsiyet="",secilenKisilik="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +56,7 @@ public class SahiplenFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         hayvanListesi=new ArrayList<>();
+
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
             private long backPressedTime = 0;
             @Override
@@ -71,6 +73,7 @@ public class SahiplenFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
 
         getData("","");
+
         binding.rvSahiplendirHayvanlar.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter= new SahiplendirAdapter(getContext(),hayvanListesi);
         binding.rvSahiplendirHayvanlar.setAdapter(adapter);
@@ -78,7 +81,6 @@ public class SahiplenFragment extends Fragment {
         binding.imageViewsahiplenfiltre.setOnClickListener(view -> {
             bottomDialogShow();
         });
-
 
 
 
@@ -97,7 +99,7 @@ public class SahiplenFragment extends Fragment {
 
         TextView sehir=dialog.findViewById(R.id.sehirText);
         TextView cinsiyet=dialog.findViewById(R.id.cinsiyetText);
-
+        TextView kisilik=dialog.findViewById(R.id.kisilikText);
         sehir.setOnClickListener(view -> {
             dialog.dismiss();
             Dialog dialog2=new Dialog(getContext());
@@ -154,7 +156,6 @@ public class SahiplenFragment extends Fragment {
         });
 
 
-
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -166,6 +167,7 @@ public class SahiplenFragment extends Fragment {
         });
     }
     private void getData(@Nullable String sehir,@Nullable String cinsiyet) {
+
         getKullaniciKisilik(firestore, auth, new KisilikCallback() {
             @Override
             public void onKisilikReceived(String kisilik) {
@@ -214,6 +216,16 @@ public class SahiplenFragment extends Fragment {
                                                     hayvanListesi.add(hayvan);
                                                 }
                                                 adapter.notifyDataSetChanged();
+                                                binding.rvSahiplendirHayvanlar.setVisibility(View.VISIBLE);
+                                                binding.imageViewCerikBulunamadi.setVisibility(View.GONE);
+                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.GONE);
+                                            }
+                                            else{
+                                                binding.rvSahiplendirHayvanlar.setVisibility(View.INVISIBLE);
+                                                binding.imageViewCerikBulunamadi.setImageResource(R.drawable.not_found);
+                                                binding.imageViewCerikBulunamadi.setVisibility(View.VISIBLE);
+                                                binding.textViewCerikBulunamadiYazisi.setText("Sahiplenecek hiç hayvan yok mu? Belkide kişilik testini yapmalısınız.");
+                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.VISIBLE);
                                             }
                                         }
                                     });
@@ -260,6 +272,9 @@ public class SahiplenFragment extends Fragment {
                                                     hayvanListesi.add(hayvan);
                                                 }
                                                 adapter.notifyDataSetChanged();
+
+                                            }
+                                            else{
                                             }
                                         }
                                     });
@@ -306,6 +321,10 @@ public class SahiplenFragment extends Fragment {
                                                     hayvanListesi.add(hayvan);
                                                 }
                                                 adapter.notifyDataSetChanged();
+
+                                            }
+                                            else{
+
                                             }
                                         }
                                     });
@@ -354,12 +373,11 @@ public class SahiplenFragment extends Fragment {
                                                 }
                                                 adapter.notifyDataSetChanged();
                                             }
+                                            else{
+                                            }
                                         }
                                     });
                         }
-
-
-
                     }//
                 });
             }
