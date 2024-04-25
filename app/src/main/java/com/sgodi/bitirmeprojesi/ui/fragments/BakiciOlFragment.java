@@ -239,10 +239,14 @@ public class BakiciOlFragment extends Fragment {
                     String tel = binding.editTextBakiciTel.getText().toString();
                     String aciklama = binding.editTextBakiciAciklama.getText().toString();
                     String cinsiyet = "";
-                    RadioButton selectedRadioButton = view.findViewById(binding.radioGroupBakiciCinsiyet.getCheckedRadioButtonId());
-                    if (selectedRadioButton != null) {
-                        cinsiyet = selectedRadioButton.getText().toString();
+                    int selectedRadioButtonId = binding.radioGroupBakiciCinsiyet.getCheckedRadioButtonId();
+                    if (selectedRadioButtonId ==R.id.radioButtonBakiciErkek) {
+                        cinsiyet="Erkek";
+                    }else{
+                        cinsiyet="Kadın";
                     }
+
+                    binding.textView4.setText(cinsiyet);
                     HashMap<String, Object> postData = new HashMap<>();
                     postData.put("email", email);
                     postData.put("foto", foto);

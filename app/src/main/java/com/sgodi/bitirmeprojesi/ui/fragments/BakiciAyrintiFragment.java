@@ -43,7 +43,7 @@ public class BakiciAyrintiFragment extends Fragment {
         // Inflate the layout for this fragment
         binding=FragmentBakiciAyrintiBinding.inflate(inflater, container, false);
         binding.materialToolbarBakiciAyrinti.setTitle("Bakıcı Ayrıntı");
-
+        firestore=FirebaseFirestore.getInstance();
         BakiciAyrintiFragmentArgs bundle=BakiciAyrintiFragmentArgs.fromBundle(getArguments());
         Bakici bakici= bundle.getBakici();
         Picasso.get().load(bakici.getFoto()).into(binding.imageViewBakiciAyrintiFoto);
@@ -66,38 +66,40 @@ public class BakiciAyrintiFragment extends Fragment {
         });
 
         binding.buttonMesaj.setOnClickListener(view -> {
-            firestore.collection("kullanicilar").whereEqualTo("email",bakici.getEmail())
-                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    String aciklama = documentSnapshot.getString("aciklama");
-                                    String ad = documentSnapshot.getString("ad");
-                                    String bakici_durum = documentSnapshot.getString("bakici_durum");
-                                    String email = documentSnapshot.getString("email");
-                                    String kisilik_durum = documentSnapshot.getString("kisilik_durum");
-                                    String kisilik = documentSnapshot.getString("kişilik");
-                                    String konum = documentSnapshot.getString("konum");
-                                    String soyad = documentSnapshot.getString("soyad");
-                                    String tel = documentSnapshot.getString("tel");
-                                    Kullanici bakici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum);
-                                    BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=
-                                            BakiciAyrintiFragmentDirections.actionBakiciAyrintiFragmentToMesajFragment(bakici);
-                                    Navigation.findNavController(view).navigate(gecis);
+            try {
+                firestore.collection("kullanicilar").whereEqualTo("email",bakici.getEmail())
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if (!queryDocumentSnapshots.isEmpty()) {
+                                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        String aciklama = documentSnapshot.getString("aciklama");
+                                        String ad = documentSnapshot.getString("ad");
+                                        String bakici_durum = documentSnapshot.getString("bakici_durum");
+                                        String email = documentSnapshot.getString("email");
+                                        String kisilik_durum = documentSnapshot.getString("kisilik_durum");
+                                        String kisilik = documentSnapshot.getString("kişilik");
+                                        String konum = documentSnapshot.getString("konum");
+                                        String soyad = documentSnapshot.getString("soyad");
+                                        String tel = documentSnapshot.getString("tel");
+                                        Kullanici Kullanici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum);
+                                        BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=
+                                                BakiciAyrintiFragmentDirections.actionBakiciAyrintiFragmentToMesajFragment(Kullanici);
+                                        Navigation.findNavController(view).navigate(gecis);
+                                    }
+                                } else {
+                                    // Belirtilen e-posta adresine sahip kullanıcı bulunamadı
                                 }
-                            } else {
-                                // Belirtilen e-posta adresine sahip kullanıcı bulunamadı
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i("Mesaj",e.getMessage());
-                        }
-                    });
-
-
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.i("Mesaj",e.getMessage());
+                            }
+                        });
+            }catch (Exception e){
+                Log.i("Mesaj",e.getMessage());
+            }
         });
 
         binding.materialToolbarBakiciAyrinti.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

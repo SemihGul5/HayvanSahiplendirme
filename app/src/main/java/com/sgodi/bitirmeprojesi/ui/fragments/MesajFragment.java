@@ -47,7 +47,7 @@ public class MesajFragment extends Fragment {
     String gonderen_ad;
     ArrayList<Mesaj> mesajArrayList;
     MesajAdapter mAdapter;
-    Kullanici bakici;
+    Kullanici Kullanici;
     boolean isAtBottom=false;
     String mesajId,alici_ad,alici_email;
     @Override
@@ -102,20 +102,20 @@ public class MesajFragment extends Fragment {
         auth=FirebaseAuth.getInstance();
         mesajArrayList=new ArrayList<>();
         MesajFragmentArgs bundle=MesajFragmentArgs.fromBundle(getArguments());
-        bakici= bundle.getKullanici();
+        Kullanici= bundle.getKullanici();
 
-        if (bakici!=null){
-            binding.toolbarOzelMesaj.setTitle(bakici.getAd()+" "+bakici.getSoyad());
+        if (Kullanici!=null){
+            binding.toolbarOzelMesaj.setTitle(Kullanici.getAd()+" "+Kullanici.getSoyad());
 
-            getData(bakici);
-            if (mesajId!=null){
+            getData(Kullanici);
+            /*if (mesajId!=null){
                 markAllMessagesAsRead(mesajId);
-            }
+            }*/
             initRecyclerView();
 
 
-            alici_ad= bakici.getAd()+" "+bakici.getSoyad();
-            alici_email=bakici.getEmail();
+            alici_ad= Kullanici.getAd()+" "+Kullanici.getSoyad();
+            alici_email=Kullanici.getEmail();
         }
 
 
@@ -227,7 +227,7 @@ public class MesajFragment extends Fragment {
         binding.recyclerViewKisiselMesaj.setLayoutManager(linearLayoutManager);
 
     }
-    private void getData(Kullanici bakici) {
+    private void getData(Kullanici Kullanici) {
         firestore.collection("mesaj")
                 .orderBy("tarih", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -249,8 +249,8 @@ public class MesajFragment extends Fragment {
                                         String gonderen_email = (String) data.get("gonderen_email");
                                         String email=auth.getCurrentUser().getEmail();
 
-                                        if (gonderen_email.equals(bakici.getEmail()) && alici_email.equals(email)
-                                                ||gonderen_email.equals(email)&&alici_email.equals(bakici.getEmail())){
+                                        if (gonderen_email.equals(Kullanici.getEmail()) && alici_email.equals(email)
+                                                ||gonderen_email.equals(email)&&alici_email.equals(Kullanici.getEmail())){
                                             String alici_ad = (String) data.get("alici_ad");
                                             String gonderen_ad = (String) data.get("gonderen_ad");
                                             String mesaj = (String) data.get("mesaj");
