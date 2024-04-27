@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,30 +95,32 @@ public class ProfilimFragment extends Fragment {
         guncellenmisBilgiler.put("soyad", yeniSoyad);
         guncellenmisBilgiler.put("tel", yeniTel);
 
-        // Belgeyi bul ve güncelle
-        firestore.collection("kullanicilar").whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // Kullanıcının belgesini bulduğunuzda
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        // Belgeyi güncelle
-                        firestore.collection("kullanicilar").document(documentSnapshot.getId())
-                                .update(guncellenmisBilgiler)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(getContext(), "Bilgiler güncellendi", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Bilgiler güncellenirken bir hata oluştu", Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Belge bulunamadığında veya bir hata oluştuğunda
-                    Toast.makeText(getContext(), "Belge bulunamadı veya bir hata oluştu", Toast.LENGTH_SHORT).show();
-                });
-
+        try {
+            // Belgeyi bul ve güncelle
+            firestore.collection("kullanicilar").whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // Kullanıcının belgesini bulduğunuzda
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // Belgeyi güncelle
+                            firestore.collection("kullanicilar").document(documentSnapshot.getId())
+                                    .update(guncellenmisBilgiler)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Bilgiler güncellendi", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(getContext(), "Bilgiler güncellenirken bir hata oluştu", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Belge bulunamadığında veya bir hata oluştuğunda
+                        Toast.makeText(getContext(), "Belge bulunamadı veya bir hata oluştu", Toast.LENGTH_SHORT).show();
+                    });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
     }
-
 
     private void getData() {
         String email=auth.getCurrentUser().getEmail();
