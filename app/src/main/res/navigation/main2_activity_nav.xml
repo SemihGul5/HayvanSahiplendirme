@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_sahiplenFragment_to_sahiplendirAyrintiFragment"
             app:destination="@id/sahiplendirAyrintiFragment" />
+        <action
+            android:id="@+id/action_sahiplenFragment_to_mapsFragmentTumHayvanlarPin"
+            app:destination="@id/mapsFragmentTumHayvanlarPin" />
     </fragment>
     <fragment
         android:id="@+id/bakiciFragment"
@@ -216,4 +219,9 @@
         android:name="com.sgodi.bitirmeprojesi.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/mapsFragmentTumHayvanlarPin"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.MapsFragmentTumHayvanlarPin"
+        android:label="fragment_maps_tum_hayvanlar_pin"
+        tools:layout="@layout/fragment_maps_tum_hayvanlar_pin" />
 </navigation>

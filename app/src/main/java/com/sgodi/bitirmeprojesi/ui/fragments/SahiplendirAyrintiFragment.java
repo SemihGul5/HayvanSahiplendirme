@@ -162,62 +162,64 @@ public class SahiplendirAyrintiFragment extends Fragment {
     }
 
     private void yolTarifi(View view) {
-        // Firestore sorgusuyla ilgili hayvanın konumunu al
-        firestore.collection("kullanici_hayvanlari").document(docID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // Hayvanın konumunu al
-                                double hayvanLatitude = Double.parseDouble(document.getString("enlem"));
-                                double hayvanLongitude = Double.parseDouble(document.getString("boylam"));
+        try {
+            // Firestore sorgusuyla ilgili hayvanın konumunu al
+            firestore.collection("kullanici_hayvanlari").document(docID)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    // Hayvanın konumunu al
+                                    double hayvanLatitude = Double.parseDouble(document.getString("enlem"));
+                                    double hayvanLongitude = Double.parseDouble(document.getString("boylam"));
 
-                                // Kullanıcının mevcut konumunu almak için yer servislerini kullanın
-                                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                                Criteria criteria = new Criteria();
-                                String provider = locationManager.getBestProvider(criteria, false);
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    // İzin yoksa işlem yapma
-                                    return;
-                                }
-                                Location location = locationManager.getLastKnownLocation(provider);
+                                    // Kullanıcının mevcut konumunu almak için yer servislerini kullanın
+                                    LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                                    Criteria criteria = new Criteria();
+                                    String provider = locationManager.getBestProvider(criteria, false);
+                                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                        // İzin yoksa işlem yapma
+                                        return;
+                                    }
+                                    Location location = locationManager.getLastKnownLocation(provider);
 
-                                // Mevcut konum alındıysa
-                                if (location != null) {
-                                    double userLatitude = location.getLatitude();
-                                    double userLongitude = location.getLongitude();
+                                    // Mevcut konum alındıysa
+                                    if (location != null) {
+                                        double userLatitude = location.getLatitude();
+                                        double userLongitude = location.getLongitude();
 
-                                    // Google Haritalar uygulamasını açmak için bir URL oluşturun
-                                    String uri = "http://maps.google.com/maps?saddr=" + userLatitude + "," + userLongitude +
-                                            "&daddr=" + hayvanLatitude + "," + hayvanLongitude;
+                                        // Google Haritalar uygulamasını açmak için bir URL oluşturun
+                                        String uri = "http://maps.google.com/maps?saddr=" + userLatitude + "," + userLongitude +
+                                                "&daddr=" + hayvanLatitude + "," + hayvanLongitude;
 
-                                    // Intent'i oluşturun ve URL'yi ekleyin
-                                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
-                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                                        // Intent'i oluşturun ve URL'yi ekleyin
+                                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+                                        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 
-                                    // Intent'i başlatın
-                                    startActivity(intent);
+                                        // Intent'i başlatın
+                                        startActivity(intent);
+                                    } else {
+                                        // Konum alınamadıysa kullanıcıya bilgi verin
+                                        Toast.makeText(getContext(), "Konum bilgisine erişilemiyor.", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    // Konum alınamadıysa kullanıcıya bilgi verin
-                                    Toast.makeText(getContext(), "Konum bilgisine erişilemiyor.", Toast.LENGTH_SHORT).show();
+                                    // Doküman yoksa kullanıcıya bilgi verin
+
+                                    Log.d("mesaj", "No such document");
                                 }
                             } else {
-                                // Doküman yoksa kullanıcıya bilgi verin
-
-                                Log.d("mesaj", "No such document");
+                                // Sorgu başarısız olursa kullanıcıya bilgi verin
+                                Log.d("mesaj", "get failed with ",task.getException());
                             }
-                        } else {
-                            // Sorgu başarısız olursa kullanıcıya bilgi verin
-                            Log.d("mesaj", "get failed with ",task.getException());
                         }
-                    }
-                });
+                    });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
     }
-
-
     private void kullaniciBul(String email) {
         firestore.collection("kullanicilar")
                 .whereEqualTo("email", email)

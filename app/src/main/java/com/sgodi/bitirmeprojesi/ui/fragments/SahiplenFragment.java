@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.Gravity;
@@ -82,6 +83,10 @@ public class SahiplenFragment extends Fragment {
             bottomDialogShow();
         });
 
+        binding.imageViewTumHayvanlarPin.setOnClickListener(view -> {
+            gitTumHayvanlar(view);
+        });
+
 
 
 
@@ -92,6 +97,11 @@ public class SahiplenFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    private void gitTumHayvanlar(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_sahiplenFragment_to_mapsFragmentTumHayvanlarPin);
+    }
+
     private void bottomDialogShow() {
         Dialog dialog=new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
