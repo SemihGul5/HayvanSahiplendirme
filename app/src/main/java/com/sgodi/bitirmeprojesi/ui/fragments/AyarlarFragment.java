@@ -51,7 +51,8 @@ public class AyarlarFragment extends Fragment {
         ayarlarListesi.add("Kişilik Testi");
         ayarlarListesi.add("Mesajlar");
         ayarlarListesi.add("Bakıcı İlanımı kaldır");
-        ayarlarListesi.add("Paylaş");
+        ayarlarListesi.add("Kişiselleştirilmiş Sahiplenme Önerileri");
+        ayarlarListesi.add("Uygulamayı Paylaş");
         ayarlarListesi.add("Bize Ulaşın");
         ayarlarListesi.add("Çıkış Yap");
         arrayAdapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_expandable_list_item_1,ayarlarListesi);
@@ -117,12 +118,12 @@ public class AyarlarFragment extends Fragment {
                 }
             });
             alert.show();
-
         } else if (secilen.equals("Mesajlar")) {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mesajListemFragment);
-
-
-        } else{
+        } else if (secilen.equals("Kişiselleştirilmiş Sahiplenme Önerileri")) {
+            Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_kisisellestirilmisSahiplenmeAyarFragment);
+        }
+        else{
             Toast.makeText(getContext(), "Hata", Toast.LENGTH_SHORT).show();
         }
         

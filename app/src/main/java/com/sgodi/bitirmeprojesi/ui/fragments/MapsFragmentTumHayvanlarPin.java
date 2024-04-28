@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
+import com.sgodi.bitirmeprojesi.data.models.Kullanici;
 import com.sgodi.bitirmeprojesi.databinding.FragmentMapsTumHayvanlarPinBinding;
 import com.squareup.picasso.Picasso;
 
@@ -190,13 +194,12 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
 
     private void showAnimalDetailsDialog(Hayvan hayvan) {
         // Bottom sheet dialog oluştur
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(),R.style.BottomSheetDialogTheme);
         // Layout dosyasını yükle
-        View view = getLayoutInflater().inflate(R.layout.hayvan_pin_bottom_sheet, null);
+        View view = getLayoutInflater().inflate(R.layout.hayvan_pin_bottom_sheet,null);
         bottomSheetDialog.setContentView(view);
 
         // Özellikleri göster;
-
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView imageView = view.findViewById(R.id.imageViewHayvanimAyrinti_bottom);
         Picasso.get().load(hayvan.getFoto()).resize(150,150)
                 .into(imageView);
@@ -218,18 +221,59 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
         textViewsehir.setText(hayvan.getSehir());
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewhakkinda = view.findViewById(R.id.hayvan_ayrinti_HAKKINDA_bottom);
         textViewhakkinda.setText(hayvan.getAciklama());
-
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button buttonMesajGonder = view.findViewById(R.id.buttonMesaj_bottom);
         buttonMesajGonder.setOnClickListener(view1 -> {
-            ilgiliKisiyeMesajListesiAc();
+            bottomSheetDialog.cancel();
+            ilgiliKisiyeMesajListesiAc(hayvan.getEmail());
         });
-        // Diğer özellikleri göster...
-
         // Dialogu göster
         bottomSheetDialog.show();
     }
 
-    private void ilgiliKisiyeMesajListesiAc() {
+    private void ilgiliKisiyeMesajListesiAc(String email) {
+        try {
+            firestore.collection("kullanicilar")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            // E-postaya sahip kullanıcılar varsa
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    String aciklama = documentSnapshot.getString("aciklama");
+                                    String ad = documentSnapshot.getString("ad");
+                                    String bakici_durum = documentSnapshot.getString("bakici_durum");
+                                    String kisilik_durum = documentSnapshot.getString("kisilik_durum");
+                                    String kisilik = documentSnapshot.getString("kişilik");
+                                    String konum = documentSnapshot.getString("konum");
+                                    String soyad = documentSnapshot.getString("soyad");
+                                    String tel = documentSnapshot.getString("tel");
+                                    String oneri_durum = documentSnapshot.getString("oneri_durum");
+                                    Kullanici kullanici= new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum,oneri_durum);
+                                    MapsFragmentTumHayvanlarPinDirections.ActionMapsFragmentTumHayvanlarPinToMesajFragment gecis=
+                                            MapsFragmentTumHayvanlarPinDirections.actionMapsFragmentTumHayvanlarPinToMesajFragment(kullanici);
+
+                                    Navigation.findNavController(getView()).navigate(gecis);
+                                }
+                            } else {
+                                // Belirtilen e-posta adresine sahip kullanıcı bulunamadı
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Hata durumunda buraya düşer
+                            Log.e("Mesaj", "Kullanıcı bulunurken hata oluştu: " + e.getMessage());
+                        }
+                    });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
+
+
+
     }
 
 }

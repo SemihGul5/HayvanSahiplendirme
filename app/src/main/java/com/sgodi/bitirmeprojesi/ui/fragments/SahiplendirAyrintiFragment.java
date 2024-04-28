@@ -121,7 +121,6 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
         binding.buttonMesaj.setOnClickListener(view -> {
             kullaniciBul(hayvan.getEmail());
-
             //mesaj sayfasına git
         });
 
@@ -238,7 +237,8 @@ public class SahiplendirAyrintiFragment extends Fragment {
                                 String konum = documentSnapshot.getString("konum");
                                 String soyad = documentSnapshot.getString("soyad");
                                 String tel = documentSnapshot.getString("tel");
-                                Kullanici kullanici= new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum);
+                                String oneri_durum = documentSnapshot.getString("oneri_durum");
+                                Kullanici kullanici= new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum,oneri_durum);
                                 SahiplendirAyrintiFragmentDirections.ActionSahiplendirAyrintiFragmentToMesajFragment gecis=
                                         SahiplendirAyrintiFragmentDirections.actionSahiplendirAyrintiFragmentToMesajFragment(kullanici);
                                 Navigation.findNavController(getView()).navigate(gecis);

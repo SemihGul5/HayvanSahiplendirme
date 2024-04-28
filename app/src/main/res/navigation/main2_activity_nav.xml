@@ -39,6 +39,9 @@
             app:destination="@id/mainActivity"
             app:popUpTo="@id/ayarlarFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_kisisellestirilmisSahiplenmeAyarFragment"
+            app:destination="@id/kisisellestirilmisSahiplenmeAyarFragment" />
     </fragment>
     <fragment
         android:id="@+id/sahiplenFragment"
@@ -223,5 +226,14 @@
         android:id="@+id/mapsFragmentTumHayvanlarPin"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.MapsFragmentTumHayvanlarPin"
         android:label="fragment_maps_tum_hayvanlar_pin"
-        tools:layout="@layout/fragment_maps_tum_hayvanlar_pin" />
+        tools:layout="@layout/fragment_maps_tum_hayvanlar_pin" >
+        <action
+            android:id="@+id/action_mapsFragmentTumHayvanlarPin_to_mesajFragment"
+            app:destination="@id/mesajFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kisisellestirilmisSahiplenmeAyarFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.KisisellestirilmisSahiplenmeAyarFragment"
+        android:label="fragment_kisisellestirilmis_sahiplenme_ayar"
+        tools:layout="@layout/fragment_kisisellestirilmis_sahiplenme_ayar" />
 </navigation>

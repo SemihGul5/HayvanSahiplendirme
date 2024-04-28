@@ -12,12 +12,14 @@ public class Kullanici implements Serializable {
     private String aciklama;
     private String kisilik_durum;
     private String bakici_durum;
+    private String oneri_durum;
 
 
     public Kullanici() {
     }
 
-    public Kullanici(String ad, String soyad, String email, String kisilik, String konum, String tel, String aciklama,String kisilik_durum,String bakici_durum) {
+    public Kullanici(String ad, String soyad, String email, String kisilik, String konum, String tel, String aciklama,String kisilik_durum,String bakici_durum
+    ,String oneri_durum) {
         this.ad = ad;
         this.soyad = soyad;
         this.email = email;
@@ -27,6 +29,7 @@ public class Kullanici implements Serializable {
         this.aciklama = aciklama;
         this.kisilik_durum=kisilik_durum;
         this.bakici_durum=bakici_durum;
+        this.oneri_durum=oneri_durum;
 
     }
 
@@ -100,5 +103,13 @@ public class Kullanici implements Serializable {
 
     public void setBakici_durum(String bakici_durum) {
         this.bakici_durum = bakici_durum;
+    }
+
+    public String getOneri_durum() {
+        return oneri_durum;
+    }
+
+    public void setOneri_durum(String oneri_durum) {
+        this.oneri_durum = oneri_durum;
     }
 }
