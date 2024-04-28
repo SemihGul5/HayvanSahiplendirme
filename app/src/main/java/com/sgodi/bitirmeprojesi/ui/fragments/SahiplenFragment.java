@@ -44,10 +44,8 @@ public class SahiplenFragment extends Fragment {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private ArrayList<Hayvan> hayvanListesi;
-    private ArrayList<Hayvan> hayvanListesifiltre;
     SahiplendirAdapter adapter;
-    String kisilik="";
-    String secilenSehir="",secilenCinsiyet="",secilenKisilik="";
+    String secilenSehir="",secilenCinsiyet="";
     Boolean oneri;
 
     @Override
@@ -114,10 +112,8 @@ public class SahiplenFragment extends Fragment {
                             }
                             // Öneri durumu alındıktan sonra gerekli işlemleri yapmak için burada çağırabilirsiniz
                             if (oneri) {
-                                Toast.makeText(getContext(), "Oneri true çalıştı", Toast.LENGTH_SHORT).show();
                                 getData("","");
                             } else {
-                                Toast.makeText(getContext(), "Oneri false çalıştı", Toast.LENGTH_SHORT).show();
                                 getDataKisilikYok("","");
                             }
                         }
@@ -137,7 +133,7 @@ public class SahiplenFragment extends Fragment {
 
         TextView sehir=dialog.findViewById(R.id.sehirText);
         TextView cinsiyet=dialog.findViewById(R.id.cinsiyetText);
-        TextView kisilik=dialog.findViewById(R.id.kisilikText);
+
         sehir.setOnClickListener(view -> {
             dialog.dismiss();
             Dialog dialog2=new Dialog(getContext());
@@ -200,7 +196,14 @@ public class SahiplenFragment extends Fragment {
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
         dialog.findViewById(R.id.buttonFiltre).setOnClickListener(view -> {
-            getData(secilenSehir,secilenCinsiyet);
+            if (oneri){
+                getData(secilenSehir,secilenCinsiyet);
+            }
+            else{
+                getDataKisilikYok(secilenSehir,secilenCinsiyet);
+            }
+            secilenCinsiyet="";
+            secilenSehir="";
             dialog.dismiss();
         });
     }

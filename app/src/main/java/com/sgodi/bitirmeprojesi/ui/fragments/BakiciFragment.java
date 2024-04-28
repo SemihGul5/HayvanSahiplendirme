@@ -45,6 +45,7 @@ public class BakiciFragment extends Fragment {
     ArrayList<Bakici> bakiciList;
     BakiciAdapter adapter;
     String secilenSehir="",secilenCinsiyet="";
+    Boolean oneri;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,8 +55,7 @@ public class BakiciFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         bakiciList=new ArrayList<>();
-
-        getData("","");
+        getKullaniciOneriDurum();
         binding.recyclerViewBakicilar.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter= new BakiciAdapter(getContext(),bakiciList);
         binding.recyclerViewBakicilar.setAdapter(adapter);
@@ -107,7 +107,29 @@ public class BakiciFragment extends Fragment {
         return binding.getRoot();
     }
 
-
+    private void getKullaniciOneriDurum() {
+        db.collection("kullanicilar")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Boolean oneriDurumu = document.getBoolean("oneri_durum");
+                            if (oneriDurumu != null && oneriDurumu) {
+                                oneri = true;
+                            } else {
+                                oneri = false;
+                            }
+                            // Öneri durumu alındıktan sonra gerekli işlemleri yapmak için burada çağırabilirsiniz
+                            if (oneri) {
+                                getData("","");
+                            } else {
+                                getDataKisilikYok("","");
+                            }
+                        }
+                    }
+                });
+    }
 
     public void durumTespit(Map<String, Object> data, View view) {
 
@@ -485,4 +507,154 @@ public class BakiciFragment extends Fragment {
             }
         });
     }
+    private void getDataKisilikYok(@Nullable String sehir,@Nullable String cinsiyet) {
+
+                if (sehir.equals("")&&cinsiyet.equals("")){
+                    db.collection("bakici")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
+
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
+
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
+
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                        binding.recyclerViewBakicilar.setVisibility(View.VISIBLE);
+                                        binding.imageViewBakiciYok.setVisibility(View.GONE);
+                                        binding.textViewBakiciYokYaz.setVisibility(View.GONE);
+                                    }
+                                    else{
+                                        binding.recyclerViewBakicilar.setVisibility(View.INVISIBLE);
+                                        binding.imageViewBakiciYok.setImageResource(R.drawable.not_found_bakici);
+                                        binding.imageViewBakiciYok.setVisibility(View.VISIBLE);
+                                        binding.textViewBakiciYokYaz.setText("Hiç bakıcı yok mu? Belkide kişilik testini yapmalısınız.");
+                                        binding.textViewBakiciYokYaz.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+
+                } else if (sehir.equals("")) {
+                    db.collection("bakici").whereEqualTo("cinsiyet",cinsiyet)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
+
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
+
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
+
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+
+                } else if (cinsiyet.equals("")) {
+                    db.collection("bakici").whereEqualTo("konum",sehir)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
+
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
+
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
+
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+
+                }else {
+                    db.collection("bakici").whereEqualTo("konum",sehir).whereEqualTo("cinsiyet",cinsiyet)
+
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    bakiciList.clear();
+
+                                    if (value != null) {
+                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                            Map<String, Object> data = documentSnapshot.getData();
+
+                                            String email = (String) data.get("email");
+                                            String aciklama = (String) data.get("aciklama");
+                                            String ad = (String) data.get("ad");
+                                            String cinsiyet = (String) data.get("cinsiyet");
+                                            String foto=(String) data.get("foto");
+                                            String kisilik = (String) data.get("kisilik");
+                                            String konum = (String) data.get("konum");
+                                            String soyad = (String) data.get("soyad");
+                                            String tel = (String) data.get("tel");
+
+                                            Bakici bakici= new Bakici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet);
+                                            bakiciList.add(bakici);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+                }
+            }
 }

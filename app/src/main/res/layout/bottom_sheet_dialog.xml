@@ -87,40 +87,7 @@
             android:textSize="16sp" />
 
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
-        <TextView
-            android:id="@+id/kisilikText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/roboto"
-            android:text="KİŞİLİK"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/secilenKisilik"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/roboto"
-            android:text=""
-            android:textAlignment="viewEnd"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-    </LinearLayout>
     <Button
         android:id="@+id/buttonFiltre"
         android:layout_width="match_parent"
