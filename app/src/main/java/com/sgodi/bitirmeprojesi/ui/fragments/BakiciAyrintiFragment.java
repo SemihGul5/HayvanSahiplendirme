@@ -82,7 +82,7 @@ public class BakiciAyrintiFragment extends Fragment {
                                         String konum = documentSnapshot.getString("konum");
                                         String soyad = documentSnapshot.getString("soyad");
                                         String tel = documentSnapshot.getString("tel");
-                                        String oneri_durum = documentSnapshot.getString("oneri_durum");
+                                        Boolean oneri_durum = documentSnapshot.getBoolean("oneri_durum");
                                         Kullanici Kullanici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,kisilik_durum,bakici_durum
                                         ,oneri_durum);
                                         BakiciAyrintiFragmentDirections.ActionBakiciAyrintiFragmentToMesajFragment gecis=

@@ -116,7 +116,7 @@ public class MesajListemFragment extends Fragment {
                                                     String konum = (String) data.get("konum");
                                                     String soyad = (String) data.get("soyad");
                                                     String tel = (String) data.get("tel");
-                                                    String oneri_durum = (String) data.get("oneri_durum");
+                                                    Boolean oneri_durum = (Boolean) data.get("oneri_durum");
                                                     Kullanici bakici=new Kullanici(ad,soyad,email,kisilik,konum,tel,aciklama,foto,cinsiyet,
                                                             oneri_durum);
                                                     bakiciList.add(bakici);

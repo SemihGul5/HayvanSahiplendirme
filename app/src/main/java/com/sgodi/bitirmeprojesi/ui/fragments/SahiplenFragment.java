@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -47,6 +48,7 @@ public class SahiplenFragment extends Fragment {
     SahiplendirAdapter adapter;
     String kisilik="";
     String secilenSehir="",secilenCinsiyet="",secilenKisilik="";
+    Boolean oneri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,8 +74,7 @@ public class SahiplenFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
-
-        getData("","");
+        getKullaniciOneriDurum();
 
         binding.rvSahiplendirHayvanlar.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter= new SahiplendirAdapter(getContext(),hayvanListesi);
@@ -97,6 +98,33 @@ public class SahiplenFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    private void getKullaniciOneriDurum() {
+        firestore.collection("kullanicilar")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Boolean oneriDurumu = document.getBoolean("oneri_durum");
+                            if (oneriDurumu != null && oneriDurumu) {
+                                oneri = true;
+                            } else {
+                                oneri = false;
+                            }
+                            // Öneri durumu alındıktan sonra gerekli işlemleri yapmak için burada çağırabilirsiniz
+                            if (oneri) {
+                                Toast.makeText(getContext(), "Oneri true çalıştı", Toast.LENGTH_SHORT).show();
+                                getData("","");
+                            } else {
+                                Toast.makeText(getContext(), "Oneri false çalıştı", Toast.LENGTH_SHORT).show();
+                                getDataKisilikYok("","");
+                            }
+                        }
+                    }
+                });
+    }
+
 
     private void gitTumHayvanlar(View view) {
         Navigation.findNavController(view).navigate(R.id.action_sahiplenFragment_to_mapsFragmentTumHayvanlarPin);
@@ -528,5 +556,214 @@ public class SahiplenFragment extends Fragment {
 
         ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,sehirler);
         listView.setAdapter(arrayAdapter);
+    }
+
+    private void getDataKisilikYok(@Nullable String sehir,@Nullable String cinsiyet) {
+                getIlandami(firestore, auth, new ilanCallback() {
+                    @Override
+                    public void onIlanReceived(String ilanValue) {
+                        if (sehir.equals("")&&cinsiyet.equals("")){
+                            firestore.collection("kullanici_hayvanlari")
+                                    .whereEqualTo("ilanda_mi","true")
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NotifyDataSetChanged")
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            if (error != null) {
+                                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            hayvanListesi.clear();
+
+                                            if (value != null) {
+                                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                                    Map<String, Object> data = documentSnapshot.getData();
+
+                                                    String email = (String) data.get("email");
+                                                    String foto = (String) data.get("foto");
+                                                    String ad = (String) data.get("ad");
+                                                    String tur = (String) data.get("tur");
+                                                    String irk = (String) data.get("ırk");
+                                                    String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                                    String yas = String.valueOf(data.get("yas"));
+                                                    String saglik = (String) data.get("saglik");
+                                                    String aciklama = (String) data.get("aciklama");
+                                                    String kisilik = (String) data.get("kisilik");
+                                                    String sahipliMi = (String) data.get("sahipli_mi");
+                                                    String ilandaMi = (String) data.get("ilanda_mi");
+                                                    String enlem = (String) data.get("enlem");
+                                                    String boylam = (String) data.get("boylam");
+                                                    String sehir = (String) data.get("sehir");
+                                                    String ilce = (String) data.get("ilce");
+                                                    String docid = documentSnapshot.getId();
+
+                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                            kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
+                                                    hayvanListesi.add(hayvan);
+                                                }
+                                                adapter.notifyDataSetChanged();
+                                                binding.rvSahiplendirHayvanlar.setVisibility(View.VISIBLE);
+                                                binding.imageViewCerikBulunamadi.setVisibility(View.GONE);
+                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.GONE);
+                                            }
+                                            else{
+                                                binding.rvSahiplendirHayvanlar.setVisibility(View.INVISIBLE);
+                                                binding.imageViewCerikBulunamadi.setImageResource(R.drawable.not_found);
+                                                binding.imageViewCerikBulunamadi.setVisibility(View.VISIBLE);
+                                                binding.textViewCerikBulunamadiYazisi.setText("Sahiplenecek hiç hayvan yok mu? Belkide kişilik testini yapmalısınız.");
+                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    });
+
+                        } else if (sehir.equals("")) {
+                            firestore.collection("kullanici_hayvanlari")
+                                    .whereEqualTo("ilanda_mi","true")
+                                    .whereEqualTo("cinsiyet",cinsiyet)
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NotifyDataSetChanged")
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            if (error != null) {
+                                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            hayvanListesi.clear();
+
+                                            if (value != null) {
+                                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                                    Map<String, Object> data = documentSnapshot.getData();
+
+                                                    String email = (String) data.get("email");
+                                                    String foto = (String) data.get("foto");
+                                                    String ad = (String) data.get("ad");
+                                                    String tur = (String) data.get("tur");
+                                                    String irk = (String) data.get("ırk");
+                                                    String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                                    String yas = String.valueOf(data.get("yas"));
+                                                    String saglik = (String) data.get("saglik");
+                                                    String aciklama = (String) data.get("aciklama");
+                                                    String kisilik = (String) data.get("kisilik");
+                                                    String sahipliMi = (String) data.get("sahipli_mi");
+                                                    String ilandaMi = (String) data.get("ilanda_mi");
+                                                    String enlem = (String) data.get("enlem");
+                                                    String boylam = (String) data.get("boylam");
+                                                    String sehir = (String) data.get("sehir");
+                                                    String ilce = (String) data.get("ilce");
+                                                    String docid = documentSnapshot.getId();
+
+                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                            kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
+                                                    hayvanListesi.add(hayvan);
+                                                }
+                                                adapter.notifyDataSetChanged();
+
+                                            }
+                                            else{
+                                            }
+                                        }
+                                    });
+
+                        } else if (cinsiyet.equals("")) {
+                            firestore.collection("kullanici_hayvanlari")
+                                    .whereEqualTo("ilanda_mi","true")
+                                    .whereEqualTo("sehir",sehir)
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NotifyDataSetChanged")
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            if (error != null) {
+                                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            hayvanListesi.clear();
+
+                                            if (value != null) {
+                                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                                    Map<String, Object> data = documentSnapshot.getData();
+
+                                                    String email = (String) data.get("email");
+                                                    String foto = (String) data.get("foto");
+                                                    String ad = (String) data.get("ad");
+                                                    String tur = (String) data.get("tur");
+                                                    String irk = (String) data.get("ırk");
+                                                    String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                                    String yas = String.valueOf(data.get("yas"));
+                                                    String saglik = (String) data.get("saglik");
+                                                    String aciklama = (String) data.get("aciklama");
+                                                    String kisilik = (String) data.get("kisilik");
+                                                    String sahipliMi = (String) data.get("sahipli_mi");
+                                                    String ilandaMi = (String) data.get("ilanda_mi");
+                                                    String enlem = (String) data.get("enlem");
+                                                    String boylam = (String) data.get("boylam");
+                                                    String sehir = (String) data.get("sehir");
+                                                    String ilce = (String) data.get("ilce");
+                                                    String docid = documentSnapshot.getId();
+
+                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                            kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
+                                                    hayvanListesi.add(hayvan);
+                                                }
+                                                adapter.notifyDataSetChanged();
+
+                                            }
+                                            else{
+
+                                            }
+                                        }
+                                    });
+
+                        }else{
+                            firestore.collection("kullanici_hayvanlari")
+                                    .whereEqualTo("ilanda_mi","true")
+                                    .whereEqualTo("sehir",sehir)
+                                    .whereEqualTo("cinsiyet",cinsiyet)
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NotifyDataSetChanged")
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            if (error != null) {
+                                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            hayvanListesi.clear();
+
+                                            if (value != null) {
+                                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                                    Map<String, Object> data = documentSnapshot.getData();
+
+                                                    String email = (String) data.get("email");
+                                                    String foto = (String) data.get("foto");
+                                                    String ad = (String) data.get("ad");
+                                                    String tur = (String) data.get("tur");
+                                                    String irk = (String) data.get("ırk");
+                                                    String cinsiyet = String.valueOf(data.get("cinsiyet"));
+                                                    String yas = String.valueOf(data.get("yas"));
+                                                    String saglik = (String) data.get("saglik");
+                                                    String aciklama = (String) data.get("aciklama");
+                                                    String kisilik = (String) data.get("kisilik");
+                                                    String sahipliMi = (String) data.get("sahipli_mi");
+                                                    String ilandaMi = (String) data.get("ilanda_mi");
+                                                    String enlem = (String) data.get("enlem");
+                                                    String boylam = (String) data.get("boylam");
+                                                    String sehir = (String) data.get("sehir");
+                                                    String ilce = (String) data.get("ilce");
+                                                    String docid = documentSnapshot.getId();
+
+                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                            kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
+                                                    hayvanListesi.add(hayvan);
+                                                }
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                            else{
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+
     }
 }

@@ -111,7 +111,7 @@ public class KayitOlFragment extends Fragment {
 
     private void kullaniciyiFirestoreKaydet(String ad, String soyad, String email) {
 
-        HashMap<String, String> data=new HashMap<>();
+        HashMap<String, Object> data=new HashMap<>();
         StringBuffer ad2 = new StringBuffer(ad);
         ad2.setCharAt(0, Character.toUpperCase(ad2.charAt(0)));
         String adson = ad2.toString();
@@ -129,7 +129,7 @@ public class KayitOlFragment extends Fragment {
         data.put("aciklama","null");
         data.put("kisilik_durum","true");
         data.put("bakici_durum","false");
-        data.put("oneri_durum","true");
+        data.put("oneri_durum",true);
         firestore.collection("kullanicilar").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
