@@ -35,7 +35,66 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbarHayvanEkle"
             app:srcCompat="@drawable/location" />
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewKonum">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@drawable/background_photo"
+                android:cropToPadding="false"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+
+                app:srcCompat="@drawable/add_photo" />
+
+            <ImageView
+                android:id="@+id/add_image2"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_photo"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/add_image3"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_photo"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/add_image4"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_photo"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop" />
+
+        </LinearLayout>
+
+       <!-- <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -44,7 +103,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewKonum"
-            app:srcCompat="@drawable/baseline_add_a_photo_24" />
+            app:srcCompat="@drawable/baseline_add_a_photo_24" /> -->
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarHayvanEkle"
@@ -66,7 +125,7 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView">
+            app:layout_constraintTop_toBottomOf="@+id/imageLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextHayvanAd"

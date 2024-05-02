@@ -43,7 +43,7 @@ public class HayvanimAdapter extends RecyclerView.Adapter<HayvanimAdapter.Hayvan
     public void onBindViewHolder(@NonNull HayvanimCardTutucu holder, int position) {
         //Karta foto, ad ve cinsiyet yazılması
         Hayvan hayvan= hayvanList.get(position);
-        Picasso.get().load(hayvan.getFoto()).resize(150,150)
+        Picasso.get().load(hayvan.getFoto1()).resize(150,150)
                 .into(holder.binding.imageViewHayvanimFoto);
         holder.binding.textViewHayvanimAd.setText(hayvan.getAd());
         holder.binding.textViewHayvanimKonum.setText(hayvan.getSehir()+" / "+hayvan.getIlce());

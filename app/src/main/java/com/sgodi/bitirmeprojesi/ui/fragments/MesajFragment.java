@@ -49,46 +49,7 @@ public class MesajFragment extends Fragment {
     MesajAdapter mAdapter;
     Kullanici Kullanici;
     boolean isAtBottom=false;
-    String mesajId,alici_ad,alici_email;
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
-
-    // Tüm mesajları otomatik olarak okundu olarak işaretle
-    private void markAllMessagesAsRead(String mesajId) {
-        for (Mesaj mesaj : mesajArrayList) {
-            if (mesaj.getOkunduMu().equals("false")) {
-                firestore.collection("mesaj").document(mesajId)
-                        .update("okunduMu", "true")
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // Mesaj başarıyla güncellendiğinde yapılacak işlemler
-                                Log.d("Mesaj", "Mesaj okundu olarak işaretlendi.");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Hata durumunda yapılacak işlemler
-                                Log.e("Mesaj", "Mesaj okundu olarak işaretlenirken hata oluştu: " + e.getMessage());
-                            }
-                        });
-            }
-        }
-    }
-
-
-
+    String mesajId,alici_ad,alici_email,gonderen_email,okunduMu;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,14 +67,8 @@ public class MesajFragment extends Fragment {
 
         if (Kullanici!=null){
             binding.toolbarOzelMesaj.setTitle(Kullanici.getAd()+" "+Kullanici.getSoyad());
-
             getData(Kullanici);
-            /*if (mesajId!=null){
-                markAllMessagesAsRead(mesajId);
-            }*/
             initRecyclerView();
-
-
             alici_ad= Kullanici.getAd()+" "+Kullanici.getSoyad();
             alici_email=Kullanici.getEmail();
         }
@@ -126,49 +81,11 @@ public class MesajFragment extends Fragment {
                 gonderen_ad=adValue;
             }
         });
-
-
-
-        String gonderen_email=auth.getCurrentUser().getEmail();
-
-        String okunduMu="false";
+        gonderen_email=auth.getCurrentUser().getEmail();
+        okunduMu="false";
 
         binding.buttonMesajGonder.setOnClickListener(view -> {
-
-            HashMap<String,Object> gonder=new HashMap<>();
-            String mesaj=binding.mesajText.getText().toString();
-            gonder.put("alici_ad",alici_ad);
-            gonder.put("alici_email",alici_email);
-            gonder.put("gonderen_ad",gonderen_ad);
-            gonder.put("gonderen_email",gonderen_email);
-            gonder.put("mesaj",mesaj);
-            gonder.put("okunduMu",okunduMu);
-            gonder.put("tarih", FieldValue.serverTimestamp());
-
-            Calendar calendar = Calendar.getInstance();
-            int saat = calendar.get(Calendar.HOUR_OF_DAY);
-            int dakika = calendar.get(Calendar.MINUTE);
-
-            // Saati ve dakikayı string formatına dönüştür
-            String zaman = String.format(Locale.getDefault(), "%02d:%02d", saat, dakika);
-
-            // Saat ve dakikayı HashMap'e ekle
-            gonder.put("saat", zaman);
-
-            firestore.collection("mesaj").add(gonder).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    binding.mesajText.setText("");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    binding.mesajText.setText("");
-                }
-            });
-
-
+            mesajGonder(view);
 
         });
 
@@ -180,6 +97,41 @@ public class MesajFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    private void mesajGonder(View view) {
+        HashMap<String,Object> gonder=new HashMap<>();
+        String mesaj=binding.mesajText.getText().toString();
+        gonder.put("alici_ad",alici_ad);
+        gonder.put("alici_email",alici_email);
+        gonder.put("gonderen_ad",gonderen_ad);
+        gonder.put("gonderen_email",gonderen_email);
+        gonder.put("mesaj",mesaj);
+        gonder.put("okunduMu",okunduMu);
+        gonder.put("tarih", FieldValue.serverTimestamp());
+
+        Calendar calendar = Calendar.getInstance();
+        int saat = calendar.get(Calendar.HOUR_OF_DAY);
+        int dakika = calendar.get(Calendar.MINUTE);
+
+        // Saati ve dakikayı string formatına dönüştür
+        String zaman = String.format(Locale.getDefault(), "%02d:%02d", saat, dakika);
+
+        // Saat ve dakikayı HashMap'e ekle
+        gonder.put("saat", zaman);
+
+        firestore.collection("mesaj").add(gonder).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                binding.mesajText.setText("");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                binding.mesajText.setText("");
+            }
+        });
     }
 
     private void initRecyclerView() {

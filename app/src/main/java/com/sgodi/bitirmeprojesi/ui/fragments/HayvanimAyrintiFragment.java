@@ -48,7 +48,7 @@ public class HayvanimAyrintiFragment extends Fragment {
         HayvanimAyrintiFragmentArgs bundle=HayvanimAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan= bundle.getHayvan();
 
-        Picasso.get().load(hayvan.getFoto()).into(binding.imageViewHayvanimAyrinti);
+        Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
         binding.hayvanAyrintiAD.setText(hayvan.getAd());
         binding.hayvanAyrintiTUR.setText(hayvan.getTur());
         binding.hayvanAyrintiIRK.setText(hayvan.getIrk());

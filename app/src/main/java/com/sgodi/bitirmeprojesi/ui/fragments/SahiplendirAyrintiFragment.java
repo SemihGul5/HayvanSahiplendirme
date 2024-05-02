@@ -70,7 +70,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
         SahiplendirAyrintiFragmentArgs bundle = SahiplendirAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan = bundle.getHayvan();
 
-        Picasso.get().load(hayvan.getFoto()).into(binding.imageViewHayvanimAyrinti);
+        Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
         binding.hayvanAyrintiAD.setText(hayvan.getAd());
         binding.hayvanAyrintiTUR.setText(hayvan.getTur());
         binding.hayvanAyrintiIRK.setText(hayvan.getIrk());
@@ -80,7 +80,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
         binding.hayvanAyrintiKISILIK.setText(hayvan.getKisilik());
         binding.hayvanAyrintiHAKKINDA.setText(hayvan.getAciklama());
         binding.hayvanAyrintiSehir.setText(hayvan.getSehir() + " / " + hayvan.getIlce());
-        foto=hayvan.getFoto();
+        foto=hayvan.getFoto1();
         getHayvanDocID();
 
         binding.hayvanAyrintiKonum.setOnClickListener(view -> {

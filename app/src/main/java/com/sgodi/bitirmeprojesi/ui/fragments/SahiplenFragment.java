@@ -235,7 +235,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -252,7 +255,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -291,7 +294,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -308,7 +314,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -340,7 +346,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -357,7 +366,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -391,7 +400,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -408,7 +420,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -583,7 +595,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -600,7 +615,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -638,7 +653,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -655,7 +673,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -686,7 +704,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -703,7 +724,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }
@@ -736,7 +757,10 @@ public class SahiplenFragment extends Fragment {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
                                                     String email = (String) data.get("email");
-                                                    String foto = (String) data.get("foto");
+                                                    String foto1 = (String) data.get("foto1");
+                                                    String foto2 = (String) data.get("foto2");
+                                                    String foto3 = (String) data.get("foto3");
+                                                    String foto4 = (String) data.get("foto4");
                                                     String ad = (String) data.get("ad");
                                                     String tur = (String) data.get("tur");
                                                     String irk = (String) data.get("ırk");
@@ -753,7 +777,7 @@ public class SahiplenFragment extends Fragment {
                                                     String ilce = (String) data.get("ilce");
                                                     String docid = documentSnapshot.getId();
 
-                                                    Hayvan hayvan = new Hayvan(email, foto, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
+                                                    Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
                                                     hayvanListesi.add(hayvan);
                                                 }

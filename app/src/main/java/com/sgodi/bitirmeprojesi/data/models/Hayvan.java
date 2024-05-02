@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 public class Hayvan implements Serializable {
     private String email;
-    private String foto;
+    private String foto1;
+    private String foto2;
+    private String foto3;
+    private String foto4;
     private String ad;
     private String tur;
     private String irk;
@@ -24,12 +27,15 @@ public class Hayvan implements Serializable {
     public Hayvan() {
     }
 
-    public Hayvan(String email, String foto, String ad, String tur,
+    public Hayvan(String email, String foto1,String foto2,String foto3,String foto4, String ad, String tur,
                   String irk, String cinsiyet, String yas, String saglik,
                   String aciklama, String kisilik,String docID,String sahipliMi,
                   String ilandaMi, String enlem,String boylam, String sehir,String ilce) {
         this.email = email;
-        this.foto = foto;
+        this.foto1 = foto1;
+        this.foto2 = foto2;
+        this.foto3 = foto3;
+        this.foto4 = foto4;
         this.ad = ad;
         this.tur = tur;
         this.irk = irk;
@@ -55,12 +61,36 @@ public class Hayvan implements Serializable {
         this.email = email;
     }
 
-    public String getFoto() {
-        return foto;
+    public String getFoto1() {
+        return foto1;
     }
 
-    public void setFoto(String foto) {
-        this.foto = foto;
+    public void setFoto1(String foto1) {
+        this.foto1 = foto1;
+    }
+
+    public String getFoto2() {
+        return foto2;
+    }
+
+    public void setFoto2(String foto2) {
+        this.foto2 = foto2;
+    }
+
+    public String getFoto3() {
+        return foto3;
+    }
+
+    public void setFoto3(String foto3) {
+        this.foto3 = foto3;
+    }
+
+    public String getFoto4() {
+        return foto4;
+    }
+
+    public void setFoto4(String foto4) {
+        this.foto4 = foto4;
     }
 
     public String getAd() {

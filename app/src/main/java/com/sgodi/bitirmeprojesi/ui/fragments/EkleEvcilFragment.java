@@ -51,7 +51,16 @@ public class EkleEvcilFragment extends Fragment{
     private FragmentEkleEvcilBinding binding;
     ActivityResultLauncher<Intent> activityResultLauncher;
     ActivityResultLauncher<String> permissionLauncher;
-    Uri imageData=null;
+    ActivityResultLauncher<Intent> activityResultLauncher2;
+    ActivityResultLauncher<String> permissionLauncher2;
+
+
+    ActivityResultLauncher<Intent> activityResultLauncher3;
+    ActivityResultLauncher<String> permissionLauncher3;
+    ActivityResultLauncher<Intent> activityResultLauncher4;
+    ActivityResultLauncher<String> permissionLauncher4;
+    Uri imageData=null,imageData2=null,imageData3=null,imageData4=null;
+    private ArrayList<Uri> uriList;
     FirebaseAuth auth;
     FirebaseStorage firebaseStorage;
     FirebaseFirestore firebaseFirestore;
@@ -71,10 +80,36 @@ public class EkleEvcilFragment extends Fragment{
         kisilikBaslat();
         yasBaslat();
         //
+        uriList = new ArrayList<>();
         registerLauncher();
+        registerLauncher2();
+        registerLauncher3();
+        registerLauncher4();
         binding.imageView.setOnClickListener(view -> {
-            fotografTiklandi(view);
+            fotografTiklandi1(view);
         });
+        binding.addImage2.setOnClickListener(view -> {
+            if (!binding.addImage2.getResources().equals(R.drawable.background_photo)){
+                fotografTiklandi2(view);
+            }
+        });
+        binding.addImage3.setOnClickListener(view -> {
+            if (!binding.addImage3.getResources().equals(R.drawable.background_photo)){
+                fotografTiklandi3(view);
+            }
+        });
+        binding.addImage4.setOnClickListener(view -> {
+            if (!binding.addImage4.getResources().equals(R.drawable.background_photo)){
+                fotografTiklandi4(view);
+            }
+        });
+
+
+
+
+
+
+
         // başlatılmalar
         auth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -115,13 +150,570 @@ public class EkleEvcilFragment extends Fragment{
 
 
         binding.imageViewKonum.setOnClickListener(view -> {
-
             Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_mapsFragment);
         });
 
 
         return binding.getRoot();
     }
+
+
+
+
+
+    //izin işlemleri
+    public void fotografTiklandi1(View view) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher.launch(intentToGallery);
+            }
+        }
+        else{
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher.launch(intentToGallery);
+            }
+        }
+    }
+    public void fotografTiklandi2(View view) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher2.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher2.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher2.launch(intentToGallery);
+            }
+        }
+        else{
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher2.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher2.launch(intentToGallery);
+            }
+        }
+    }
+
+    public void fotografTiklandi4(View view) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher4.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher4.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher4.launch(intentToGallery);
+            }
+        }
+        else{
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher4.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher4.launch(intentToGallery);
+            }
+        }
+    }
+    public void fotografTiklandi3(View view) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher3.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher3.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher3.launch(intentToGallery);
+            }
+        }
+        else{
+            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                //izin gerekli
+                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
+                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    //açıklama gerekli
+                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //izin işlemleri
+                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
+                    }).show();
+                }
+                else{
+                    //izin işlemleri
+                    permissionLauncher3.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+            }
+            else{
+                //izin daha önceden verilmiş, galeriye git
+                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityResultLauncher3.launch(intentToGallery);
+            }
+        }
+    }
+
+    private void registerLauncher() {
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intentFromResult = result.getData();
+                    if (intentFromResult != null) {
+                        imageData = intentFromResult.getData();
+                        //binding.imageView.setImageURI(imageData);
+                        try {
+                            img  = ImageUtil.uriToBitmap(getContext(), imageData);
+                            imageData=null;
+                            // Bitmap'i kullanabilirsiniz
+
+                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
+                            try {
+                                Model model = Model.newInstance(getContext());
+
+                                // Creates inputs for reference.
+                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
+                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
+                                tensorImage.load(img);
+                                ByteBuffer byteBuffer=tensorImage.getBuffer();
+                                inputFeature0.loadBuffer(byteBuffer);
+
+                                // Runs model inference and gets result.
+                                Model.Outputs outputs = model.process(inputFeature0);
+                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                                StringBuilder resultBuilder = new StringBuilder();
+                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
+                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
+
+                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
+                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
+                                    i==4 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                        binding.imageView.setImageResource(R.drawable.add_photo);
+                                        imageData=null;
+                                        uriList.clear();
+                                    }
+                                    if(i==0 && resultValue==255.f){
+                                        binding.autoCompleteTextView.setText("Kedi");
+                                        binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    if(i==1 && resultValue==255.f){
+                                        binding.autoCompleteTextView.setText("Köpek");
+                                        binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    else{
+                                        uriList.add(imageData);
+                                        imageData = intentFromResult.getData();
+                                        binding.imageView.setImageBitmap(img);
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                    }
+                                }
+                                // Releases model resources if no longer used.
+                                model.close();
+                            } catch (IOException e) {
+                                // TODO Handle the exception
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }
+            }
+        });
+
+        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    activityResultLauncher.launch(intent);
+                } else {
+                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void registerLauncher2() {
+        activityResultLauncher2 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intentFromResult = result.getData();
+                    if (intentFromResult != null) {
+                        imageData2 = intentFromResult.getData();
+                        //binding.imageView.setImageURI(imageData);
+                        try {
+                            img  = ImageUtil.uriToBitmap(getContext(), imageData2);
+                            imageData2=null;
+                            // Bitmap'i kullanabilirsiniz
+
+                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
+                            try {
+                                Model model = Model.newInstance(getContext());
+
+                                // Creates inputs for reference.
+                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
+                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
+                                tensorImage.load(img);
+                                ByteBuffer byteBuffer=tensorImage.getBuffer();
+                                inputFeature0.loadBuffer(byteBuffer);
+
+                                // Runs model inference and gets result.
+                                Model.Outputs outputs = model.process(inputFeature0);
+                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                                StringBuilder resultBuilder = new StringBuilder();
+                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
+                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
+
+                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
+                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
+                                            i==4 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        imageData2=null;
+                                    }
+                                    if(i==0 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Kedi");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    if(i==1 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Köpek");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    else{
+                                        imageData2 = intentFromResult.getData();
+                                        binding.addImage2.setImageBitmap(img);
+                                        binding.addImage3.setImageResource(R.drawable.add_photo);
+                                    }
+                                }
+                                // Releases model resources if no longer used.
+                                model.close();
+                            } catch (IOException e) {
+                                // TODO Handle the exception
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        permissionLauncher2 = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    activityResultLauncher.launch(intent);
+                } else {
+                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void registerLauncher3() {
+        activityResultLauncher3 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intentFromResult = result.getData();
+                    if (intentFromResult != null) {
+                        imageData3 = intentFromResult.getData();
+                        //binding.imageView.setImageURI(imageData);
+                        try {
+                            img  = ImageUtil.uriToBitmap(getContext(), imageData3);
+                            imageData3=null;
+                            // Bitmap'i kullanabilirsiniz
+
+                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
+                            try {
+                                Model model = Model.newInstance(getContext());
+
+                                // Creates inputs for reference.
+                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
+                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
+                                tensorImage.load(img);
+                                ByteBuffer byteBuffer=tensorImage.getBuffer();
+                                inputFeature0.loadBuffer(byteBuffer);
+
+                                // Runs model inference and gets result.
+                                Model.Outputs outputs = model.process(inputFeature0);
+                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                                StringBuilder resultBuilder = new StringBuilder();
+                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
+                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
+
+                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
+                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
+                                            i==4 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        imageData3=null;
+                                    }
+                                    if(i==0 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Kedi");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    if(i==1 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Köpek");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    else{
+                                        imageData3 = intentFromResult.getData();
+                                        binding.addImage3.setImageBitmap(img);
+                                        binding.addImage4.setImageResource(R.drawable.add_photo);
+                                    }
+                                }
+                                // Releases model resources if no longer used.
+                                model.close();
+                            } catch (IOException e) {
+                                // TODO Handle the exception
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        permissionLauncher3 = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    activityResultLauncher.launch(intent);
+                } else {
+                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void registerLauncher4() {
+        activityResultLauncher4 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intentFromResult = result.getData();
+                    if (intentFromResult != null) {
+                        imageData4 = intentFromResult.getData();
+                        //binding.imageView.setImageURI(imageData);
+                        try {
+                            img  = ImageUtil.uriToBitmap(getContext(), imageData4);
+                            imageData4=null;
+                            // Bitmap'i kullanabilirsiniz
+
+                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
+                            try {
+                                Model model = Model.newInstance(getContext());
+
+                                // Creates inputs for reference.
+                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
+                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
+                                tensorImage.load(img);
+                                ByteBuffer byteBuffer=tensorImage.getBuffer();
+                                inputFeature0.loadBuffer(byteBuffer);
+
+                                // Runs model inference and gets result.
+                                Model.Outputs outputs = model.process(inputFeature0);
+                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                                StringBuilder resultBuilder = new StringBuilder();
+                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
+                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
+
+                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
+                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
+                                            i==4 && resultValue == 255.0f) {
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        imageData4=null;
+                                    }
+                                    if(i==0 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Kedi");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    if(i==1 && resultValue==255.f){
+                                        //binding.autoCompleteTextView.setText("Köpek");
+                                        //binding.autoCompleteTextView.setEnabled(false);
+                                    }
+                                    else{
+                                        imageData4 = intentFromResult.getData();
+                                        binding.addImage4.setImageBitmap(img);
+                                    }
+                                }
+                                // Releases model resources if no longer used.
+                                model.close();
+                            } catch (IOException e) {
+                                // TODO Handle the exception
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        permissionLauncher4 = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    activityResultLauncher.launch(intent);
+                } else {
+                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+
+
 
 
 
@@ -206,7 +798,25 @@ public class EkleEvcilFragment extends Fragment{
                     postData.put("aciklama", aciklama);
                     postData.put("ad", ad);
                     postData.put("cinsiyet", cinsiyet);
-                    postData.put("foto", foto);
+
+                    postData.put("foto1", imageData);
+
+
+                    if (imageData2 != null){
+                        postData.put("foto2", imageData);
+                    }else{
+                        postData.put("foto2", "null");
+                    }
+                    if (imageData3 != null){
+                        postData.put("foto3", imageData);
+                    }else{
+                        postData.put("foto3", "null");
+                    }
+                    if (imageData4 != null){
+                        postData.put("foto4", imageData);
+                    }else{
+                        postData.put("foto4", "null");
+                    }
                     postData.put("kisilik", kisilik);
                     postData.put("saglik", saglik);
                     postData.put("tur", tur);
@@ -222,12 +832,15 @@ public class EkleEvcilFragment extends Fragment{
                     firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
                         temizle();
+
                     }).addOnFailureListener(e -> {
                         Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }).addOnCompleteListener(task -> {
                         binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
                         binding.buttonHayvanEkle.setEnabled(true);
                     });
+
+
                     firebaseFirestore.collection("kullanici_hayvanlari_sahiplendir").add(postData).addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
                         temizle();
@@ -253,148 +866,12 @@ public class EkleEvcilFragment extends Fragment{
         }
     }
 
-    //izin işlemleri
-    public void fotografTiklandi(View view) {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
-            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
-                //izin gerekli
-                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
-                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)){
-                    //açıklama gerekli
-                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //izin işlemleri
-                            permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
-                        }
-                    }).show();
-                }
-                else{
-                    //izin işlemleri
-                    permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES);
-                }
-
-            }
-            else{
-                //izin daha önceden verilmiş, galeriye git
-                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                activityResultLauncher.launch(intentToGallery);
-            }
-        }
-        else{
-            if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-                //izin gerekli
-                //kullanıcıya açıklama göstermek zorunda mıyız kontrolü
-                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.READ_EXTERNAL_STORAGE)){
-                    //açıklama gerekli
-                    Snackbar.make(view,"Galeriye gitmek için izin gereklidir.",Snackbar.LENGTH_INDEFINITE).setAction("İzin ver", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //izin işlemleri
-                            permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
-                        }
-                    }).show();
-                }
-                else{
-                    //izin işlemleri
-                    permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
-
-            }
-            else{
-                //izin daha önceden verilmiş, galeriye git
-                Intent intentToGallery= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                activityResultLauncher.launch(intentToGallery);
-            }
-        }
-    }
-
-    private void registerLauncher() {
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == RESULT_OK) {
-                    Intent intentFromResult = result.getData();
-                    if (intentFromResult != null) {
-                        imageData = intentFromResult.getData();
-                        //binding.imageView.setImageURI(imageData);
-                        try {
-                            img  = ImageUtil.uriToBitmap(getContext(), imageData);
-                            imageData=null;
-                            // Bitmap'i kullanabilirsiniz
-
-                            img = Bitmap.createScaledBitmap(img, 224, 224, true);
-                            try {
-                                Model model = Model.newInstance(getContext());
-
-                                // Creates inputs for reference.
-                                TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.UINT8);
-                                TensorImage tensorImage=new TensorImage(DataType.UINT8);
-                                tensorImage.load(img);
-                                ByteBuffer byteBuffer=tensorImage.getBuffer();
-                                inputFeature0.loadBuffer(byteBuffer);
-
-                                // Runs model inference and gets result.
-                                Model.Outputs outputs = model.process(inputFeature0);
-                                TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-                                StringBuilder resultBuilder = new StringBuilder();
-                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
-                                    float resultValue = outputFeature0.getFloatArray()[i];
-                                    resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
-
-                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
-                                    i==4 && resultValue == 255.0f) {
-                                        Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
-                                        binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
-                                        imageData=null;
-                                    }
-                                    if(i==0 && resultValue==255.f){
-                                        binding.autoCompleteTextView.setText("Kedi");
-                                        binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    if(i==1 && resultValue==255.f){
-                                        binding.autoCompleteTextView.setText("Köpek");
-                                        binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    else{
-                                        imageData = intentFromResult.getData();
-                                        binding.imageView.setImageBitmap(img);
-                                    }
-                                }
-                                // Releases model resources if no longer used.
-                                model.close();
-                            } catch (IOException e) {
-                                // TODO Handle the exception
-                            }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                }
-            }
-        });
-
-        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-            @Override
-            public void onActivityResult(Boolean result) {
-                if (result) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    activityResultLauncher.launch(intent);
-                } else {
-                    Toast.makeText(getContext(), "İzin verilmedi", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void temizle(){
         binding.autoCompleteTextView.clearListSelection();
-        binding.imageView.setImageResource(R.drawable.baseline_add_a_photo_24);
+        binding.imageView.setImageResource(R.drawable.add_photo);
+        binding.addImage2.setImageResource(R.drawable.background_photo);
+        binding.addImage3.setImageResource(R.drawable.background_photo);
+        binding.addImage4.setImageResource(R.drawable.background_photo);
         binding.radioButtonErkek.setChecked(false);
         binding.radioButtonDisi.setChecked(false);
         binding.autoCompleteTextViewHayvanKisilik.clearListSelection();

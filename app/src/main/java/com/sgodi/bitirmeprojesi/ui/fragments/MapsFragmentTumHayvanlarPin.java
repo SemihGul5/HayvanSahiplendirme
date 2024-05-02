@@ -139,7 +139,10 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
                             String aciklama = document.getString("aciklama");
                             String sehir = document.getString("sehir");
                             String ilce = document.getString("ilce");
-                            String foto = document.getString("foto");
+                            String foto1 = document.getString("foto1");
+                            String foto2 = document.getString("foto2");
+                            String foto3 = document.getString("foto3");
+                            String foto4 = document.getString("foto4");
                             String email = document.getString("email");
                             String docid=document.getId();
                             String sahiplimi=document.getString("sahipli_mi");
@@ -147,7 +150,7 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
                             String enlem=document.getString("enlem");
                             String boylam=document.getString("boylam");
                             // Hayvan nesnesini oluştur
-                            Hayvan hayvan = new Hayvan(email,foto,ad,tur,irk,cinsiyet,yas,saglik,aciklama,kisilik,docid,sahiplimi,ilanda_mi,enlem,
+                            Hayvan hayvan = new Hayvan(email,foto1,foto2,foto3,foto4,ad,tur,irk,cinsiyet,yas,saglik,aciklama,kisilik,docid,sahiplimi,ilanda_mi,enlem,
                                     boylam,sehir,ilce);
                             hayvans.add(hayvan);
 
@@ -201,7 +204,7 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
 
         // Özellikleri göster;
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView imageView = view.findViewById(R.id.imageViewHayvanimAyrinti_bottom);
-        Picasso.get().load(hayvan.getFoto()).resize(150,150)
+        Picasso.get().load(hayvan.getFoto1()).resize(150,150)
                 .into(imageView);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewAd = view.findViewById(R.id.hayvan_ayrinti_AD_bottom);
         textViewAd.setText(hayvan.getAd());
