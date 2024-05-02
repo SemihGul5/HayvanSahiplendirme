@@ -54,7 +54,7 @@ public class AyarlarFragment extends Fragment {
         AyarlarIcerik profilim=new AyarlarIcerik("Profilim",false);
         AyarlarIcerik kisilikTesti=new AyarlarIcerik("Kişilik Testi",false);
         AyarlarIcerik mesajlar=new AyarlarIcerik("Mesajlar",false);
-        AyarlarIcerik bakiciIlan=new AyarlarIcerik("Bakıcı İlanımı kaldır",false);
+        AyarlarIcerik bakiciIlan=new AyarlarIcerik("Bakıcı İlanımı Kaldır",false);
         AyarlarIcerik oneri=new AyarlarIcerik("Kişiselleştirilmiş Öneriler",true);
         AyarlarIcerik paylas=new AyarlarIcerik("Uygulamayı Paylaş",false);
         AyarlarIcerik ulas=new AyarlarIcerik("Bize Ulaşın",false);

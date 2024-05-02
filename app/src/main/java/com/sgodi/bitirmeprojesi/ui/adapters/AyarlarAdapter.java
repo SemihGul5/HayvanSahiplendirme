@@ -87,6 +87,13 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
         holder.binding.ayarlarCard.setOnClickListener(view -> {
             listedenElemanTiklanmasi(view,holder,icerik);
         });
+
+        ayarlarIconAyarlama(icerik,holder);
+
+
+
+
+
         holder.binding.switchAyarlar.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Firestore'daki oneri_durumu değerini güncelleme
             firestore.collection("kullanicilar")
@@ -109,6 +116,32 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
                     });
         });
 
+    }
+
+    private void ayarlarIconAyarlama(AyarlarIcerik icerik, AyarlarCardTutucu holder) {
+        if (icerik.getBaslik().equals("Profilim")){
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_person_24);
+        } else if (icerik.getBaslik().equals("Kişilik Testi")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.testing);
+        }
+        else if (icerik.getBaslik().equals("Mesajlar")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_message_24);
+        }
+        else if (icerik.getBaslik().equals("Bakıcı İlanımı Kaldır")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_bookmark_remove_24);
+        }
+        else if (icerik.getBaslik().equals("Kişiselleştirilmiş Öneriler")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_auto_fix_high_24);
+        }
+        else if (icerik.getBaslik().equals("Uygulamayı Paylaş")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_share_24);
+        }
+        else if (icerik.getBaslik().equals("Bize Ulaşın")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_email_24);
+        }
+        else if (icerik.getBaslik().equals("Çıkış Yap")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_logout_24);
+        }
     }
 
     private void listedenElemanTiklanmasi(View view, AyarlarCardTutucu holder, AyarlarIcerik icerik) {

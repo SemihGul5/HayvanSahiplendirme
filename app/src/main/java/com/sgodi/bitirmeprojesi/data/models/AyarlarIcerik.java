@@ -1,6 +1,7 @@
 package com.sgodi.bitirmeprojesi.data.models;
 
 public class AyarlarIcerik {
+
     private String baslik;
     private Boolean switchDurum;
 
@@ -11,6 +12,7 @@ public class AyarlarIcerik {
 
     public AyarlarIcerik() {
     }
+
 
     public String getBaslik() {
         return baslik;

@@ -47,7 +47,6 @@ public class KisilikTestFragment extends Fragment {
     private OkHttpClient client;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-    String kisilik="";
     String aciklama="";
 
     @SuppressLint("ResourceAsColor")
