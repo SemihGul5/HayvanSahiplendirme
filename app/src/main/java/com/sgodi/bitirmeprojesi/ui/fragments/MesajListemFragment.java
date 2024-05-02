@@ -40,7 +40,6 @@ public class MesajListemFragment extends Fragment {
     FirebaseFirestore firestore;
     FirebaseAuth auth;
     ArrayList<Kullanici> bakiciList;
-    String gonderenEmail,aliciEmail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -47,18 +47,11 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:layout_marginBottom="8dp"
-                    android:textColor="#B9B8B8"
+                    android:textColor="@color/black"
                     android:layout_gravity="end"
                     android:text="25:38"
                     android:textSize="12sp" />
-                <ImageView
-                    android:id="@+id/imageViewOkunduMu"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    app:srcCompat="@drawable/check" />
+
             </LinearLayout>
         </LinearLayout>
 

@@ -20,12 +20,8 @@ import com.sgodi.bitirmeprojesi.databinding.KisiMesajBinding;
 import java.util.List;
 
 public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.MesajHolder> {
-    public static final int VIEW_GONDEREN=1;
-    public static final int VIEW_ALAN=2;
     private Context context;
     private List<Mesaj> mesajs;
-
-    // Kullanıcının e-posta adresi
     private String userEmail;
 
     public MesajAdapter(Context context, List<Mesaj> mesajs, String userEmail) {
@@ -47,12 +43,6 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.MesajHolder>
         Mesaj mesaj = mesajs.get(position);
         holder.binding.textViewCardMesaj.setText(mesaj.getMesaj());
         holder.binding.textViewMesajSaati.setText(mesaj.getSaat());
-
-        if (mesaj.getOkunduMu().equals("true")){
-            holder.binding.imageViewOkunduMu.setImageResource(R.drawable.baseline_check_24);
-        }else{
-            holder.binding.imageViewOkunduMu.setImageResource(R.drawable.baseline_check_gri);
-        }
 
         // Mesajın gönderildiği tarafı belirle
         if (mesaj.getGonderen_email().equals(userEmail)) {
