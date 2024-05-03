@@ -140,10 +140,10 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_bookmark_remove_24);
         }
         else if (icerik.getBaslik().equals("Kişiselleştirilmiş Öneriler")) {
-            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_auto_fix_high_24);
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.oneriler);
         }
         else if (icerik.getBaslik().equals("Hayvan Kişilikleri")) {
-            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.info);
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.black_cat);
         }
         else if (icerik.getBaslik().equals("Uygulamayı Paylaş")) {
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_share_24);
