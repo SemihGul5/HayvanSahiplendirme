@@ -6,6 +6,7 @@ buildscript{
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3")
     }
 }
+
 plugins {
     id("com.android.application") version "8.2.2" apply false
 

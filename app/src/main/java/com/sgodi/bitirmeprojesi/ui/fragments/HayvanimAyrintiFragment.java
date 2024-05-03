@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,11 +27,16 @@ import com.sgodi.bitirmeprojesi.data.models.Hayvan;
 import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanimAyrintiBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class HayvanimAyrintiFragment extends Fragment {
     private FragmentHayvanimAyrintiBinding binding;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private String enlem,boylam;
+    ArrayList<SlideModel>slideModels;
+    private String foto1,foto2,foto3,foto4;
+    
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +55,31 @@ public class HayvanimAyrintiFragment extends Fragment {
         // hayvan kartına tıklandığında gelen bilgileri alınması - hayvanim adapterdan
         HayvanimAyrintiFragmentArgs bundle=HayvanimAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan= bundle.getHayvan();
+        foto1=hayvan.getFoto1();
+        foto2=hayvan.getFoto2();
+        foto3=hayvan.getFoto3();
+        foto4=hayvan.getFoto4();
+        slideModels=new ArrayList<>();
+        SlideModel slideModel1=new SlideModel(foto1, ScaleTypes.FIT);
+        slideModels.add(slideModel1);
+        if (!"null".equals(foto2)) {
+            SlideModel slideModel2 = new SlideModel(foto2, ScaleTypes.FIT);
+            slideModels.add(slideModel2);
+        }
 
-        Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
+        if (!"null".equals(foto3)) {
+            SlideModel slideModel3 = new SlideModel(foto3, ScaleTypes.FIT);
+            slideModels.add(slideModel3);
+        }
+
+        if (!"null".equals(foto4)) {
+            SlideModel slideModel4 = new SlideModel(foto4, ScaleTypes.FIT);
+            slideModels.add(slideModel4);
+        }
+
+        binding.imageSlider.setImageList(slideModels,ScaleTypes.FIT);
+
+        //Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
         binding.hayvanAyrintiAD.setText(hayvan.getAd());
         binding.hayvanAyrintiTUR.setText(hayvan.getTur());
         binding.hayvanAyrintiIRK.setText(hayvan.getIrk());

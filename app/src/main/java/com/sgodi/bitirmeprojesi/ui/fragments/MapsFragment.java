@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,19 +47,36 @@ public class MapsFragment extends Fragment {
     private ActivityResultLauncher<String> permissionLauncher;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private String sehir,ilce;
+    private String sehir, ilce;
+
+    private GoogleMap googleMap;
+    private LatLng selectedLatLng; // Kullanıcının seçtiği konumu tutmak için
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
-            locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        public void onMapReady(GoogleMap map) {
+            googleMap = map;
 
+            // Konum izni kontrolü
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
             } else {
-                // Konumu al
-                getLocation(googleMap);
+                // Konum al
+                getLocation();
             }
+
+            // Haritada bir yere tıklandığında
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    // Kullanıcının tıkladığı konumu al
+                    selectedLatLng = latLng;
+                    // Önceki marker'ı temizle (sadece bir marker göstermek istiyoruz)
+                    googleMap.clear();
+                    // Yeni marker ekle
+                    googleMap.addMarker(new MarkerOptions().position(selectedLatLng).title("Seçili Konum"));
+                }
+            });
         }
     };
 
@@ -84,40 +102,34 @@ public class MapsFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
 
         binding.buttonKonumKaydet.setOnClickListener(view1 -> {
-            // Butona tıklandığında o anki konumu al
-            if (locationManager != null && locationListener != null) {
-                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (lastLocation != null) {
-                    double latitude = lastLocation.getLatitude();
-                    double longitude = lastLocation.getLongitude();
-                    String latitudeStr = String.valueOf(latitude);
-                    String longitudeStr = String.valueOf(longitude);
+            // Seçili konumu kullanarak işlem yap
+            if (selectedLatLng != null) {
+                double latitude = selectedLatLng.latitude;
+                double longitude = selectedLatLng.longitude;
+                String latitudeStr = String.valueOf(latitude);
+                String longitudeStr = String.valueOf(longitude);
 
-                    getCityNameWithLocation(latitude,longitude);
+                getCityNameWithLocation(latitude, longitude);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("la", latitudeStr); // Key, alıcı fragment'ta bu veriyi almak için kullanılacak
-                    bundle.putString("lo", longitudeStr);
-                    bundle.putString("sehir", sehir);
-                    bundle.putString("ilce", ilce);
-                    EkleEvcilFragment ekleEvcilFragment = new EkleEvcilFragment();
-                    ekleEvcilFragment.setArguments(bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putString("la", latitudeStr);
+                bundle.putString("lo", longitudeStr);
+                bundle.putString("sehir", sehir);
+                bundle.putString("ilce", ilce);
+                EkleEvcilFragment ekleEvcilFragment = new EkleEvcilFragment();
+                ekleEvcilFragment.setArguments(bundle);
 
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.constMAP, ekleEvcilFragment)
-                            .addToBackStack(null)
-                            .commit();
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.constMAP, ekleEvcilFragment)
+                        .addToBackStack(null)
+                        .commit();*/
+                MapsFragmentDirections.ActionMapsFragmentToEkleEvcilFragment gecis=
+                        MapsFragmentDirections.actionMapsFragmentToEkleEvcilFragment(latitudeStr,longitudeStr,sehir,ilce);
+                Navigation.findNavController(view).navigate(gecis);
 
-                    // Toast ile kullanıcıya bilgi ver
-                    Toast.makeText(requireContext(), "Konum başarıyla kaydedildi", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireContext(), "Konum bulunamadı", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(requireContext(), "Konum başarıyla kaydedildi", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(requireContext(), "Konum izni verilmedi", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Lütfen bir konum seçin. (İstediğiniz bir yere basın)", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -125,9 +137,9 @@ public class MapsFragment extends Fragment {
     private void registerLauncher() {
         permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
+                // Konum izni verilmiş, işlem yap
                 if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    // Konumu al
-                    getLocation(null);
+                    getLocation();
                 }
             } else {
                 Toast.makeText(requireContext(), "Konum izni verilmedi", Toast.LENGTH_SHORT).show();
@@ -135,53 +147,40 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    private void getLocation(GoogleMap googleMap) {
+    private void getLocation() {
+        locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null) {
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
-                   /* double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    String latitudeStr = String.valueOf(latitude);
-                    String longitudeStr = String.valueOf(longitude);
-
-                    // Haritada konumu göster
-                    LatLng currentLocation = new LatLng(latitude, longitude);
-                    if (googleMap != null) {
-                        googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                    }*/
+                    // Konum değiştiğinde çalışacak kodlar
                 }
             };
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // İzin verilmemiş, işlem yapma
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (lastLocation != null && googleMap != null) {
+            if (lastLocation != null) {
+                // Konumu al ve haritada göster
                 LatLng currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                googleMap.setMyLocationEnabled(true);
             }
         }
     }
+
     private void getCityNameWithLocation(double lat, double lng) {
         try {
-
             Geocoder geo = new Geocoder(getContext(), Locale.getDefault());
-            List < Address > addresses = geo.getFromLocation(lat, lng, 1);
-            if (addresses.isEmpty()) {
-
-            } else {
-                if (addresses.size() > 0) {
-                    Log.i("cityname",addresses.get(0).getAdminArea());
-                    sehir=addresses.get(0).getAdminArea();
-                    ilce=addresses.get(0).getSubLocality();
-                }
+            List<Address> addresses = geo.getFromLocation(lat, lng, 1);
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                sehir = address.getAdminArea();
+                ilce = address.getSubLocality();
             }
-        } catch (Exception e) {
-            e.printStackTrace(); // getFromLocation() may sometimes fail
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -194,3 +193,4 @@ public class MapsFragment extends Fragment {
         binding = null;
     }
 }
+

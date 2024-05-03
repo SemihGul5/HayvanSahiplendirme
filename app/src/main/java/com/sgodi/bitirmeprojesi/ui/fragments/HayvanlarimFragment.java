@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
@@ -42,7 +44,7 @@ public class HayvanlarimFragment extends Fragment {
 
         binding.floatingActionButtonHayvanlarim.setOnClickListener(view -> {
             //hayvan ekleye git
-            Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_ekleEvcilFragment);
+            Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_mapsFragment);
         });
 
         hayvanListesi=new ArrayList<>();
@@ -62,12 +64,14 @@ public class HayvanlarimFragment extends Fragment {
 
         firestore.collection("kullanici_hayvanlari")
                 .whereEqualTo("email", userEmail)
+                .orderBy("tarih", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (error != null) {
                             Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            Log.i("Mesaj",error.getMessage());
                             return;
                         }
                         hayvanListesi.clear();

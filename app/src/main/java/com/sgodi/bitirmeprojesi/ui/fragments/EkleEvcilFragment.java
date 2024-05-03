@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -79,6 +80,12 @@ public class EkleEvcilFragment extends Fragment{
         turBaslat();
         kisilikBaslat();
         yasBaslat();
+        EkleEvcilFragmentArgs bundle=EkleEvcilFragmentArgs.fromBundle(getArguments());
+        latitude=bundle.getLatitude();
+        longitude=bundle.getLongitude();
+        sehir=bundle.getSehir();
+        ilce=bundle.getIlce();
+
         //
         uriList = new ArrayList<>();
         registerLauncher();
@@ -104,12 +111,6 @@ public class EkleEvcilFragment extends Fragment{
             }
         });
 
-
-
-
-
-
-
         // başlatılmalar
         auth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -117,7 +118,7 @@ public class EkleEvcilFragment extends Fragment{
         storageReference = firebaseStorage.getReference();// görseli depoda nereye kaydediceğimizi gösteren bir değişken
 
 
-        Bundle bundle = getArguments();
+        /*Bundle bundle = getArguments();
         if (bundle != null) {
             latitude = bundle.getString("la");
             longitude = bundle.getString("lo");
@@ -126,20 +127,20 @@ public class EkleEvcilFragment extends Fragment{
             //binding.textView4.setText(latitude+"   "+longitude);
             if (latitude==null){
                 //Toast.makeText(getContext(), "boş", Toast.LENGTH_SHORT).show();
-                binding.imageViewCheckPass.setImageResource(R.drawable.close);
+                //binding.imageViewCheckPass.setImageResource(R.drawable.close);
                 secildiMi=false;
             }else{
                 //Toast.makeText(getContext(), "dolu", Toast.LENGTH_SHORT).show();
-                binding.imageViewCheckPass.setImageResource(R.drawable.check);
+                //binding.imageViewCheckPass.setImageResource(R.drawable.check);
                 secildiMi=true;
             }
 
             // Veri alındı, burada işlemleri yapabilirsiniz
-        }
+        }*/
 
-        if (secildiMi){
+       /* if (secildiMi){
             binding.imageViewKonum.setEnabled(false);
-        }
+        }*/
 
 
         //kaydet butonu tıklanması
@@ -147,11 +148,9 @@ public class EkleEvcilFragment extends Fragment{
             hayvan_kaydet(view);
         });
 
-
-
-        binding.imageViewKonum.setOnClickListener(view -> {
+       /* binding.imageViewKonum.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_mapsFragment);
-        });
+        });*/
 
 
         return binding.getRoot();
@@ -778,7 +777,7 @@ public class EkleEvcilFragment extends Fragment{
                     //veritabanına koyma işlemleri
                     FirebaseUser user = auth.getCurrentUser();
                     String email = user.getEmail();
-                    String foto = uri.toString();
+                    String foto1 = uri.toString();
                     String ad = binding.editTextHayvanAd.getText().toString();
                     String tur = binding.autoCompleteTextView.getText().toString();
                     String irk = binding.editTextHayvanIrk.getText().toString();
@@ -828,11 +827,12 @@ public class EkleEvcilFragment extends Fragment{
                     postData.put("boylam",longitude);
                     postData.put("sehir",sehir);
                     postData.put("ilce",ilce);
+                    postData.put("tarih", FieldValue.serverTimestamp());
                     //firebase koleksiyonuna yükleme işlemi ve sonucunun ne olduğunu değerlendirme
                     firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
                         temizle();
-
+                        Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_hayvanlarimFragment);
                     }).addOnFailureListener(e -> {
                         Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }).addOnCompleteListener(task -> {

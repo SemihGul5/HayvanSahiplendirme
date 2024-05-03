@@ -51,6 +51,7 @@ public class Hayvan implements Serializable {
         this.boylam=boylam;
         this.sehir=sehir;
         this.ilce=ilce;
+
     }
 
     public String getEmail() {
@@ -212,4 +213,5 @@ public class Hayvan implements Serializable {
     public void setIlce(String ilce) {
         this.ilce = ilce;
     }
+
 }

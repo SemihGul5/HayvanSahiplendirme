@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
@@ -219,12 +221,14 @@ public class SahiplenFragment extends Fragment {
                         if (sehir.equals("")&&cinsiyet.equals("")){
                             firestore.collection("kullanici_hayvanlari")
                                     .whereEqualTo("kisilik", kisilik)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .whereEqualTo("ilanda_mi","true")
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -279,11 +283,13 @@ public class SahiplenFragment extends Fragment {
                                     .whereEqualTo("kisilik", kisilik)
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("cinsiyet",cinsiyet)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -331,11 +337,13 @@ public class SahiplenFragment extends Fragment {
                                     .whereEqualTo("kisilik", kisilik)
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("sehir",sehir)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -385,11 +393,13 @@ public class SahiplenFragment extends Fragment {
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("sehir",sehir)
                                     .whereEqualTo("cinsiyet",cinsiyet)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -580,11 +590,13 @@ public class SahiplenFragment extends Fragment {
                         if (sehir.equals("")&&cinsiyet.equals("")){
                             firestore.collection("kullanici_hayvanlari")
                                     .whereEqualTo("ilanda_mi","true")
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -638,11 +650,13 @@ public class SahiplenFragment extends Fragment {
                             firestore.collection("kullanici_hayvanlari")
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("cinsiyet",cinsiyet)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -689,11 +703,13 @@ public class SahiplenFragment extends Fragment {
                             firestore.collection("kullanici_hayvanlari")
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("sehir",sehir)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -742,11 +758,13 @@ public class SahiplenFragment extends Fragment {
                                     .whereEqualTo("ilanda_mi","true")
                                     .whereEqualTo("sehir",sehir)
                                     .whereEqualTo("cinsiyet",cinsiyet)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NotifyDataSetChanged")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             if (error != null) {
+                                                Log.i("Mesaj",error.getMessage());
                                                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
@@ -775,6 +793,7 @@ public class SahiplenFragment extends Fragment {
                                                     String boylam = (String) data.get("boylam");
                                                     String sehir = (String) data.get("sehir");
                                                     String ilce = (String) data.get("ilce");
+
                                                     String docid = documentSnapshot.getId();
 
                                                     Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,

@@ -72,14 +72,20 @@
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.EkleEvcilFragment"
         android:label="fragment_ekle_evcil"
         tools:layout="@layout/fragment_ekle_evcil" >
-        <action
-            android:id="@+id/action_ekleEvcilFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
         <argument
             android:name="latitude"
             app:argType="string" />
         <argument
             android:name="longitude"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ekleEvcilFragment_to_hayvanlarimFragment"
+            app:destination="@id/hayvanlarimFragment" />
+        <argument
+            android:name="sehir"
+            app:argType="string" />
+        <argument
+            android:name="ilce"
             app:argType="string" />
     </fragment>
     <fragment
@@ -88,11 +94,11 @@
         android:label="fragment_hayvanlarim"
         tools:layout="@layout/fragment_hayvanlarim" >
         <action
-            android:id="@+id/action_hayvanlarimFragment_to_ekleEvcilFragment"
-            app:destination="@id/ekleEvcilFragment" />
-        <action
             android:id="@+id/action_hayvanlarimFragment_to_hayvanimAyrintiFragment"
             app:destination="@id/hayvanimAyrintiFragment" />
+        <action
+            android:id="@+id/action_hayvanlarimFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/bizeUlasFragment"
