@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_ayarlarFragment_to_kisisellestirilmisSahiplenmeAyarFragment"
             app:destination="@id/kisisellestirilmisSahiplenmeAyarFragment" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_hayvanimKisilikYonergeleriFragment"
+            app:destination="@id/hayvanimKisilikYonergeleriFragment" />
     </fragment>
     <fragment
         android:id="@+id/sahiplenFragment"
@@ -99,6 +102,9 @@
         <action
             android:id="@+id/action_hayvanlarimFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_hayvanlarimFragment_to_hayvanimKisilikYonergeleriFragment"
+            app:destination="@id/hayvanimKisilikYonergeleriFragment" />
     </fragment>
     <fragment
         android:id="@+id/bizeUlasFragment"
@@ -242,4 +248,9 @@
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.KisisellestirilmisSahiplenmeAyarFragment"
         android:label="fragment_kisisellestirilmis_sahiplenme_ayar"
         tools:layout="@layout/fragment_kisisellestirilmis_sahiplenme_ayar" />
+    <fragment
+        android:id="@+id/hayvanimKisilikYonergeleriFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanimKisilikYonergeleriFragment"
+        android:label="fragment_hayvanim_kisilik_yonergeleri"
+        tools:layout="@layout/fragment_hayvanim_kisilik_yonergeleri" />
 </navigation>

@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +50,7 @@ import com.sgodi.bitirmeprojesi.data.models.Mesaj;
 import com.sgodi.bitirmeprojesi.databinding.FragmentSahiplendirAyrintiBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +58,8 @@ public class SahiplendirAyrintiFragment extends Fragment {
     private FragmentSahiplendirAyrintiBinding binding;
     FirebaseFirestore firestore;
     String docID;
-    String foto;
+    ArrayList<SlideModel> slideModels;
+    private String foto1,foto2,foto3,foto4;
 
     @SuppressLint("ResourceType")
     @Override
@@ -69,8 +73,30 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
         SahiplendirAyrintiFragmentArgs bundle = SahiplendirAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan = bundle.getHayvan();
+        foto1=hayvan.getFoto1();
+        foto2=hayvan.getFoto2();
+        foto3=hayvan.getFoto3();
+        foto4=hayvan.getFoto4();
+        slideModels=new ArrayList<>();
+        SlideModel slideModel1=new SlideModel(foto1, ScaleTypes.FIT);
+        slideModels.add(slideModel1);
+        if (!"null".equals(foto2)) {
+            SlideModel slideModel2 = new SlideModel(foto2, ScaleTypes.FIT);
+            slideModels.add(slideModel2);
+        }
 
-        Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
+        if (!"null".equals(foto3)) {
+            SlideModel slideModel3 = new SlideModel(foto3, ScaleTypes.FIT);
+            slideModels.add(slideModel3);
+        }
+
+        if (!"null".equals(foto4)) {
+            SlideModel slideModel4 = new SlideModel(foto4, ScaleTypes.FIT);
+            slideModels.add(slideModel4);
+        }
+
+        binding.imageSlider.setImageList(slideModels,ScaleTypes.FIT);
+        //Picasso.get().load(hayvan.getFoto1()).into(binding.imageViewHayvanimAyrinti);
         binding.hayvanAyrintiAD.setText(hayvan.getAd());
         binding.hayvanAyrintiTUR.setText(hayvan.getTur());
         binding.hayvanAyrintiIRK.setText(hayvan.getIrk());
@@ -80,7 +106,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
         binding.hayvanAyrintiKISILIK.setText(hayvan.getKisilik());
         binding.hayvanAyrintiHAKKINDA.setText(hayvan.getAciklama());
         binding.hayvanAyrintiSehir.setText(hayvan.getSehir() + " / " + hayvan.getIlce());
-        foto=hayvan.getFoto1();
+        foto1=hayvan.getFoto1();
         getHayvanDocID();
 
         binding.hayvanAyrintiKonum.setOnClickListener(view -> {
@@ -134,7 +160,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
     private void getHayvanDocID() {
         try {
-            firestore.collection("kullanici_hayvanlari").whereEqualTo("foto",foto)
+            firestore.collection("kullanici_hayvanlari").whereEqualTo("foto1",foto1)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

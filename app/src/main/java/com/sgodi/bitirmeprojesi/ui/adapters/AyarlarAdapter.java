@@ -51,25 +51,29 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
     @Override
     public AyarlarCardTutucu onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         AyarlarListesiBinding binding=AyarlarListesiBinding.inflate(LayoutInflater.from(mContext),parent,false);
-
-        // Firestore'dan belirli bir koşulu karşılayan belgeleri getirme ve switch bileşenini buna göre ayarlama
-        firestore.collection("kullanicilar")
-                .whereEqualTo("email", auth.getCurrentUser().getEmail())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (DocumentSnapshot document : task.getResult()) {
-                            Boolean oneriDurumu = document.getBoolean("oneri_durum");
-                            if (oneriDurumu != null && oneriDurumu) {
-                                // oneri_durumu true ise switch'i açık yap
-                                binding.switchAyarlar.setChecked(true);
-                            } else {
-                                // oneri_durumu false veya null ise switch'i kapalı yap
-                                binding.switchAyarlar.setChecked(false);
+        try {
+            // Firestore'dan belirli bir koşulu karşılayan belgeleri getirme ve switch bileşenini buna göre ayarlama
+            firestore.collection("kullanicilar")
+                    .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Boolean oneriDurumu = document.getBoolean("oneri_durum");
+                                if (oneriDurumu != null && oneriDurumu) {
+                                    // oneri_durumu true ise switch'i açık yap
+                                    binding.switchAyarlar.setChecked(true);
+                                } else {
+                                    // oneri_durumu false veya null ise switch'i kapalı yap
+                                    binding.switchAyarlar.setChecked(false);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
+
 
         return new AyarlarCardTutucu(binding);
     }
@@ -94,27 +98,32 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
 
 
 
-        holder.binding.switchAyarlar.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Firestore'daki oneri_durumu değerini güncelleme
-            firestore.collection("kullanicilar")
-                    .whereEqualTo("email", auth.getCurrentUser().getEmail())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                document.getReference().update("oneri_durum", isChecked)
-                                        .addOnSuccessListener(aVoid -> {
-                                            //Snackbar.make(getView(), "Başarılı", Snackbar.LENGTH_SHORT).show();
-                                            // Başarılı bir şekilde güncellendiğinde bir işlem yapılabilir
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            //Snackbar.make(getView(), "Başarısız", Snackbar.LENGTH_SHORT).show();
-                                            // Güncelleme başarısız olduğunda bir işlem yapılabilir
-                                        });
+        try {
+            holder.binding.switchAyarlar.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                // Firestore'daki oneri_durumu değerini güncelleme
+                firestore.collection("kullanicilar")
+                        .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    document.getReference().update("oneri_durum", isChecked)
+                                            .addOnSuccessListener(aVoid -> {
+                                                //Snackbar.make(getView(), "Başarılı", Snackbar.LENGTH_SHORT).show();
+                                                // Başarılı bir şekilde güncellendiğinde bir işlem yapılabilir
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                //Snackbar.make(getView(), "Başarısız", Snackbar.LENGTH_SHORT).show();
+                                                // Güncelleme başarısız olduğunda bir işlem yapılabilir
+                                            });
+                                }
                             }
-                        }
-                    });
-        });
+                        });
+            });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
+
 
     }
 
@@ -132,6 +141,9 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
         }
         else if (icerik.getBaslik().equals("Kişiselleştirilmiş Öneriler")) {
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_auto_fix_high_24);
+        }
+        else if (icerik.getBaslik().equals("Hayvan Kişilikleri")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.info);
         }
         else if (icerik.getBaslik().equals("Uygulamayı Paylaş")) {
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_share_24);
@@ -160,7 +172,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_bizeUlasFragment);
         } else if (secilen.equals("Çıkış Yap")) {
             cikisYap(view);
-        } else if (secilen.equals("Bakıcı İlanımı kaldır")) {
+        } else if (secilen.equals("Bakıcı İlanımı Kaldır")) {
             AlertDialog.Builder alert=new AlertDialog.Builder(mContext);
             alert.setTitle("İlanı kaldır");
             alert.setMessage("İlanı kaldırmak istediğinizden emin misiniz?");
@@ -176,6 +188,9 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mesajListemFragment);
         } else if (secilen.equals("Kişiselleştirilmiş Öneriler")) {
 
+        }
+        else if (secilen.equals("Hayvan Kişilikleri")) {
+            Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_hayvanimKisilikYonergeleriFragment);
         }
         else{
             Toast.makeText(mContext, "Hata", Toast.LENGTH_SHORT).show();

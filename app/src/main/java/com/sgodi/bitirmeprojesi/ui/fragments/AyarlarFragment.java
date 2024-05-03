@@ -56,6 +56,7 @@ public class AyarlarFragment extends Fragment {
         AyarlarIcerik mesajlar=new AyarlarIcerik("Mesajlar",false);
         AyarlarIcerik bakiciIlan=new AyarlarIcerik("Bakıcı İlanımı Kaldır",false);
         AyarlarIcerik oneri=new AyarlarIcerik("Kişiselleştirilmiş Öneriler",true);
+        AyarlarIcerik hayvanKisilikleri=new AyarlarIcerik("Hayvan Kişilikleri",false);
         AyarlarIcerik paylas=new AyarlarIcerik("Uygulamayı Paylaş",false);
         AyarlarIcerik ulas=new AyarlarIcerik("Bize Ulaşın",false);
         AyarlarIcerik cikis=new AyarlarIcerik("Çıkış Yap",false);
@@ -65,6 +66,7 @@ public class AyarlarFragment extends Fragment {
         ayarlarList.add(mesajlar);
         ayarlarList.add(bakiciIlan);
         ayarlarList.add(oneri);
+        ayarlarList.add(hayvanKisilikleri);
         ayarlarList.add(paylas);
         ayarlarList.add(ulas);
         ayarlarList.add(cikis);

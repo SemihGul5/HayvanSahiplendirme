@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -24,6 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,7 +47,7 @@ import com.sgodi.bitirmeprojesi.ui.adapters.SahiplendirAdapter;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SahiplenFragment extends Fragment {
+public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
     private FragmentSahiplenBinding binding;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
@@ -49,6 +55,7 @@ public class SahiplenFragment extends Fragment {
     SahiplendirAdapter adapter;
     String secilenSehir="",secilenCinsiyet="";
     Boolean oneri;
+    private GoogleMap googleMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +65,8 @@ public class SahiplenFragment extends Fragment {
         binding.materialToolbarSahiplen.setTitle("Sahiplen");
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.getMapAsync(this);
         hayvanListesi=new ArrayList<>();
 
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
@@ -84,9 +93,10 @@ public class SahiplenFragment extends Fragment {
             bottomDialogShow();
         });
 
-        binding.imageViewTumHayvanlarPin.setOnClickListener(view -> {
+        binding.buttonGitHaritaPin.setOnClickListener(view -> {
             gitTumHayvanlar(view);
         });
+
 
 
 
@@ -487,6 +497,14 @@ public class SahiplenFragment extends Fragment {
                     }
                 });
     }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
+        googleMap = map;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
+    }
+
     public interface KisilikCallback {
         void onKisilikReceived(String kisilikValue);
     }

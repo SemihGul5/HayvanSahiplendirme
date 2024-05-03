@@ -1,6 +1,8 @@
 package com.sgodi.bitirmeprojesi.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -44,13 +46,36 @@ public class HayvanlarimFragment extends Fragment {
 
         binding.floatingActionButtonHayvanlarim.setOnClickListener(view -> {
             //hayvan ekleye git
-            Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_mapsFragment);
+            if (hayvanListesi == null || hayvanListesi.isEmpty()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Uyarı");
+                alert.setMessage("Yeni bir hayvan eklemeden önce hayvanın kişiliği ile ilgili bazı bilgiler bilmenizde fayda var. Buraya daha sonradan da ayarlardan gidebilirsiniz");
+                alert.setPositiveButton("Beni oraya götür", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_hayvanimKisilikYonergeleriFragment);
+                    }
+                });
+                alert.setNegativeButton("Belki sonra", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_mapsFragment);
+                    }
+                });
+                Log.i("Mesaj", "hayvanListesi boş veya null");
+                alert.show();
+            } else {
+                Navigation.findNavController(view).navigate(R.id.action_hayvanlarimFragment_to_mapsFragment);
+            }
+
+
         });
 
         hayvanListesi=new ArrayList<>();
         auth=FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
         getData();
+
         binding.hayvanlarimRV.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter= new HayvanimAdapter(getContext(),hayvanListesi);
         binding.hayvanlarimRV.setAdapter(adapter);
