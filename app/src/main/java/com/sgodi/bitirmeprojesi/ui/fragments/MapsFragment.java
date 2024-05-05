@@ -111,25 +111,13 @@ public class MapsFragment extends Fragment {
 
                 getCityNameWithLocation(latitude, longitude);
 
-                /*Bundle bundle = new Bundle();
-                bundle.putString("la", latitudeStr);
-                bundle.putString("lo", longitudeStr);
-                bundle.putString("sehir", sehir);
-                bundle.putString("ilce", ilce);
-                EkleEvcilFragment ekleEvcilFragment = new EkleEvcilFragment();
-                ekleEvcilFragment.setArguments(bundle);
-
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.constMAP, ekleEvcilFragment)
-                        .addToBackStack(null)
-                        .commit();*/
                 MapsFragmentDirections.ActionMapsFragmentToEkleEvcilFragment gecis=
                         MapsFragmentDirections.actionMapsFragmentToEkleEvcilFragment(latitudeStr,longitudeStr,sehir,ilce);
                 Navigation.findNavController(view).navigate(gecis);
 
                 Toast.makeText(requireContext(), "Konum başarıyla kaydedildi", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(requireContext(), "Lütfen bir konum seçin. (İstediğiniz bir yere basın)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Lütfen bir konum seçin.", Toast.LENGTH_SHORT).show();
             }
         });
     }

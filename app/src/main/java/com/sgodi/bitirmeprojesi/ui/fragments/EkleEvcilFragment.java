@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,14 +55,13 @@ public class EkleEvcilFragment extends Fragment{
     ActivityResultLauncher<String> permissionLauncher;
     ActivityResultLauncher<Intent> activityResultLauncher2;
     ActivityResultLauncher<String> permissionLauncher2;
-
-
     ActivityResultLauncher<Intent> activityResultLauncher3;
     ActivityResultLauncher<String> permissionLauncher3;
     ActivityResultLauncher<Intent> activityResultLauncher4;
     ActivityResultLauncher<String> permissionLauncher4;
     Uri imageData=null,imageData2=null,imageData3=null,imageData4=null;
     private ArrayList<Uri> uriList;
+    ArrayList<Uri> imageDatalist;
     FirebaseAuth auth;
     FirebaseStorage firebaseStorage;
     FirebaseFirestore firebaseFirestore;
@@ -69,6 +69,7 @@ public class EkleEvcilFragment extends Fragment{
     Bitmap img;
     String latitude,longitude,sehir,ilce;
     boolean secildiMi=false;
+    String foto1,foto2,foto3,foto4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,13 +86,25 @@ public class EkleEvcilFragment extends Fragment{
         longitude=bundle.getLongitude();
         sehir=bundle.getSehir();
         ilce=bundle.getIlce();
-
+        imageDatalist=new ArrayList<>();
         //
         uriList = new ArrayList<>();
         registerLauncher();
         registerLauncher2();
         registerLauncher3();
         registerLauncher4();
+
+
+        binding.addImage2.setEnabled(false);
+        binding.addImage3.setEnabled(false);
+        binding.addImage4.setEnabled(false);
+
+
+
+
+
+
+
         binding.imageView.setOnClickListener(view -> {
             fotografTiklandi1(view);
         });
@@ -159,6 +172,207 @@ public class EkleEvcilFragment extends Fragment{
 
 
 
+
+
+
+
+
+
+
+
+
+    private void turBaslat() {
+        ArrayList<String> turler= new ArrayList<>();
+        turler.add("Kedi");
+        turler.add("Köpek");
+        turler.add("Kuş");
+        turler.add("Balık");
+        turler.add("Hamster");
+        turler.add("Tavşan");
+        turler.add("Kaplumbağa");
+        turler.add("Diğer");
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,turler);
+        binding.autoCompleteTextView.setAdapter(arrayAdapter);
+    }
+    private void kisilikBaslat(){
+        ArrayList<String> kisilik= new ArrayList<>();
+        kisilik.add("Açıklık");
+        kisilik.add("Sorumluluk");
+        kisilik.add("Dışa Dönüklük");
+        kisilik.add("Uyum");
+        kisilik.add("Duyarlılık");
+
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,kisilik);
+        binding.autoCompleteTextViewHayvanKisilik.setAdapter(arrayAdapter);
+    }
+    private void yasBaslat(){
+        ArrayList<String> yas= new ArrayList<>();
+        yas.add("Yavru");
+        yas.add("Genç");
+        yas.add("Orta");
+        yas.add("Yaşlı");
+
+        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,yas);
+        binding.autoCompleteTextViewHayvanYas.setAdapter(arrayAdapter);
+    }
+
+
+    private void hayvan_kaydet(View view) {
+        if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty()
+                || binding.autoCompleteTextView.getText().toString().isEmpty()
+                || binding.editTextHayvanIrk.getText().toString().isEmpty()
+                || binding.radioGroupCinsiyet.getCheckedRadioButtonId() == -1
+                || binding.autoCompleteTextViewHayvanYas.getText().toString().isEmpty()
+                || binding.editTextHayvanSaglik.getText().toString().isEmpty()
+                || binding.autoCompleteTextViewHayvanKisilik.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), "Açıklama hariç tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.progressBarHayvanEkle.setVisibility(View.VISIBLE);
+        binding.buttonHayvanEkle.setEnabled(false);
+
+        imageDatalist.add(imageData);
+        imageDatalist.add(imageData2);
+        imageDatalist.add(imageData3);
+        imageDatalist.add(imageData4);
+
+        String[] fotoURLs = new String[4];
+
+        for (int i = 0; i < 4; i++) {
+            final int index = i;
+
+            if (imageDatalist.get(i) != null) {
+                UUID uuid = UUID.randomUUID();
+                String path = "images/" + uuid + "_" + (i + 1) + ".jpg";
+
+                // Resim yükleme işleminin başarı dinleyicisi
+                storageReference.child(path).putFile(imageDatalist.get(i)).addOnSuccessListener(taskSnapshot -> {
+                    // Resim yükleme işlemi başarılı olduğunda URL alma işlemini gerçekleştir
+                    storageReference.child(path).getDownloadUrl().addOnSuccessListener(uri -> {
+                        fotoURLs[index] = uri.toString();
+
+                        // Tüm resimlerin yüklenmesini beklerip, URL'leri aldıktan sonra veritabanına kaydet
+                        if (allURLsReceived(fotoURLs)) {
+                            savedF(view, fotoURLs[0], fotoURLs[1], fotoURLs[2], fotoURLs[3]);
+                        }
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "URL alınamadı: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Resim yüklenemedi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            } else {
+                // Resim verisi yoksa, URL'yi "null" olarak ayarla
+                fotoURLs[i] = "null";
+
+                // Tüm resimlerin yüklenmesini beklerip, URL'leri aldıktan sonra veritabanına kaydet
+                if (allURLsReceived(fotoURLs)) {
+                    savedF(view, fotoURLs[0], fotoURLs[1], fotoURLs[2], fotoURLs[3]);
+                }
+            }
+        }
+    }
+
+    // Tüm URL'lerin alınıp alınmadığını kontrol eden yardımcı metod
+    private boolean allURLsReceived(String[] urls) {
+        for (String url : urls) {
+            if (url == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    // Firebase Firestore'a veri kaydetme işlemi
+    public void savedF(View view, String foto1, String foto2, String foto3, String foto4){
+        // Veritabanına koyma işlemleri
+        FirebaseUser user = auth.getCurrentUser();
+        String email = user.getEmail();
+
+        // Diğer veri alanlarını toplama işlemi
+        String ad = binding.editTextHayvanAd.getText().toString();
+        String tur = binding.autoCompleteTextView.getText().toString();
+        String irk = binding.editTextHayvanIrk.getText().toString();
+        String cinsiyet = "";
+        int cinsiyetID = binding.radioGroupCinsiyet.getCheckedRadioButtonId();
+        if (cinsiyetID == R.id.radioButtonErkek) {
+            cinsiyet = "Erkek";
+        } else {
+            cinsiyet = "Dişi";
+        }
+        String yas = binding.autoCompleteTextViewHayvanYas.getText().toString();
+        String saglik = binding.editTextHayvanSaglik.getText().toString();
+        String aciklama = binding.editTextHayvanAciklama.getText().toString().isEmpty() ? "yok" : binding.editTextHayvanAciklama.getText().toString();
+        String kisilik = binding.autoCompleteTextViewHayvanKisilik.getText().toString();
+
+        // Firestore için veri oluşturma işlemi
+        HashMap<String, Object> postData = new HashMap<>();
+        postData.put("email", email);
+        postData.put("aciklama", aciklama);
+        postData.put("ad", ad);
+        postData.put("cinsiyet", cinsiyet);
+        postData.put("foto1", foto1);
+        postData.put("foto2", foto2);
+        postData.put("foto3", foto3);
+        postData.put("foto4", foto4);
+        postData.put("kisilik", kisilik);
+        postData.put("saglik", saglik);
+        postData.put("tur", tur);
+        postData.put("yas", yas);
+        postData.put("ırk", irk);
+        postData.put("sahipli_mi", "false");
+        postData.put("ilanda_mi", "false");
+        postData.put("enlem", latitude);
+        postData.put("boylam", longitude);
+        postData.put("sehir", sehir);
+        postData.put("ilce", ilce);
+        postData.put("tarih", FieldValue.serverTimestamp());
+
+        // Firebase Firestore'a ekleme işlemi
+        firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
+            Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+            temizle();
+            Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_hayvanlarimFragment);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Firestore'a ekleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }).addOnCompleteListener(task -> {
+            binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+            binding.buttonHayvanEkle.setEnabled(true);
+        });
+
+        // İkinci koleksiyona da ekleme işlemi
+        firebaseFirestore.collection("kullanici_hayvanlari_sahiplendir").add(postData).addOnSuccessListener(documentReference -> {
+            Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+            temizle();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Firestore'a ekleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }).addOnCompleteListener(task -> {
+            binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
+            binding.buttonHayvanEkle.setEnabled(true);
+        });
+    }
+
+
+
+
+
+    private void temizle(){
+        binding.autoCompleteTextView.clearListSelection();
+        binding.imageView.setImageResource(R.drawable.add_photo);
+        binding.addImage2.setImageResource(R.drawable.background_photo);
+        binding.addImage3.setImageResource(R.drawable.background_photo);
+        binding.addImage4.setImageResource(R.drawable.background_photo);
+        binding.radioButtonErkek.setChecked(false);
+        binding.radioButtonDisi.setChecked(false);
+        binding.autoCompleteTextViewHayvanKisilik.clearListSelection();
+        binding.editTextHayvanAd.setText("");
+        binding.editTextHayvanIrk.setText("");
+        binding.autoCompleteTextViewHayvanYas.clearListSelection();
+        binding.editTextHayvanSaglik.setText("");
+        binding.editTextHayvanAciklama.setText("");
+    }
 
     //izin işlemleri
     public void fotografTiklandi1(View view) {
@@ -408,32 +622,32 @@ public class EkleEvcilFragment extends Fragment{
                                 Model.Outputs outputs = model.process(inputFeature0);
                                 TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                                 StringBuilder resultBuilder = new StringBuilder();
-                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
-                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                float[] results = outputFeature0.getFloatArray(); // Sonuç dizisini al
+                                for (int i = 0; i < results.length; i++) {
+                                    float resultValue = results[i];
                                     resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
 
-                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
-                                    i==4 && resultValue == 255.0f) {
+                                    // Belirli bir koşulu kontrol et ve uygun durumda işlem yap
+                                    if ((i == 5 || i == 2 || i == 3 || i == 4) && resultValue == 255.0f) {
                                         Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
                                         binding.imageView.setImageResource(R.drawable.add_photo);
                                         imageData=null;
-                                        uriList.clear();
-                                    }
-                                    if(i==0 && resultValue==255.f){
+                                    } else if (i == 0 && resultValue == 255.f) {
                                         binding.autoCompleteTextView.setText("Kedi");
                                         binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    if(i==1 && resultValue==255.f){
-                                        binding.autoCompleteTextView.setText("Köpek");
-                                        binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    else{
-                                        uriList.add(imageData);
                                         imageData = intentFromResult.getData();
                                         binding.imageView.setImageBitmap(img);
                                         binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        binding.addImage2.setEnabled(true);
+                                    } else if (i == 1 && resultValue == 255.f) {
+                                        binding.autoCompleteTextView.setText("Köpek");
+                                        binding.autoCompleteTextView.setEnabled(false);
+                                        imageData = intentFromResult.getData();
+                                        binding.imageView.setImageBitmap(img);
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        binding.addImage2.setEnabled(true);
                                     }
+
                                 }
                                 // Releases model resources if no longer used.
                                 model.close();
@@ -489,35 +703,42 @@ public class EkleEvcilFragment extends Fragment{
                                 tensorImage.load(img);
                                 ByteBuffer byteBuffer=tensorImage.getBuffer();
                                 inputFeature0.loadBuffer(byteBuffer);
-
                                 // Runs model inference and gets result.
                                 Model.Outputs outputs = model.process(inputFeature0);
                                 TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                                 StringBuilder resultBuilder = new StringBuilder();
-                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
-                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                float[] results = outputFeature0.getFloatArray();
+                                String sonuc = "";
+                                for (int i = 0; i < results.length; i++) {
+                                    float resultValue = results[i];
                                     resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
-
-                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
-                                            i==4 && resultValue == 255.0f) {
+                                    // Belirli bir koşulu kontrol et ve uygun durumda işlem yap
+                                    if ((i == 5 || i == 2 || i == 3 || i == 4) && resultValue == 255.0f) {
                                         Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
                                         binding.addImage2.setImageResource(R.drawable.add_photo);
                                         imageData2=null;
                                     }
-                                    if(i==0 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Kedi");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    if(i==1 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Köpek");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    else{
+                                    else if (i == 0 && resultValue == 255.f) {
+                                        sonuc="Kedi";
                                         imageData2 = intentFromResult.getData();
                                         binding.addImage2.setImageBitmap(img);
                                         binding.addImage3.setImageResource(R.drawable.add_photo);
+                                        binding.addImage3.setEnabled(true);
+                                    } else if (i == 1 && resultValue == 255.f) {
+                                        sonuc="Köpek";
+                                        imageData2 = intentFromResult.getData();
+                                        binding.addImage2.setImageBitmap(img);
+                                        binding.addImage3.setImageResource(R.drawable.add_photo);
+                                        binding.addImage3.setEnabled(true);
                                     }
+                                    if (!sonuc.equals(binding.autoCompleteTextView.getText().toString())){
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        imageData2=null;
+                                        binding.addImage3.setImageResource(R.drawable.backgorund_ekle_evcil);
+                                        binding.addImage4.setImageResource(R.drawable.backgorund_ekle_evcil);
+                                    }
+
                                 }
                                 // Releases model resources if no longer used.
                                 model.close();
@@ -576,29 +797,34 @@ public class EkleEvcilFragment extends Fragment{
                                 Model.Outputs outputs = model.process(inputFeature0);
                                 TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                                 StringBuilder resultBuilder = new StringBuilder();
-                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
-                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                float[] results = outputFeature0.getFloatArray();
+                                String sonuc="";
+                                for (int i = 0; i < results.length; i++) {
+                                    float resultValue = results[i];
                                     resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
-
-                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
-                                            i==4 && resultValue == 255.0f) {
+                                    // Belirli bir koşulu kontrol et ve uygun durumda işlem yap
+                                    if ((i == 5 || i == 2 || i == 3 || i == 4) && resultValue == 255.0f) {
                                         Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
-                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        binding.addImage3.setImageResource(R.drawable.add_photo);
                                         imageData3=null;
-                                    }
-                                    if(i==0 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Kedi");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    if(i==1 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Köpek");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    else{
+                                    } else if (i == 0 && resultValue == 255.f) {
+                                        sonuc="Kedi";
                                         imageData3 = intentFromResult.getData();
                                         binding.addImage3.setImageBitmap(img);
                                         binding.addImage4.setImageResource(R.drawable.add_photo);
+                                        binding.addImage4.setEnabled(true);
+                                    } else if (i == 1 && resultValue == 255.f) {
+                                        sonuc="Köpek";
+                                        imageData3 = intentFromResult.getData();
+                                        binding.addImage3.setImageBitmap(img);
+                                        binding.addImage4.setImageResource(R.drawable.add_photo);
+                                        binding.addImage4.setEnabled(true);
+                                    }
+                                    if (!sonuc.equals(binding.autoCompleteTextView.getText().toString())){
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        binding.addImage3.setImageResource(R.drawable.add_photo);
+                                        imageData3=null;
+                                        binding.addImage4.setImageResource(R.drawable.backgorund_ekle_evcil);
                                     }
                                 }
                                 // Releases model resources if no longer used.
@@ -658,28 +884,29 @@ public class EkleEvcilFragment extends Fragment{
                                 Model.Outputs outputs = model.process(inputFeature0);
                                 TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                                 StringBuilder resultBuilder = new StringBuilder();
-                                for (int i = 0; i < outputFeature0.getFloatArray().length; i++) {
-                                    float resultValue = outputFeature0.getFloatArray()[i];
+                                float[] results = outputFeature0.getFloatArray();
+                                String sonuc="";
+                                for (int i = 0; i < results.length; i++) {
+                                    float resultValue = results[i];
                                     resultBuilder.append("Result ").append(i).append(": ").append(resultValue).append("\n");
-
-                                    // Belirli bir koşulu kontrol et ve uygun durumda Toast mesajı göster
-                                    if (i == 5 && resultValue == 255.0f||i==2 && resultValue == 255.0f||i==3 && resultValue == 255.0f||
-                                            i==4 && resultValue == 255.0f) {
+                                    // Belirli bir koşulu kontrol et ve uygun durumda işlem yap
+                                    if ((i == 5 || i == 2 || i == 3 || i == 4) && resultValue == 255.0f) {
                                         Snackbar.make(getView(),"Yüklediğiniz fotoğraf kedi veya köpek fotoğrafı değil! Lütfen başka bir fotoğraf yükleyin.",Snackbar.LENGTH_LONG).show();
-                                        binding.addImage2.setImageResource(R.drawable.add_photo);
+                                        binding.addImage4.setImageResource(R.drawable.add_photo);
                                         imageData4=null;
-                                    }
-                                    if(i==0 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Kedi");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    if(i==1 && resultValue==255.f){
-                                        //binding.autoCompleteTextView.setText("Köpek");
-                                        //binding.autoCompleteTextView.setEnabled(false);
-                                    }
-                                    else{
+                                    } else if (i == 0 && resultValue == 255.f) {
+                                        sonuc="Kedi";
                                         imageData4 = intentFromResult.getData();
                                         binding.addImage4.setImageBitmap(img);
+                                    } else if (i == 1 && resultValue == 255.f) {
+                                        sonuc="Köpek";
+                                        imageData4 = intentFromResult.getData();
+                                        binding.addImage4.setImageBitmap(img);
+                                    }
+                                    if (!sonuc.equals(binding.autoCompleteTextView.getText().toString())){
+                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        binding.addImage4.setImageResource(R.drawable.add_photo);
+                                        imageData4=null;
                                     }
                                 }
                                 // Releases model resources if no longer used.
@@ -709,178 +936,4 @@ public class EkleEvcilFragment extends Fragment{
             }
         });
     }
-
-
-
-
-
-
-
-    private void turBaslat() {
-        ArrayList<String> turler= new ArrayList<>();
-        turler.add("Kedi");
-        turler.add("Köpek");
-        turler.add("Kuş");
-        turler.add("Balık");
-        turler.add("Hamster");
-        turler.add("Tavşan");
-        turler.add("Kaplumbağa");
-        turler.add("Diğer");
-        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,turler);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
-    }
-    private void kisilikBaslat(){
-        ArrayList<String> kisilik= new ArrayList<>();
-        kisilik.add("Açıklık");
-        kisilik.add("Sorumluluk");
-        kisilik.add("Dışa Dönüklük");
-        kisilik.add("Uyum");
-        kisilik.add("Duyarlılık");
-
-        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,kisilik);
-        binding.autoCompleteTextViewHayvanKisilik.setAdapter(arrayAdapter);
-    }
-    private void yasBaslat(){
-        ArrayList<String> yas= new ArrayList<>();
-        yas.add("Yavru");
-        yas.add("Genç");
-        yas.add("Orta");
-        yas.add("Yaşlı");
-
-        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,yas);
-        binding.autoCompleteTextViewHayvanYas.setAdapter(arrayAdapter);
-    }
-
-
-    private void hayvan_kaydet(View view) {
-        if (imageData == null || binding.editTextHayvanAd.getText().toString().isEmpty()
-                || binding.autoCompleteTextView.getText().toString().isEmpty()
-                || binding.editTextHayvanIrk.getText().toString().isEmpty()
-                || binding.radioGroupCinsiyet.getCheckedRadioButtonId() == -1
-                || binding.autoCompleteTextViewHayvanYas.getText().toString().isEmpty()
-                || binding.editTextHayvanSaglik.getText().toString().isEmpty()
-                || binding.autoCompleteTextViewHayvanKisilik.getText().toString().isEmpty()) {
-            Toast.makeText(getContext(), "Açıklama hariç tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        binding.progressBarHayvanEkle.setVisibility(View.VISIBLE);
-        binding.buttonHayvanEkle.setEnabled(false);
-        try {
-            //unique bir id oluşturur
-            UUID uuid = UUID.randomUUID();
-            String path = "images/" + uuid + ".jpg";
-            storageReference.child(path).putFile(imageData).addOnSuccessListener(taskSnapshot -> {
-                //görseli storage'a kaydettik, onSuccess de veritabanına kaydetme işlemleri, ilgili kullanıcının
-                //direkt o kaydedilen resmi eşleştiriyoruz
-                StorageReference reference = firebaseStorage.getReference(path);
-                reference.getDownloadUrl().addOnSuccessListener(uri -> {
-                    //veritabanına koyma işlemleri
-                    FirebaseUser user = auth.getCurrentUser();
-                    String email = user.getEmail();
-                    String foto1 = uri.toString();
-                    String ad = binding.editTextHayvanAd.getText().toString();
-                    String tur = binding.autoCompleteTextView.getText().toString();
-                    String irk = binding.editTextHayvanIrk.getText().toString();
-                    String cinsiyet = "";
-                    int cinsiyetID = binding.radioGroupCinsiyet.getCheckedRadioButtonId();
-                    if (cinsiyetID == R.id.radioButtonErkek) {
-                        cinsiyet = "Erkek";
-                    } else {
-                        cinsiyet = "Dişi";
-                    }
-                    String yas= binding.autoCompleteTextViewHayvanYas.getText().toString();
-                    String saglik = binding.editTextHayvanSaglik.getText().toString();
-                    String aciklama = binding.editTextHayvanAciklama.getText().toString().isEmpty() ? "yok" : binding.editTextHayvanAciklama.getText().toString();
-                    String kisilik = binding.autoCompleteTextViewHayvanKisilik.getText().toString();
-                    HashMap<String, Object> postData = new HashMap<>();
-                    postData.put("email", email);
-                    postData.put("aciklama", aciklama);
-                    postData.put("ad", ad);
-                    postData.put("cinsiyet", cinsiyet);
-
-                    postData.put("foto1", imageData);
-
-
-                    if (imageData2 != null){
-                        postData.put("foto2", imageData);
-                    }else{
-                        postData.put("foto2", "null");
-                    }
-                    if (imageData3 != null){
-                        postData.put("foto3", imageData);
-                    }else{
-                        postData.put("foto3", "null");
-                    }
-                    if (imageData4 != null){
-                        postData.put("foto4", imageData);
-                    }else{
-                        postData.put("foto4", "null");
-                    }
-                    postData.put("kisilik", kisilik);
-                    postData.put("saglik", saglik);
-                    postData.put("tur", tur);
-                    postData.put("yas", yas);
-                    postData.put("ırk", irk);
-                    postData.put("sahipli_mi","false");
-                    postData.put("ilanda_mi","false");
-                    postData.put("enlem",latitude);
-                    postData.put("boylam",longitude);
-                    postData.put("sehir",sehir);
-                    postData.put("ilce",ilce);
-                    postData.put("tarih", FieldValue.serverTimestamp());
-                    //firebase koleksiyonuna yükleme işlemi ve sonucunun ne olduğunu değerlendirme
-                    firebaseFirestore.collection("kullanici_hayvanlari").add(postData).addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
-                        temizle();
-                        Navigation.findNavController(view).navigate(R.id.action_ekleEvcilFragment_to_hayvanlarimFragment);
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    }).addOnCompleteListener(task -> {
-                        binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
-                        binding.buttonHayvanEkle.setEnabled(true);
-                    });
-
-
-                    firebaseFirestore.collection("kullanici_hayvanlari_sahiplendir").add(postData).addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getContext(), "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
-                        temizle();
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    }).addOnCompleteListener(task -> {
-                        binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
-                        binding.buttonHayvanEkle.setEnabled(true);
-                    });
-                });
-
-            }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
-                binding.buttonHayvanEkle.setEnabled(true);
-
-            });
-        } catch (Exception e) {
-            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            binding.progressBarHayvanEkle.setVisibility(View.INVISIBLE);
-            binding.buttonHayvanEkle.setEnabled(true);
-
-        }
-    }
-
-    private void temizle(){
-        binding.autoCompleteTextView.clearListSelection();
-        binding.imageView.setImageResource(R.drawable.add_photo);
-        binding.addImage2.setImageResource(R.drawable.background_photo);
-        binding.addImage3.setImageResource(R.drawable.background_photo);
-        binding.addImage4.setImageResource(R.drawable.background_photo);
-        binding.radioButtonErkek.setChecked(false);
-        binding.radioButtonDisi.setChecked(false);
-        binding.autoCompleteTextViewHayvanKisilik.clearListSelection();
-        binding.editTextHayvanAd.setText("");
-        binding.editTextHayvanIrk.setText("");
-        binding.autoCompleteTextViewHayvanYas.clearListSelection();
-        binding.editTextHayvanSaglik.setText("");
-        binding.editTextHayvanAciklama.setText("");
-    }
-
-
 }

@@ -25,14 +25,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/white" />
-    <com.google.android.gms.maps.MapView
+    <!-- <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="200dp"
         app:layout_constraintBottom_toTopOf="@+id/rvSahiplendirHayvanlar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbarSahiplen" />  -->
+    <ImageView
+        android:id="@+id/image_map_sahiplen"
+        android:layout_width="match_parent"
+        android:src="@drawable/map_pin_sahiplen"
+        android:layout_height="175dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbarSahiplen" />
+
+
+
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSahiplendirHayvanlar"
@@ -42,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+        app:layout_constraintTop_toBottomOf="@+id/image_map_sahiplen" />
 
     <ImageView
         android:id="@+id/imageViewsahiplenfiltre"
@@ -92,6 +105,18 @@
         android:text="Haritada Göster"
         app:layout_constraintBottom_toTopOf="@+id/rvSahiplendirHayvanlar"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        android:indeterminateTint="@color/yesil"
+        style="?android:attr/progressBarStyle"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

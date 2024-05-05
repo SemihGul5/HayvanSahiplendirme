@@ -47,7 +47,7 @@ import com.sgodi.bitirmeprojesi.ui.adapters.SahiplendirAdapter;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
+public class SahiplenFragment extends Fragment {
     private FragmentSahiplenBinding binding;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
@@ -55,7 +55,8 @@ public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
     SahiplendirAdapter adapter;
     String secilenSehir="",secilenCinsiyet="";
     Boolean oneri;
-    private GoogleMap googleMap;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,10 +66,41 @@ public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
         binding.materialToolbarSahiplen.setTitle("Sahiplen");
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
-        binding.mapView.onCreate(savedInstanceState);
-        binding.mapView.getMapAsync(this);
         hayvanListesi=new ArrayList<>();
 
+        geriTusuIslemi();
+        binding.progressBar2.setVisibility(View.VISIBLE);
+        getKullaniciOneriDurum();
+        binding.progressBar2.setVisibility(View.GONE);
+
+        binding.rvSahiplendirHayvanlar.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter= new SahiplendirAdapter(getContext(),hayvanListesi);
+        binding.rvSahiplendirHayvanlar.setAdapter(adapter);
+
+        binding.imageViewsahiplenfiltre.setOnClickListener(view -> {
+            bottomDialogShow();
+        });
+
+        binding.buttonGitHaritaPin.setOnClickListener(view -> {
+            gitTumHayvanlar(view);
+        });
+        binding.imageMapSahiplen.setOnClickListener(view -> {
+            gitTumHayvanlar(view);
+        });
+
+
+
+
+
+
+
+
+
+
+        return binding.getRoot();
+    }
+
+    private void geriTusuIslemi() {
         OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
             private long backPressedTime = 0;
             @Override
@@ -83,30 +115,6 @@ public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
-        getKullaniciOneriDurum();
-
-        binding.rvSahiplendirHayvanlar.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter= new SahiplendirAdapter(getContext(),hayvanListesi);
-        binding.rvSahiplendirHayvanlar.setAdapter(adapter);
-
-        binding.imageViewsahiplenfiltre.setOnClickListener(view -> {
-            bottomDialogShow();
-        });
-
-        binding.buttonGitHaritaPin.setOnClickListener(view -> {
-            gitTumHayvanlar(view);
-        });
-
-
-
-
-
-
-
-
-
-
-        return binding.getRoot();
     }
 
     private void getKullaniciOneriDurum() {
@@ -498,12 +506,6 @@ public class SahiplenFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap map) {
-        googleMap = map;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
-    }
 
     public interface KisilikCallback {
         void onKisilikReceived(String kisilikValue);

@@ -274,9 +274,6 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
         }catch (Exception e){
             Log.i("Mesaj",e.getMessage());
         }
-
-
-
     }
 
 }
