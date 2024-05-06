@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -289,22 +290,27 @@ public class BakiciOlFragment extends Fragment {
     }
 
     private void bakici_druum_guncelle(String email, FirebaseFirestore firebaseFirestore) {
-        Query query=firebaseFirestore.collection("kullanicilar").whereEqualTo("email",email);
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    // Belirli bir kritere uyan belgeyi güncelle
-                    String userId = document.getId();
-                    firebaseFirestore.collection("kullanicilar").document(userId).update("bakici_durum", "true");
+        try {
+            Query query=firebaseFirestore.collection("kullanicilar").whereEqualTo("email",email);
+            query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        // Belirli bir kritere uyan belgeyi güncelle
+                        String userId = document.getId();
+                        firebaseFirestore.collection("kullanicilar").document(userId).update("bakici_durum", "true");
+                    }
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(),"Bakıcı durum güncellenemedi! "+e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(),"Bakıcı durum güncellenemedi! "+e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (Exception e){
+            Log.i("Mesaj",e.getMessage());
+        }
+
     }
 
 
