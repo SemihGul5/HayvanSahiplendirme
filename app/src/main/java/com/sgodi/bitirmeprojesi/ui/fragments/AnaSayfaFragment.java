@@ -57,6 +57,9 @@ public class AnaSayfaFragment extends Fragment {
         binding.imageViewHayvanlarim.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.action_anaSayfaFragment_to_hayvanlarimFragment);
         });
+        binding.imageViewSahiplendirilenler.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_anaSayfaFragment_to_artikSahibiVarFragment);
+        });
 
         getIcerik();
         icerikArrayList = new ArrayList<>();

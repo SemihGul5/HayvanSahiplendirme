@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
@@ -52,10 +53,16 @@ public class HayvanimAdapter extends RecyclerView.Adapter<HayvanimAdapter.Hayvan
         holder.binding.hayvanimCard.setOnClickListener(view -> {
             gitAyrinti(view,hayvan,holder);
         });
-        
         holder.binding.imageViewCardHayvanSil.setOnClickListener(view -> {
-            gitSil(view,hayvan,holder);
+            if (hayvan.getSahipliMi().equals("false")){
+                gitSil(view,hayvan,holder);
+            }else{
+                Toast.makeText(mContext,"Sahipli hayvan artık silinemez!",Toast.LENGTH_LONG).show();
+            }
+
         });
+
+
 
 
     }

@@ -7,12 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,14 +20,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
 import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanimAyrintiBinding;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HayvanimAyrintiFragment extends Fragment {
     private FragmentHayvanimAyrintiBinding binding;
@@ -128,6 +131,7 @@ public class HayvanimAyrintiFragment extends Fragment {
                 binding.buttonSahiplenmeIslemi.setText("ARTIK SAHİBİM VAR");
                 binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
                 binding.buttonSahiplenmeIslemi.setEnabled(false);
+                ekleSahiplenenHayvanlar(firestore,auth,hayvan.getDocID());
             }
         });
 
@@ -151,6 +155,22 @@ public class HayvanimAyrintiFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    private void ekleSahiplenenHayvanlar(FirebaseFirestore firestore, FirebaseAuth auth, String docID) {
+        CollectionReference sahiplenenHayvanlarRef = firestore.collection("sahibi_olan_hayvanlar");
+
+        Map<String, Object> sahiplenenHayvanData = new HashMap<>();
+        sahiplenenHayvanData.put("sahip_email", auth.getCurrentUser().getEmail());
+        sahiplenenHayvanData.put("docID", docID);
+        sahiplenenHayvanData.put("tarih", FieldValue.serverTimestamp());
+        sahiplenenHayvanlarRef.add(sahiplenenHayvanData)
+                .addOnSuccessListener(documentReference -> {
+                })
+                .addOnFailureListener(e -> {
+                    Log.i("Mesaj",e.getMessage());
+                });
+    }
+
 
     private void ilanGuncelle(String collectionPath,FirebaseFirestore firestore, FirebaseAuth auth, Hayvan hayvan, String aTrue) {
         String email=auth.getCurrentUser().getEmail();

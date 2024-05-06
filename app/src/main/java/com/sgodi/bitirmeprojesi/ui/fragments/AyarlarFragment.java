@@ -78,22 +78,8 @@ public class AyarlarFragment extends Fragment {
 
 
 
-        // geri tuşu
-        OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
-            private long backPressedTime = 0;
 
-            @Override
-            public void handleOnBackPressed() {
-                long currentTime = System.currentTimeMillis();
-                if (backPressedTime + 2000 > currentTime) {
-                    requireActivity().finishAffinity();
-                } else {
-                    Toast.makeText(getContext(), "Çıkmak için tekrar basın", Toast.LENGTH_SHORT).show();
-                }
-                backPressedTime = currentTime;
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backButtonCallback);
+
 
 
 

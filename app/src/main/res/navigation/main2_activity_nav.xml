@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_anaSayfaFragment_to_bakiciFragment"
             app:destination="@id/bakiciFragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_artikSahibiVarFragment"
+            app:destination="@id/artikSahibiVarFragment" />
     </fragment>
     <fragment
         android:id="@+id/ayarlarFragment"
@@ -234,6 +237,7 @@
         android:name="com.sgodi.bitirmeprojesi.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
+
     <fragment
         android:id="@+id/mapsFragmentTumHayvanlarPin"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.MapsFragmentTumHayvanlarPin"
@@ -253,4 +257,30 @@
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanimKisilikYonergeleriFragment"
         android:label="fragment_hayvanim_kisilik_yonergeleri"
         tools:layout="@layout/fragment_hayvanim_kisilik_yonergeleri" />
+    <fragment
+        android:id="@+id/profilGorunumFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.ProfilGorunumFragment"
+        android:label="fragment_profil_gorunum"
+        tools:layout="@layout/fragment_profil_gorunum" >
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_ayarlarFragment"
+            app:destination="@id/ayarlarFragment" />
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_mesajListemFragment"
+            app:destination="@id/mesajListemFragment" />
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_kisilikTestFragment"
+            app:destination="@id/kisilikTestFragment" />
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_sifreDegisFragment"
+            app:destination="@id/sifreDegisFragment" />
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_profilimFragment"
+            app:destination="@id/profilimFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/artikSahibiVarFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.ArtikSahibiVarFragment"
+        android:label="fragment_artik_sahibi_var"
+        tools:layout="@layout/fragment_artik_sahibi_var" />
 </navigation>

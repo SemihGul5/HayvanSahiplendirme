@@ -20,12 +20,19 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class SahiplendirAdapter extends RecyclerView.Adapter<SahiplendirAdapter.SahiplendirCardTutucu> {
+    public enum SayfaTuru {
+        SAHIPLEN,
+        ARTIK_SAHIBI_VAR
+    }
+
     private Context context;
     private List<Hayvan> hayvanList;
+    private SayfaTuru sayfaTuru;
 
-    public SahiplendirAdapter(Context context, List<Hayvan> hayvanList) {
+    public SahiplendirAdapter(Context context, List<Hayvan> hayvanList,SayfaTuru sayfaTuru) {
         this.context = context;
         this.hayvanList = hayvanList;
+        this.sayfaTuru=sayfaTuru;
     }
 
     @NonNull
@@ -48,11 +55,13 @@ public class SahiplendirAdapter extends RecyclerView.Adapter<SahiplendirAdapter.
             holder.binding.imageViewCinsiyet.setImageResource(R.drawable.femenine);
         }
 
+        if (sayfaTuru==SayfaTuru.SAHIPLEN){
+            // hayvan kart tasarımına tıklandığında
+            holder.binding.sahiplendirCard.setOnClickListener(view -> {
+                gitAyrinti(view,hayvan,holder);
+            });
+        }
 
-        // hayvan kart tasarımına tıklandığında
-        holder.binding.sahiplendirCard.setOnClickListener(view -> {
-            gitAyrinti(view,hayvan,holder);
-        });
 
         String sahipliMi=hayvan.getSahipliMi();
         if(sahipliMi.equals("true")){

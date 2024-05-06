@@ -74,8 +74,12 @@ public class SahiplenFragment extends Fragment {
         binding.progressBar2.setVisibility(View.GONE);
 
         binding.rvSahiplendirHayvanlar.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter= new SahiplendirAdapter(getContext(),hayvanListesi);
+        adapter= new SahiplendirAdapter(getContext(),hayvanListesi, SahiplendirAdapter.SayfaTuru.SAHIPLEN);
         binding.rvSahiplendirHayvanlar.setAdapter(adapter);
+
+
+
+
 
         binding.imageViewsahiplenfiltre.setOnClickListener(view -> {
             bottomDialogShow();
@@ -133,6 +137,7 @@ public class SahiplenFragment extends Fragment {
                             // Öneri durumu alındıktan sonra gerekli işlemleri yapmak için burada çağırabilirsiniz
                             if (oneri) {
                                 getData("","");
+
                             } else {
                                 getDataKisilikYok("","");
                             }
