@@ -257,7 +257,7 @@ public class SahiplenFragment extends Fragment {
                                             }
                                             hayvanListesi.clear();
 
-                                            if (value != null) {
+                                            if (value != null&&!value.isEmpty()) {
                                                 for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
@@ -287,16 +287,17 @@ public class SahiplenFragment extends Fragment {
                                                     hayvanListesi.add(hayvan);
                                                 }
                                                 adapter.notifyDataSetChanged();
-                                                binding.rvSahiplendirHayvanlar.setVisibility(View.VISIBLE);
-                                                binding.imageViewCerikBulunamadi.setVisibility(View.GONE);
-                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.GONE);
+
                                             }
                                             else{
                                                 binding.rvSahiplendirHayvanlar.setVisibility(View.INVISIBLE);
+                                                binding.imageMapSahiplen.setVisibility(View.INVISIBLE);
+                                                binding.buttonGitHaritaPin.setVisibility(View.INVISIBLE);
                                                 binding.imageViewCerikBulunamadi.setImageResource(R.drawable.not_found);
                                                 binding.imageViewCerikBulunamadi.setVisibility(View.VISIBLE);
                                                 binding.textViewCerikBulunamadiYazisi.setText("Sahiplenecek hiç hayvan yok mu? Belkide kişilik testini yapmalısınız.");
                                                 binding.textViewCerikBulunamadiYazisi.setVisibility(View.VISIBLE);
+                                                Toast.makeText(getContext(), "Hiç hayvan yok.", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -627,7 +628,7 @@ public class SahiplenFragment extends Fragment {
                                             }
                                             hayvanListesi.clear();
 
-                                            if (value != null) {
+                                            if (value != null&&!value.isEmpty()) {
                                                 for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
                                                     Map<String, Object> data = documentSnapshot.getData();
 
@@ -657,16 +658,17 @@ public class SahiplenFragment extends Fragment {
                                                     hayvanListesi.add(hayvan);
                                                 }
                                                 adapter.notifyDataSetChanged();
-                                                binding.rvSahiplendirHayvanlar.setVisibility(View.VISIBLE);
-                                                binding.imageViewCerikBulunamadi.setVisibility(View.GONE);
-                                                binding.textViewCerikBulunamadiYazisi.setVisibility(View.GONE);
+
                                             }
                                             else{
                                                 binding.rvSahiplendirHayvanlar.setVisibility(View.INVISIBLE);
+                                                binding.imageMapSahiplen.setVisibility(View.INVISIBLE);
+                                                binding.buttonGitHaritaPin.setVisibility(View.INVISIBLE);
                                                 binding.imageViewCerikBulunamadi.setImageResource(R.drawable.not_found);
                                                 binding.imageViewCerikBulunamadi.setVisibility(View.VISIBLE);
                                                 binding.textViewCerikBulunamadiYazisi.setText("Sahiplenecek hiç hayvan yok mu? Belkide kişilik testini yapmalısınız.");
                                                 binding.textViewCerikBulunamadiYazisi.setVisibility(View.VISIBLE);
+                                                Toast.makeText(getContext(), "Hiç hayvan yok.", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });

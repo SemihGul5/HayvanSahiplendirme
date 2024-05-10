@@ -26,6 +26,7 @@ public class ProfilGorunumFragment extends Fragment {
     private FragmentProfilGorunumBinding binding;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+    private String email;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,8 +34,8 @@ public class ProfilGorunumFragment extends Fragment {
         binding=FragmentProfilGorunumBinding.inflate(inflater, container, false);
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
-
-        getData();
+        email=auth.getCurrentUser().getEmail();
+        getData(email,auth);
 
         binding.linearLayoutAyarlar.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.action_profilGorunumFragment_to_ayarlarFragment);
@@ -56,33 +57,40 @@ public class ProfilGorunumFragment extends Fragment {
 
         return binding.getRoot();
     }
-    private void getData() {
-        String email=auth.getCurrentUser().getEmail();
-        firestore.collection("kullanicilar").whereEqualTo("email",email)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (value != null) {
-                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                Map<String, Object> data = documentSnapshot.getData();
+    private void getData(String email, FirebaseAuth auth) {
+        if (auth.getCurrentUser()!=null){
+            firestore.collection("kullanicilar")
+                    .whereEqualTo("email",email)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if (value != null) {
+                                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                    Map<String, Object> data = documentSnapshot.getData();
 
-                                String ad = (String) data.get("ad");
-                                String soyad = (String) data.get("soyad");
-                                String tel = (String) data.get("tel");
-                                String kisilik = (String) data.get("kişilik");
+                                    String ad = (String) data.get("ad");
+                                    String soyad = (String) data.get("soyad");
+                                    String tel = (String) data.get("tel");
+                                    String kisilik = (String) data.get("kişilik");
 
-                                String isim=ad+" "+soyad;
-                                binding.textViewKullaniciIsmi.setText(isim);
-                                binding.textViewKullaniciEmail.setText(email);
-                                binding.textViewTelBilgi.setText(tel);
-                                binding.textViewKisilikBilgi.setText(kisilik);
+                                    String isim=ad+" "+soyad;
+                                    binding.textViewKullaniciIsmi.setText(isim);
+                                    binding.textViewKullaniciEmail.setText(email);
+                                    binding.textViewTelBilgi.setText(tel);
+                                    binding.textViewKisilikBilgi.setText(kisilik);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }else{
+            Toast.makeText(getContext(), "Oturum açılmamış", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 }

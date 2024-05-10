@@ -38,8 +38,8 @@ import java.util.ArrayList;
 
 public class AyarlarFragment extends Fragment {
     private FragmentAyarlarBinding binding;
-    FirebaseAuth auth;
-    FirebaseFirestore firestore;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
     private ArrayList<AyarlarIcerik> ayarlarList;
     private AyarlarAdapter adapter;
     @Override
@@ -48,9 +48,12 @@ public class AyarlarFragment extends Fragment {
         // Inflate the layout for this fragment
         binding= FragmentAyarlarBinding.inflate(inflater, container, false);
         binding.materialToolbarAyarlar.setTitle("Ayarlar");
-        ayarlarList=new ArrayList<>();
-        firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
+        firestore=FirebaseFirestore.getInstance();
+        ayarlarList=new ArrayList<>();
+
+
+
         AyarlarIcerik profilim=new AyarlarIcerik("Profilim",false);
         AyarlarIcerik kisilikTesti=new AyarlarIcerik("Kişilik Testi",false);
         AyarlarIcerik mesajlar=new AyarlarIcerik("Mesajlar",false);
@@ -74,8 +77,6 @@ public class AyarlarFragment extends Fragment {
         adapter = new AyarlarAdapter(getContext(), ayarlarList,firestore,auth);
         binding.rvAyarlar.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvAyarlar.setAdapter(adapter);
-
-
 
 
 

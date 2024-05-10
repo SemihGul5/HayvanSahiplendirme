@@ -24,13 +24,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.sgodi.bitirmeprojesi.MainActivity;
 import com.sgodi.bitirmeprojesi.R;
-import com.sgodi.bitirmeprojesi.data.models.AnasayfaIcerik;
 import com.sgodi.bitirmeprojesi.data.models.AyarlarIcerik;
 import com.sgodi.bitirmeprojesi.databinding.AyarlarListesiBinding;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarCardTutucu> {
 
@@ -51,10 +51,11 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
     @Override
     public AyarlarCardTutucu onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         AyarlarListesiBinding binding=AyarlarListesiBinding.inflate(LayoutInflater.from(mContext),parent,false);
+
         try {
             // Firestore'dan belirli bir koşulu karşılayan belgeleri getirme ve switch bileşenini buna göre ayarlama
             firestore.collection("kullanicilar")
-                    .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                    .whereEqualTo("email", Objects.requireNonNull(auth.getCurrentUser()).getEmail())
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -102,7 +103,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             holder.binding.switchAyarlar.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 // Firestore'daki oneri_durumu değerini güncelleme
                 firestore.collection("kullanicilar")
-                        .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                        .whereEqualTo("email", Objects.requireNonNull(auth.getCurrentUser()).getEmail())
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -171,7 +172,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
         } else if (secilen.equals("Bize Ulaşın")) {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_bizeUlasFragment);
         } else if (secilen.equals("Çıkış Yap")) {
-            cikisYap(view);
+            cikisYap(view,auth);
         } else if (secilen.equals("Bakıcı İlanımı Kaldır")) {
             AlertDialog.Builder alert=new AlertDialog.Builder(mContext);
             alert.setTitle("İlanı kaldır");
@@ -199,7 +200,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
 
     private void bakiciIlanKaldir(FirebaseFirestore firestore) {
         firestore.collection("bakici")
-                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .whereEqualTo("email", Objects.requireNonNull(auth.getCurrentUser()).getEmail())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -222,7 +223,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
                 });
     }
 
-    private void cikisYap(View view) {
+    private void cikisYap(View view, FirebaseAuth auth) {
         try {
             AlertDialog.Builder alert=new AlertDialog.Builder(mContext);
             alert.setTitle("Çıkıs Yap");
@@ -230,10 +231,17 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             alert.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Toast.makeText(mContext, "Çıkış Yapılıyor.", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mainActivity);
+                    if (auth.getCurrentUser()!=null){
+                        Toast.makeText(mContext, "Çıkış Yapılıyor.", Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(mContext, MainActivity.class);
+                        startActivity(mContext,intent,null);
+                        //Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mainActivity);
 
-                    auth.signOut();
+                        auth.signOut();
+                    }else{
+                        Toast.makeText(mContext, "hata.", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 }
             });
