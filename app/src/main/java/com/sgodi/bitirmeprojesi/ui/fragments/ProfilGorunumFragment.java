@@ -50,7 +50,7 @@ public class ProfilGorunumFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_profilGorunumFragment_to_profilimFragment);
         });
         binding.textViewGitSifreDegistir.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.action_profilGorunumFragment_to_sifreDegisFragment);
+            Navigation.findNavController(view).navigate(R.id.action_profilGorunumFragment_to_kaydedilenlerFragment);
         });
 
 

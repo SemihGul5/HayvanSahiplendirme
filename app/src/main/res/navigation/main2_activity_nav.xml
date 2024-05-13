@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_ayarlarFragment_to_hayvanimKisilikYonergeleriFragment"
             app:destination="@id/hayvanimKisilikYonergeleriFragment" />
+        <action
+            android:id="@+id/action_ayarlarFragment_to_kaydedilenlerFragment"
+            app:destination="@id/kaydedilenlerFragment" />
     </fragment>
     <fragment
         android:id="@+id/sahiplenFragment"
@@ -277,10 +280,26 @@
         <action
             android:id="@+id/action_profilGorunumFragment_to_profilimFragment"
             app:destination="@id/profilimFragment" />
+        <action
+            android:id="@+id/action_profilGorunumFragment_to_kaydedilenlerFragment"
+            app:destination="@id/kaydedilenlerFragment" />
     </fragment>
     <fragment
         android:id="@+id/artikSahibiVarFragment"
         android:name="com.sgodi.bitirmeprojesi.ui.fragments.ArtikSahibiVarFragment"
         android:label="fragment_artik_sahibi_var"
-        tools:layout="@layout/fragment_artik_sahibi_var" />
+        tools:layout="@layout/fragment_artik_sahibi_var" >
+        <action
+            android:id="@+id/action_artikSahibiVarFragment_to_sahiplendirAyrintiFragment"
+            app:destination="@id/sahiplendirAyrintiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kaydedilenlerFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.KaydedilenlerFragment"
+        android:label="fragment_kaydedilenler"
+        tools:layout="@layout/fragment_kaydedilenler" >
+        <action
+            android:id="@+id/action_kaydedilenlerFragment_to_sahiplendirAyrintiFragment"
+            app:destination="@id/sahiplendirAyrintiFragment" />
+    </fragment>
 </navigation>

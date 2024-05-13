@@ -42,7 +42,6 @@ public class AnaSayfaFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAnaSayfaBinding.inflate(inflater, container, false);
-        binding.toolbar.setTitle("AnaSayfa");
         geriTusuIslemleri();
 
         // Firestore nesnesini başlat

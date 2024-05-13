@@ -3,7 +3,9 @@ package com.sgodi.bitirmeprojesi.ui.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -17,40 +19,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
-import com.sgodi.bitirmeprojesi.databinding.FragmentArtikSahibiVarBinding;
+import com.sgodi.bitirmeprojesi.databinding.FragmentKaydedilenlerBinding;
 import com.sgodi.bitirmeprojesi.ui.adapters.SahiplendirAdapter;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ArtikSahibiVarFragment extends Fragment {
-    private FragmentArtikSahibiVarBinding binding;
+public class KaydedilenlerFragment extends Fragment {
+    private FragmentKaydedilenlerBinding binding;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-    private ArrayList<Hayvan> hayvanListesi;
-    SahiplendirAdapter adapter;
+    private String email;
     private ArrayList<String> docIDListesi;
-
+    private ArrayList<Hayvan> hayvanList;
+    private SahiplendirAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentArtikSahibiVarBinding.inflate(inflater, container, false);
-
+        binding= FragmentKaydedilenlerBinding.inflate(inflater, container, false);
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
-        hayvanListesi=new ArrayList<>();
+        email=auth.getCurrentUser().getEmail();
         docIDListesi = new ArrayList<>();
-        getData(firestore);
+        hayvanList=new ArrayList<>();
 
-        binding.rvArtikSahibiVar.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter= new SahiplendirAdapter(getContext(),hayvanListesi, SahiplendirAdapter.SayfaTuru.ARTIK_SAHIBI_VAR);
-        binding.rvArtikSahibiVar.setAdapter(adapter);
+        getData(email,firestore);
 
-
-
-
-
+        binding.rvKaydedilenler.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter=new SahiplendirAdapter(getContext(),hayvanList, SahiplendirAdapter.SayfaTuru.KAYDEDILENLER);
+        binding.rvKaydedilenler.setAdapter(adapter);
 
 
 
@@ -58,10 +56,10 @@ public class ArtikSahibiVarFragment extends Fragment {
 
         return binding.getRoot();
     }
-
-    private void getData(FirebaseFirestore firestore) {
+    private void getData(String email, FirebaseFirestore firestore) {
         // Favoriler koleksiyonundan belirli bir kullanıcının favori etkinliklerini getir
-        firestore.collection("sahibi_olan_hayvanlar")
+        firestore.collection("favoriler")
+                .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -79,7 +77,6 @@ public class ArtikSahibiVarFragment extends Fragment {
                     }
                 });
     }
-
     @SuppressLint("NotifyDataSetChanged")
     private void aramaYap(ArrayList<String> docIDListesi) {
         for (String docID : docIDListesi) {
@@ -92,7 +89,6 @@ public class ArtikSahibiVarFragment extends Fragment {
                             if (document.exists()) {
                                 Map<String, Object> data = document.getData();
                                 if (data != null) {
-
                                     String email = (String) data.get("email");
                                     String foto1 = (String) data.get("foto1");
                                     String foto2 = (String) data.get("foto2");
@@ -116,20 +112,12 @@ public class ArtikSahibiVarFragment extends Fragment {
 
                                     Hayvan hayvan = new Hayvan(email, foto1,foto2,foto3,foto4, ad, tur, irk, cinsiyet, yas, saglik, aciklama,
                                             kisilik, docid, sahipliMi, ilandaMi,enlem,boylam,sehir,ilce);
-                                    hayvanListesi.add(hayvan);
-
-                                    // Tüm veriler alındığında adapter'ı güncelle
-                                    if (hayvanListesi.size() == docIDListesi.size()) {
-                                        adapter.notifyDataSetChanged();
-                                        int sayac = adapter.getItemCount();
-                                        String sayacS = "Sahiplendirilen Hayvan Sayısı: " + sayac;
-                                        binding.textViewSahipliSayac.setText(sayacS);
-                                    }
-
+                                    hayvanList.add(hayvan);
                                 }
                                 adapter.notifyDataSetChanged();
                             } else {
                                 // Belge bulunamadığında yapılacak işlemler
+                                //Toast.makeText(getContext(), "Etkinlik bulunamadı", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Arama yapılırken hata oluştuğunda yapılacak işlemler

@@ -46,7 +46,7 @@ public class MesajListemFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentMesajListemBinding.inflate(inflater, container, false);
-        binding.materialToolbarMesajListem.setTitle("Mesajlar");
+
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         bakiciList=new ArrayList<>();

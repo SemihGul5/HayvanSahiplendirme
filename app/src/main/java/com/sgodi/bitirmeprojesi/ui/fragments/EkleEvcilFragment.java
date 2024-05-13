@@ -76,7 +76,7 @@ public class EkleEvcilFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentEkleEvcilBinding.inflate(inflater, container, false);
-        binding.toolbarHayvanEkle.setTitle("Hayvan Ekle");
+
         // Tür, kisilik ve yaş bölümü başlatılması
         turBaslat();
         kisilikBaslat();

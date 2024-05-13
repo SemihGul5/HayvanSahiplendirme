@@ -47,7 +47,7 @@ public class AyarlarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding= FragmentAyarlarBinding.inflate(inflater, container, false);
-        binding.materialToolbarAyarlar.setTitle("Ayarlar");
+
         auth=FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
         ayarlarList=new ArrayList<>();
@@ -59,6 +59,7 @@ public class AyarlarFragment extends Fragment {
         AyarlarIcerik mesajlar=new AyarlarIcerik("Mesajlar",false);
         AyarlarIcerik bakiciIlan=new AyarlarIcerik("Bakıcı İlanımı Kaldır",false);
         AyarlarIcerik oneri=new AyarlarIcerik("Kişiselleştirilmiş Öneriler",true);
+        AyarlarIcerik kaydedilenler=new AyarlarIcerik("Kaydedilen Hayvanlar",false);
         AyarlarIcerik hayvanKisilikleri=new AyarlarIcerik("Hayvan Kişilikleri",false);
         AyarlarIcerik paylas=new AyarlarIcerik("Uygulamayı Paylaş",false);
         AyarlarIcerik ulas=new AyarlarIcerik("Bize Ulaşın",false);
@@ -69,6 +70,7 @@ public class AyarlarFragment extends Fragment {
         ayarlarList.add(mesajlar);
         ayarlarList.add(bakiciIlan);
         ayarlarList.add(oneri);
+        ayarlarList.add(kaydedilenler);
         ayarlarList.add(hayvanKisilikleri);
         ayarlarList.add(paylas);
         ayarlarList.add(ulas);

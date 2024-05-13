@@ -42,7 +42,7 @@ public class HayvanlarimFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentHayvanlarimBinding.inflate(inflater, container, false);
-        binding.toolbarHayvanlarim.setTitle("Hayvanlarım");
+
 
         binding.floatingActionButtonHayvanlarim.setOnClickListener(view -> {
             //hayvan ekleye git

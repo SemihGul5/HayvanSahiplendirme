@@ -18,7 +18,7 @@ public class HayvanimKisilikYonergeleriFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentHayvanimKisilikYonergeleriBinding.inflate(inflater, container, false);
-        binding.materialToolbarHayvanlarKisilik.setTitle("Hayvan Kişilikleri");
+
 
 
 

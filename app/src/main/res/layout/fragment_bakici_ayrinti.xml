@@ -19,7 +19,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/sahiplen_ayrinti_menu"
         app:titleTextColor="@color/white" />
-
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pacifico"
+        android:text="Bakıcı Ayrıntı"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarBakiciAyrinti"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarBakiciAyrinti"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbarBakiciAyrinti"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarBakiciAyrinti" />
     <ImageView
         android:id="@+id/imageViewBakiciAyrintiFoto"
         android:layout_width="0dp"

@@ -26,4 +26,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/textView36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pacifico"
+        android:text="Mesajlar"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarMesajListem"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarMesajListem"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbarMesajListem"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarMesajListem" />
 </androidx.constraintlayout.widget.ConstraintLayout>

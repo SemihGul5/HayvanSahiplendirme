@@ -65,7 +65,7 @@ public class BakiciOlFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentBakiciOlBinding.inflate(inflater, container, false);
-        binding.materialToolbarBakiciOl.setTitle("Bakıcı Ol");
+
         registerLauncher();
         binding.imageView.setOnClickListener(view -> {
             fotografTiklandi(view);
@@ -247,7 +247,7 @@ public class BakiciOlFragment extends Fragment {
                         cinsiyet="Kadın";
                     }
 
-                    binding.textView4.setText(cinsiyet);
+
                     HashMap<String, Object> postData = new HashMap<>();
                     postData.put("email", email);
                     postData.put("foto", foto);

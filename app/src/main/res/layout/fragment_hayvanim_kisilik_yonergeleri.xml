@@ -25,7 +25,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pacifico"
+            android:text="Hayvan Kişilikleri"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@+id/materialToolbarHayvanlarKisilik"
+            app:layout_constraintEnd_toEndOf="@+id/materialToolbarHayvanlarKisilik"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbarHayvanlarKisilik"
+            app:layout_constraintTop_toTopOf="@+id/materialToolbarHayvanlarKisilik" />
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"

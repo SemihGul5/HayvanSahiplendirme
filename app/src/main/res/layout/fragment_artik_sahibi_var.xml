@@ -17,7 +17,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <TextView
+        android:id="@+id/textView26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pacifico"
+        android:text="Sahiplendirilen Hayvanlar"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarArtikSahibiVar"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarArtikSahibiVar"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbarArtikSahibiVar"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarArtikSahibiVar" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_artik_sahibi_var"
         android:layout_width="0dp"

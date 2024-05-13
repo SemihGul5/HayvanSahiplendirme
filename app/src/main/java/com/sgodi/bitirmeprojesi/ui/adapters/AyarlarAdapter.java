@@ -143,6 +143,9 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
         else if (icerik.getBaslik().equals("Kişiselleştirilmiş Öneriler")) {
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.oneriler);
         }
+        else if (icerik.getBaslik().equals("Kaydedilen Hayvanlar")) {
+            holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.baseline_bookmarks_24);
+        }
         else if (icerik.getBaslik().equals("Hayvan Kişilikleri")) {
             holder.binding.imageViewAyarlarIcon.setImageResource(R.drawable.black_cat);
         }
@@ -189,6 +192,9 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_mesajListemFragment);
         } else if (secilen.equals("Kişiselleştirilmiş Öneriler")) {
 
+        }
+        else if (secilen.equals("Kaydedilen Hayvanlar")) {
+            Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_kaydedilenlerFragment);
         }
         else if (secilen.equals("Hayvan Kişilikleri")) {
             Navigation.findNavController(view).navigate(R.id.action_ayarlarFragment_to_hayvanimKisilikYonergeleriFragment);

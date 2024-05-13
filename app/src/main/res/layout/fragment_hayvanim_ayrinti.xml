@@ -27,7 +27,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="@color/white" />
-
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pacifico"
+            android:text="Ayrıntılar"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbarAyrinti"
+            app:layout_constraintEnd_toEndOf="@+id/toolbarAyrinti"
+            app:layout_constraintStart_toStartOf="@+id/toolbarAyrinti"
+            app:layout_constraintTop_toTopOf="@+id/toolbarAyrinti" />
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"

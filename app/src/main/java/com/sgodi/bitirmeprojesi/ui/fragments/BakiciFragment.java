@@ -51,7 +51,7 @@ public class BakiciFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentBakiciBinding.inflate(inflater, container, false);
-        binding.toolbar2.setTitle("Bakıcılar");
+        
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         bakiciList=new ArrayList<>();

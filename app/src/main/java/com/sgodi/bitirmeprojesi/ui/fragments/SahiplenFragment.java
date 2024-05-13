@@ -63,7 +63,7 @@ public class SahiplenFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding= FragmentSahiplenBinding.inflate(inflater, container, false);
-        binding.materialToolbarSahiplen.setTitle("Sahiplen");
+
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         hayvanListesi=new ArrayList<>();

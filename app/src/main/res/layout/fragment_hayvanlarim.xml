@@ -19,7 +19,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <TextView
+        android:id="@+id/textView35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pacifico"
+        android:text="Hayvanlarım"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbarHayvanlarim"
+        app:layout_constraintEnd_toEndOf="@+id/toolbarHayvanlarim"
+        app:layout_constraintStart_toStartOf="@+id/toolbarHayvanlarim"
+        app:layout_constraintTop_toTopOf="@+id/toolbarHayvanlarim" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonHayvanlarim"
         android:layout_width="wrap_content"

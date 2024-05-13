@@ -32,8 +32,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
@@ -42,15 +48,20 @@ import com.sgodi.bitirmeprojesi.databinding.FragmentMapsTumHayvanlarPinBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsFragmentTumHayvanlarPin extends Fragment {
 
     private GoogleMap mMap;
     private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
     private FusedLocationProviderClient fusedLocationClient;
     private FragmentMapsTumHayvanlarPinBinding binding;
     ArrayList<Hayvan> hayvans;
+    private Boolean favoriMi,oneri;
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -60,7 +71,7 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
             // Kullanıcının mevcut konumunu haritada göster
             showCurrentLocation();
             // Firestore'dan tüm hayvanların konumlarını al ve haritada marker'lar oluştur
-            getAllAnimalsLocation();
+            getKullaniciOneriDurum();
         }
     };
 
@@ -70,7 +81,7 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding=FragmentMapsTumHayvanlarPinBinding.inflate(inflater, container, false);
         hayvans=new ArrayList<>();
-
+        auth=FirebaseAuth.getInstance();
 
         return binding.getRoot();
     }
@@ -118,7 +129,119 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
         }
         mMap.setMyLocationEnabled(true);
     }
+    private void getKullaniciKisilik(FirebaseFirestore firestore, FirebaseAuth auth, MapsFragmentTumHayvanlarPin.KisilikCallback callback) {
+        String currentUserEmail = auth.getCurrentUser().getEmail();
+        firestore.collection("kullanicilar").whereEqualTo("email", currentUserEmail)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (value != null) {
+                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                Map<String, Object> data = documentSnapshot.getData();
+                                String kisilik = (String) data.get("kişilik");
+                                callback.onKisilikReceived(kisilik);
+                            }
+                        }
+                    }
+                });
+    }
+    public interface KisilikCallback {
+        void onKisilikReceived(String kisilikValue);
+    }
+    private void getKullaniciOneriDurum() {
+        firestore.collection("kullanicilar")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Boolean oneriDurumu = document.getBoolean("oneri_durum");
+                            if (oneriDurumu != null && oneriDurumu) {
+                                oneri = true;
+                            } else {
+                                oneri = false;
+                            }
+                            // Öneri durumu alındıktan sonra gerekli işlemleri yapmak için burada çağırabilirsiniz
+                            if (oneri) {
+                                getData();
 
+                            } else {
+                                getAllAnimalsLocation();
+                            }
+                        }
+                    }
+                });
+    }
+    private void getData(){
+        getKullaniciKisilik(firestore, auth, new KisilikCallback() {
+            @Override
+            public void onKisilikReceived(String kisilikValue) {
+                firestore.collection("kullanici_hayvanlari")
+                        .whereEqualTo("ilanda_mi","true")
+                        .whereEqualTo("kisilik",kisilikValue)
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                // Firestore'dan tüm hayvanların konumlarını al
+                                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                                for (DocumentSnapshot document : documents) {
+                                    // Hayvan belgesinden tüm özellikleri al
+                                    String ad = document.getString("ad");
+                                    String tur = document.getString("tur");
+                                    String irk = document.getString("ırk");
+                                    String cinsiyet = document.getString("cinsiyet");
+                                    String yas = document.getString("yas");
+                                    String saglik = document.getString("saglik");
+                                    String kisilik = document.getString("kisilik");
+                                    String aciklama = document.getString("aciklama");
+                                    String sehir = document.getString("sehir");
+                                    String ilce = document.getString("ilce");
+                                    String foto1 = document.getString("foto1");
+                                    String foto2 = document.getString("foto2");
+                                    String foto3 = document.getString("foto3");
+                                    String foto4 = document.getString("foto4");
+                                    String email = document.getString("email");
+                                    String docid=document.getId();
+                                    String sahiplimi=document.getString("sahipli_mi");
+                                    String ilanda_mi=document.getString("ilanda_mi");
+                                    String enlem=document.getString("enlem");
+                                    String boylam=document.getString("boylam");
+                                    // Hayvan nesnesini oluştur
+                                    Hayvan hayvan = new Hayvan(email,foto1,foto2,foto3,foto4,ad,tur,irk,cinsiyet,yas,saglik,aciklama,kisilik,docid,sahiplimi,ilanda_mi,enlem,
+                                            boylam,sehir,ilce);
+                                    hayvans.add(hayvan);
+
+                                    // Hayvanın konumunu al
+                                    double latitude = Double.parseDouble(document.getString("enlem"));
+                                    double longitude = Double.parseDouble(document.getString("boylam"));
+
+                                    // Marker oluştur ve haritaya ekle
+                                    LatLng animalLocation = new LatLng(latitude, longitude);
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(animalLocation));
+
+                                    // Marker'a tıklanınca hangi hayvana tıklanıldığını belirlemek için dinleyici ekle
+                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            // Marker'a tıklandığında ilgili hayvanın bilgilerini göster
+                                            Hayvan clickedHayvan = getHayvanFromMarker(marker);
+                                            if (clickedHayvan != null) {
+                                                // İlgili hayvanın bilgilerini gösteren bottom sheet dialog oluştur
+                                                showAnimalDetailsDialog(clickedHayvan);
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+            }
+        });
+    }
     private void getAllAnimalsLocation() {
         firestore.collection("kullanici_hayvanlari")
                 .whereEqualTo("ilanda_mi","true")
@@ -203,6 +326,27 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
         bottomSheetDialog.setContentView(view);
 
         // Özellikleri göster;
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView imageViewFav = view.findViewById(R.id.imageView_kaydet_bottom);
+        firestore.collection("favoriler")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .whereEqualTo("docID", hayvan.getDocID())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            // Favoride var
+                            favoriMi=true;
+                            imageViewFav.setImageResource(R.drawable.baseline_bookmark_added_32);
+                        } else {
+                            favoriMi=false;
+                            imageViewFav.setImageResource(R.drawable.baseline_bookmark_add_32);
+                        }
+                    } else {
+                        // Firestore sorgusu başarısız oldu
+                        Toast.makeText(requireContext(), "Favorileri kontrol ederken bir hata oluştu.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // Özellikleri göster;
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView imageView = view.findViewById(R.id.imageViewHayvanimAyrinti_bottom);
         Picasso.get().load(hayvan.getFoto1()).resize(150,150)
                 .into(imageView);
@@ -229,10 +373,63 @@ public class MapsFragmentTumHayvanlarPin extends Fragment {
             bottomSheetDialog.cancel();
             ilgiliKisiyeMesajListesiAc(hayvan.getEmail());
         });
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView buttonFavEkle = view.findViewById(R.id.imageView_kaydet_bottom);
+        buttonFavEkle.setOnClickListener(view1 -> {
+            if (favoriMi){
+                etkinligiFavorilerdenSil(hayvan.getDocID(), firestore,imageViewFav);
+            }else{
+                etkinligiFavorilereEkle(hayvan.getDocID(), auth.getCurrentUser().getEmail(), firestore,imageViewFav);
+            }
+
+        });
         // Dialogu göster
         bottomSheetDialog.show();
     }
-
+    private void etkinligiFavorilerdenSil(String docID, FirebaseFirestore firestore, ImageView imageViewFav) {
+        firestore.collection("favoriler")
+                .whereEqualTo("docID", docID)
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        // Belirli bir kaydı sil
+                        firestore.collection("favoriler")
+                                .document(snapshot.getId()) // Silinecek belgenin kimliğini al
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getContext(), "Etkinlik favorilerden kaldırıldı", Toast.LENGTH_SHORT).show();
+                                    imageViewFav.setImageResource(R.drawable.baseline_bookmark_add_32);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), "Etkinlik favorilerden kaldırılırken hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Favorileri kontrol ederken bir hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+    private void etkinligiFavorilereEkle(String docID, String email, FirebaseFirestore firestore, ImageView imageViewFav) {
+        CollectionReference bildirilerCollectionRef = firestore.collection("favoriler");
+        DocumentReference yeniBelgeRef = bildirilerCollectionRef.document();
+        Map<String, Object> bildiriVerileri = new HashMap<>();
+        bildiriVerileri.put("email", email);
+        bildiriVerileri.put("docID", docID);
+        yeniBelgeRef.set(bildiriVerileri)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show();
+                        imageViewFav.setImageResource(R.drawable.baseline_bookmark_added_32);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Favorilere eklenirken hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     private void ilgiliKisiyeMesajListesiAc(String email) {
         try {
             firestore.collection("kullanicilar")

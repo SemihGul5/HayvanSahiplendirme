@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,6 +43,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
@@ -57,9 +59,11 @@ import java.util.Map;
 public class SahiplendirAyrintiFragment extends Fragment {
     private FragmentSahiplendirAyrintiBinding binding;
     FirebaseFirestore firestore;
-    String docID;
+    String docID,email;
     ArrayList<SlideModel> slideModels;
     private String foto1,foto2,foto3,foto4;
+    Boolean favoriMi;
+    private FirebaseAuth auth;
 
     @SuppressLint("ResourceType")
     @Override
@@ -67,10 +71,10 @@ public class SahiplendirAyrintiFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSahiplendirAyrintiBinding.inflate(inflater, container, false);
-        binding.materialToolbarSahiplendirAyrinti.setTitle("Ayrıntı");
+
         firestore = FirebaseFirestore.getInstance();
-
-
+        auth=FirebaseAuth.getInstance();
+        email=auth.getCurrentUser().getEmail();
         SahiplendirAyrintiFragmentArgs bundle = SahiplendirAyrintiFragmentArgs.fromBundle(getArguments());
         Hayvan hayvan = bundle.getHayvan();
         foto1=hayvan.getFoto1();
@@ -106,8 +110,18 @@ public class SahiplendirAyrintiFragment extends Fragment {
         binding.hayvanAyrintiKISILIK.setText(hayvan.getKisilik());
         binding.hayvanAyrintiHAKKINDA.setText(hayvan.getAciklama());
         binding.hayvanAyrintiSehir.setText(hayvan.getSehir() + " / " + hayvan.getIlce());
+        getFavoriMi(auth.getCurrentUser().getEmail(),hayvan.getDocID());
         foto1=hayvan.getFoto1();
-        getHayvanDocID();
+
+
+        binding.imageViewKaydet.setOnClickListener(view -> {
+            if (favoriMi){
+                hayvaniFavorilerdenSil(hayvan.getDocID(), firestore);
+            }else{
+                hayvaniFavorilereEkle(hayvan.getDocID(), auth.getCurrentUser().getEmail(), firestore);
+            }
+        });
+
 
         binding.hayvanAyrintiKonum.setOnClickListener(view -> {
             SahiplendirAyrintiFragmentDirections.ActionSahiplendirAyrintiFragmentToMapsFragmentSahiplenAyrinti gecis =
@@ -157,33 +171,77 @@ public class SahiplendirAyrintiFragment extends Fragment {
 
         return binding.getRoot();
     }
+    private void hayvaniFavorilerdenSil(String docID, FirebaseFirestore firestore) {
+        firestore.collection("favoriler")
+                .whereEqualTo("docID", docID)
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Favoriler koleksiyonunda belirli bir etkinliğin kaydını bulduk
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        // Belirli bir kaydı sil
+                        firestore.collection("favoriler")
+                                .document(snapshot.getId()) // Silinecek belgenin kimliğini al
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getContext(), "Etkinlik favorilerden kaldırıldı", Toast.LENGTH_SHORT).show();
+                                    binding.imageViewKaydet.setImageResource(R.drawable.baseline_bookmark_add_24_beyaz);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), "Etkinlik favorilerden kaldırılırken hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Favorileri kontrol ederken bir hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
 
-    private void getHayvanDocID() {
-        try {
-            firestore.collection("kullanici_hayvanlari").whereEqualTo("foto1",foto1)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                //Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.i("Mesaj",error.getMessage());
-                            }else {
-                                if (value != null) {
-                                    if (value.isEmpty()) {
-                                        Toast.makeText(getContext(), "Bir sorun oluştu", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                                            docID = documentSnapshot.getId();
-                                        }
-                                    }
-                                }
-                            }
+
+    private void hayvaniFavorilereEkle(String docID, String email, FirebaseFirestore firestore) {
+        CollectionReference bildirilerCollectionRef = firestore.collection("favoriler");
+        DocumentReference yeniBelgeRef = bildirilerCollectionRef.document();
+        Map<String, Object> bildiriVerileri = new HashMap<>();
+        bildiriVerileri.put("email", email);
+        bildiriVerileri.put("docID", docID);
+        yeniBelgeRef.set(bildiriVerileri)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show();
+                        binding.imageViewKaydet.setImageResource(R.drawable.baseline_bookmark_added_24_beyaz);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Favorilere eklenirken hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    public void getFavoriMi(String email, String docID) {
+        // Kullanıcının emailine göre Firestore'da favoriler koleksiyonunda arama yap
+        firestore.collection("favoriler")
+                .whereEqualTo("email", email)
+                .whereEqualTo("docID", docID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Favoriler koleksiyonunda kayıt bulundu
+                        if (!task.getResult().isEmpty()) {
+                            // Favoride var
+                            favoriMi=true;
+                            binding.imageViewKaydet.setImageResource(R.drawable.baseline_bookmark_added_24_beyaz);
+                        } else {
+                            // Favoride yok, ekle
+                            favoriMi=false;;
+                            binding.imageViewKaydet.setImageResource(R.drawable.baseline_bookmark_add_24_beyaz);
                         }
-                    });
-        }catch (Exception e){
-            Log.i("Mesaj",e.getMessage());
-        }
-
+                    } else {
+                        // Firestore sorgusu başarısız oldu
+                        Toast.makeText(requireContext(), "Favorileri kontrol ederken bir hata oluştu.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void yolTarifi(View view) {

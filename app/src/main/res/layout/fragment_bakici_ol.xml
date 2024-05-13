@@ -22,7 +22,19 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pacifico"
+            android:text="Bakıcı Ol"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@+id/materialToolbarBakiciOl"
+            app:layout_constraintEnd_toEndOf="@+id/materialToolbarBakiciOl"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbarBakiciOl"
+            app:layout_constraintTop_toTopOf="@+id/materialToolbarBakiciOl" />
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
@@ -203,16 +215,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             android:indeterminateTint="@color/yesil"
             android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialToolbarBakiciOl" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="21dp"
-            android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialToolbarBakiciOl" />
 

@@ -4,48 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fontFamily="@font/roboto"
-    tools:context=".ui.fragments.AyarlarFragment">
+    tools:context=".ui.fragments.KaydedilenlerFragment" >
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbarAyarlar"
+        android:id="@+id/materialToolbarKaydedilenler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:fontFamily="@font/roboto"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/beyaz" />
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
-        android:id="@+id/textView27"
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/pacifico"
-        android:text="Ayarlar"
+        android:text="Favorilerim"
         android:textColor="@color/white"
         android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarAyarlar"
-        app:layout_constraintEnd_toEndOf="@+id/materialToolbarAyarlar"
-        app:layout_constraintStart_toStartOf="@+id/materialToolbarAyarlar"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbarAyarlar" />
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarKaydedilenler"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarKaydedilenler"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbarKaydedilenler"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarKaydedilenler" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_ayarlar"
+        android:id="@+id/rv_kaydedilenler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbarAyarlar" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbarKaydedilenler" />
 </androidx.constraintlayout.widget.ConstraintLayout>

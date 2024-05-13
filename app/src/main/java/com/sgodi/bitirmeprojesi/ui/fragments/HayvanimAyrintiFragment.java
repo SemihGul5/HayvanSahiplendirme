@@ -51,7 +51,7 @@ public class HayvanimAyrintiFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentHayvanimAyrintiBinding.inflate(inflater, container, false);
-        binding.toolbarAyrinti.setTitle("Ayrıntılar");
+
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);

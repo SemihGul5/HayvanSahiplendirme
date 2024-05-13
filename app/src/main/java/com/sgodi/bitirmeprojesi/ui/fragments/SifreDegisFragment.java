@@ -23,7 +23,7 @@ public class SifreDegisFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentSifreDegisBinding.inflate(inflater, container, false);
-        binding.materialToolbarSifreDegis.setTitle("Şifre Değiştir");
+
 
         binding.buttonSifreDegis.setOnClickListener(view -> {
             sifreDegis(view);

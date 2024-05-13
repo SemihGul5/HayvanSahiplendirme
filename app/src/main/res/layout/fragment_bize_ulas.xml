@@ -19,7 +19,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/white" />
-
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pacifico"
+        android:text="Bize Ulaşın"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbarBizeUlas"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbarBizeUlas"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbarBizeUlas"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbarBizeUlas" />
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="50dp"

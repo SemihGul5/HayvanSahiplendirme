@@ -252,7 +252,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Şifre"
+                                android:text="Kaydedilen Hayvanlar"
                                 android:textColor="@color/yesil"
                                 android:textSize="18sp" />
 
@@ -261,7 +261,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Değiştir"
+                                android:text="Göster"
                                 android:textAlignment="viewEnd"
                                 android:textColor="#5b5b5b"
                                 android:textSize="16sp" />

@@ -19,7 +19,7 @@ public class BizeUlasFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentBizeUlasBinding.inflate(inflater, container, false);
-        binding.materialToolbarBizeUlas.setTitle("Bize Ulaşın");
+
         binding.imageView4.setImageResource(R.drawable.ml);
         binding.imageView5.setImageResource(R.drawable.ig);
         binding.imageView6.setImageResource(R.drawable.tw);

@@ -42,7 +42,7 @@ public class BakiciAyrintiFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentBakiciAyrintiBinding.inflate(inflater, container, false);
-        binding.materialToolbarBakiciAyrinti.setTitle("Bakıcı Ayrıntı");
+
         firestore=FirebaseFirestore.getInstance();
         BakiciAyrintiFragmentArgs bundle=BakiciAyrintiFragmentArgs.fromBundle(getArguments());
         Bakici bakici= bundle.getBakici();

@@ -41,7 +41,7 @@ public class ProfilimFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding=FragmentProfilimBinding.inflate(inflater, container, false);
-        binding.materialToolbarProfilim.setTitle("Profilim");
+
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         binding.textProfilEmail.setEnabled(false);
