@@ -96,9 +96,6 @@
         <argument
             android:name="ilce"
             app:argType="string" />
-        <action
-            android:id="@+id/action_ekleEvcilFragment_to_hayvanDuzenleFragment"
-            app:destination="@id/hayvanDuzenleFragment" />
     </fragment>
     <fragment
         android:id="@+id/hayvanlarimFragment"
@@ -154,6 +151,9 @@
         <action
             android:id="@+id/action_hayvanimAyrintiFragment_to_mapsFragmentHayvanimAyrinti"
             app:destination="@id/mapsFragmentHayvanimAyrinti" />
+        <action
+            android:id="@+id/action_hayvanimAyrintiFragment_to_hayvanDuzenleFragment"
+            app:destination="@id/hayvanDuzenleFragment" />
     </fragment>
     <fragment
         android:id="@+id/sifreDegisFragment"

@@ -4,11 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.sgodi.bitirmeprojesi.R;
 import com.sgodi.bitirmeprojesi.data.models.Hayvan;
 import com.sgodi.bitirmeprojesi.databinding.FragmentHayvanimAyrintiBinding;
 
@@ -38,6 +41,7 @@ public class HayvanimAyrintiFragment extends Fragment {
     private FirebaseAuth auth;
     private String enlem,boylam;
     ArrayList<SlideModel>slideModels;
+    Hayvan hayvan;
     private String foto1,foto2,foto3,foto4;
     
     @Override
@@ -57,7 +61,7 @@ public class HayvanimAyrintiFragment extends Fragment {
         binding.buttonSahiplenmeIslemiGeriAl.setVisibility(View.INVISIBLE);
         // hayvan kartına tıklandığında gelen bilgileri alınması - hayvanim adapterdan
         HayvanimAyrintiFragmentArgs bundle=HayvanimAyrintiFragmentArgs.fromBundle(getArguments());
-        Hayvan hayvan= bundle.getHayvan();
+        hayvan= bundle.getHayvan();
         foto1=hayvan.getFoto1();
         foto2=hayvan.getFoto2();
         foto3=hayvan.getFoto3();
@@ -148,6 +152,17 @@ public class HayvanimAyrintiFragment extends Fragment {
                     HayvanimAyrintiFragmentDirections.actionHayvanimAyrintiFragmentToMapsFragmentHayvanimAyrinti(enlem,boylam);
             Navigation.findNavController(view).navigate(gecis);
 
+        });
+        binding.toolbarAyrinti.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId()== R.id.hayvan_duzenle){
+                    HayvanimAyrintiFragmentDirections.ActionHayvanimAyrintiFragmentToHayvanDuzenleFragment gecis=
+                            HayvanimAyrintiFragmentDirections.actionHayvanimAyrintiFragmentToHayvanDuzenleFragment(hayvan);
+                    Navigation.findNavController(getView()).navigate(gecis);
+                }
+                return false;
+            }
         });
 
 

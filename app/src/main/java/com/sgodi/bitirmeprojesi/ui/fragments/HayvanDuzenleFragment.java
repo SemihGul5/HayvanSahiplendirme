@@ -144,14 +144,14 @@ public class HayvanDuzenleFragment extends Fragment {
     }
 
     private void hayvanGuncelle(View view) {
-        if (imageData == null || binding.editTextHayvanAdDuzenle.getText().toString().isEmpty()
+        if (binding.editTextHayvanAdDuzenle.getText().toString().isEmpty()
                 || binding.autoCompleteTextViewDuzenle.getText().toString().isEmpty()
                 || binding.editTextHayvanIrkDuzenle.getText().toString().isEmpty()
                 || binding.radioGroupCinsiyetDuzenle.getCheckedRadioButtonId() == -1
                 || binding.autoCompleteTextViewHayvanYasDuzenle.getText().toString().isEmpty()
                 || binding.editTextHayvanSaglikDuzenle.getText().toString().isEmpty()
                 || binding.autoCompleteTextViewHayvanKisilikDuzenle.getText().toString().isEmpty()) {
-            Toast.makeText(getContext(), "Açıklama hariç tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Tüm alanları doldurmak zorunludur.", Toast.LENGTH_SHORT).show();
             return;
         }
         binding.progressBarHayvanEkleDuzenle.setVisibility(View.VISIBLE);
@@ -643,7 +643,7 @@ public class HayvanDuzenleFragment extends Fragment {
                                         binding.addImage3Duzenle.setEnabled(true);
                                     }
                                     if (!sonuc.equals(binding.autoCompleteTextViewDuzenle.getText().toString())){
-                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        //Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
                                         binding.addImage2Duzenle.setImageResource(R.drawable.add_photo);
                                         imageData2=null;
                                         binding.addImage3Duzenle.setImageResource(R.drawable.backgorund_ekle_evcil);
@@ -732,7 +732,7 @@ public class HayvanDuzenleFragment extends Fragment {
                                         binding.addImage4Duzenle.setEnabled(true);
                                     }
                                     if (!sonuc.equals(binding.autoCompleteTextViewDuzenle.getText().toString())){
-                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        //Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
                                         binding.addImage3Duzenle.setImageResource(R.drawable.add_photo);
                                         imageData3=null;
                                         binding.addImage4Duzenle.setImageResource(R.drawable.backgorund_ekle_evcil);
@@ -815,7 +815,7 @@ public class HayvanDuzenleFragment extends Fragment {
                                         binding.addImage4Duzenle.setImageBitmap(img);
                                     }
                                     if (!sonuc.equals(binding.autoCompleteTextViewDuzenle.getText().toString())){
-                                        Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
+                                        //Snackbar.make(getView(),"Yüklediğiniz fotoğrafta başka hayvan bulunuyor !",Snackbar.LENGTH_SHORT).show();
                                         binding.addImage4Duzenle.setImageResource(R.drawable.add_photo);
                                         imageData4=null;
                                     }
