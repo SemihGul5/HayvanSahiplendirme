@@ -207,7 +207,7 @@ public class HayvanDuzenleFragment extends Fragment {
             HashMap<String, Object> updatedData = new HashMap<>();
             updatedData.put("ad", binding.editTextHayvanAdDuzenle.getText().toString());
             updatedData.put("tur", binding.autoCompleteTextViewDuzenle.getText().toString());
-            updatedData.put("irk", binding.editTextHayvanIrkDuzenle.getText().toString());
+            updatedData.put("ırk", binding.editTextHayvanIrkDuzenle.getText().toString());
             String cinsiyet = "";
             int cinsiyetID = binding.radioGroupCinsiyetDuzenle.getCheckedRadioButtonId();
             if (cinsiyetID == R.id.radioButtonErkek) {
