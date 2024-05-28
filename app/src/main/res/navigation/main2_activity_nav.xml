@@ -96,6 +96,9 @@
         <argument
             android:name="ilce"
             app:argType="string" />
+        <action
+            android:id="@+id/action_ekleEvcilFragment_to_hayvanDuzenleFragment"
+            app:destination="@id/hayvanDuzenleFragment" />
     </fragment>
     <fragment
         android:id="@+id/hayvanlarimFragment"
@@ -301,5 +304,13 @@
         <action
             android:id="@+id/action_kaydedilenlerFragment_to_sahiplendirAyrintiFragment"
             app:destination="@id/sahiplendirAyrintiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hayvanDuzenleFragment"
+        android:name="com.sgodi.bitirmeprojesi.ui.fragments.HayvanDuzenleFragment"
+        android:label="HayvanDuzenleFragment" >
+        <argument
+            android:name="Hayvan"
+            app:argType="com.sgodi.bitirmeprojesi.data.models.Hayvan" />
     </fragment>
 </navigation>

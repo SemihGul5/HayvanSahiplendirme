@@ -112,7 +112,7 @@ public class SahiplendirAyrintiFragment extends Fragment {
         binding.hayvanAyrintiSehir.setText(hayvan.getSehir() + " / " + hayvan.getIlce());
         getFavoriMi(auth.getCurrentUser().getEmail(),hayvan.getDocID());
         foto1=hayvan.getFoto1();
-
+        docID=hayvan.getDocID();
 
         binding.imageViewKaydet.setOnClickListener(view -> {
             if (favoriMi){
