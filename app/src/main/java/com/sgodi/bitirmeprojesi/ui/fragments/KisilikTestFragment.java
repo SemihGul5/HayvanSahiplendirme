@@ -81,7 +81,7 @@ public class KisilikTestFragment extends Fragment {
                                 Snackbar.make(view, "Tüm değerler 0'dan büyük olmalıdır", Snackbar.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getContext(), "İşleniyor...", Toast.LENGTH_SHORT).show();
-                                sendTestResults();
+                                tekrarDene();
                             }
                         }catch (Exception e){
                             Log.i("Mesaj",e.getMessage());
@@ -196,7 +196,7 @@ public class KisilikTestFragment extends Fragment {
                     });
                 } else {
                     // Request başarısız olduğunda yapılacak işlemler
-                    Snackbar.make(getView(),"Bu kez olmadı, tekrar deneyeceğiz. Lütfen bekleyiniz...",Snackbar.LENGTH_SHORT).show();
+                    //Snackbar.make(getView(),"Bu kez olmadı, tekrar deneyeceğiz. Lütfen bekleyiniz...",Snackbar.LENGTH_SHORT).show();
                     tekrarDene();
 
                 }

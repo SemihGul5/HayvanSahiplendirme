@@ -97,7 +97,8 @@ public class KayitOlFragment extends Fragment {
                     Exception exception = task.getException();
                     if (exception instanceof FirebaseAuthUserCollisionException) {
                         // E-posta zaten kayıtlı, kullanıcıyı bilgilendir veya işlem yap
-                        Snackbar.make(view,"E posta zaten kayıtlı",Snackbar.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "E posta zaten kayıtlı", Toast.LENGTH_SHORT).show();
+
                     } else {
                         // Diğer hataları işle
                         Snackbar.make(view,exception.getLocalizedMessage(),Snackbar.LENGTH_SHORT).show();
