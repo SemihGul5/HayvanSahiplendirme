@@ -83,7 +83,6 @@ public class KayitOlFragment extends Fragment {
                     FirebaseUser user = auth.getCurrentUser(); // Oluşturulan kullanıcıyı al
                     aktivasyonEmailiGonder(user, view);
                     kullaniciyiFirestoreKaydet(ad, soyad, email);
-                    auth.signOut();
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof FirebaseAuthUserCollisionException) {
