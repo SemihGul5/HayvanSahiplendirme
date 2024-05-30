@@ -31,88 +31,73 @@ import java.util.HashMap;
 
 public class KayitOlFragment extends Fragment {
     private FragmentKayitOlBinding binding;
-    private String ad,soyad,email,sifre,sifreTekrar;
+    private String ad, soyad, email, sifre, sifreTekrar;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding= FragmentKayitOlBinding.inflate(inflater, container, false);
-        auth=FirebaseAuth.getInstance();
-        firestore=FirebaseFirestore.getInstance();
+        binding = FragmentKayitOlBinding.inflate(inflater, container, false);
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
-
-        //Giriş yap ekranına gidiş
+        // Giriş yap ekranına gidiş
         binding.kayitOlGirisYapButton.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.action_kayitOlFragment_to_girisYapFragment);
         });
 
-        kayitOlButtonTiklandi(getView());
-
-
-
-
-
+        // Kayıt ol butonuna tıklandığında çalışacak metodu çağırıyoruz
+        kayitOlButtonTiklandi();
 
         return binding.getRoot();
     }
 
-    private void kayitOlButtonTiklandi(View view) {
-
-        binding.kayitOlKayitOlButton.setOnClickListener(view1 -> {
+    private void kayitOlButtonTiklandi() {
+        binding.kayitOlKayitOlButton.setOnClickListener(view -> {
             binding.progressBarKayitOl.setVisibility(View.VISIBLE);
-            ad=binding.kayitOlAdText.getText().toString();
-            soyad=binding.kayitOlSoyAdText.getText().toString();
-            email=binding.kayitOlEMailText.getText().toString();
-            sifre=binding.kayitOlSifreText.getText().toString();
-            sifreTekrar=binding.kayitOlSifreTekrarText.getText().toString();
+            ad = binding.kayitOlAdText.getText().toString();
+            soyad = binding.kayitOlSoyAdText.getText().toString();
+            email = binding.kayitOlEMailText.getText().toString();
+            sifre = binding.kayitOlSifreText.getText().toString();
+            sifreTekrar = binding.kayitOlSifreTekrarText.getText().toString();
 
-            if(ad.equals("")||soyad.equals("")||email.equals("")||sifre.equals("")||sifreTekrar.equals("")){
-                Snackbar.make(getView(),"Tüm alanları doldurun",Snackbar.LENGTH_SHORT).show();
+            if (ad.isEmpty() || soyad.isEmpty() || email.isEmpty() || sifre.isEmpty() || sifreTekrar.isEmpty()) {
+                Snackbar.make(getView(), "Tüm alanları doldurun", Snackbar.LENGTH_SHORT).show();
                 binding.progressBarKayitOl.setVisibility(View.GONE);
             } else if (!sifre.equals(sifreTekrar)) {
-                Snackbar.make(getView(),"Şifreler aynı olmalıdır",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), "Şifreler aynı olmalıdır", Snackbar.LENGTH_SHORT).show();
                 binding.progressBarKayitOl.setVisibility(View.GONE);
+            } else {
+                kullaniciyiKaydet(ad, soyad, email, sifre, view);
             }
-            else{
-                kullaniciyiKaydet(ad,soyad,email,sifre,view);
-                binding.progressBarKayitOl.setVisibility(View.GONE);
-            }
-
-
         });
     }
 
-    private void kullaniciyiKaydet(String ad,String soyad,String email, String sifre, View view) {
-        auth.createUserWithEmailAndPassword(email,sifre).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private void kullaniciyiKaydet(String ad, String soyad, String email, String sifre, View view) {
+        auth.createUserWithEmailAndPassword(email, sifre).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    FirebaseUser user=auth.getCurrentUser();//oluşturulan userı aldık, mail göndermek için
-                    aktivasyonEmailiGonder(user,view);
-                    kullaniciyiFirestoreKaydet(ad,soyad,email);
-
-                }else{
+                binding.progressBarKayitOl.setVisibility(View.GONE); // İşlem tamamlandığında progress bar gizle
+                if (task.isSuccessful()) {
+                    FirebaseUser user = auth.getCurrentUser(); // Oluşturulan kullanıcıyı al
+                    aktivasyonEmailiGonder(user, view);
+                    kullaniciyiFirestoreKaydet(ad, soyad, email);
+                    auth.signOut();
+                } else {
                     Exception exception = task.getException();
                     if (exception instanceof FirebaseAuthUserCollisionException) {
-                        // E-posta zaten kayıtlı, kullanıcıyı bilgilendir veya işlem yap
-                        Toast.makeText(getContext(), "E posta zaten kayıtlı", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getContext(), "E-posta zaten kayıtlı", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Diğer hataları işle
-                        Snackbar.make(view,exception.getLocalizedMessage(),Snackbar.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-
-
     }
 
     private void kullaniciyiFirestoreKaydet(String ad, String soyad, String email) {
-
-        HashMap<String, Object> data=new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>();
         StringBuffer ad2 = new StringBuffer(ad);
         ad2.setCharAt(0, Character.toUpperCase(ad2.charAt(0)));
         String adson = ad2.toString();
@@ -121,41 +106,40 @@ public class KayitOlFragment extends Fragment {
         soyad2.setCharAt(0, Character.toUpperCase(soyad2.charAt(0)));
         String soyad3 = soyad2.toString();
 
-        data.put("ad",adson);
-        data.put("soyad",soyad3);
-        data.put("email",email);
-        data.put("tel","null");
-        data.put("kişilik","null");
-        data.put("konum","null");
-        data.put("aciklama","null");
-        data.put("kisilik_durum","true");
-        data.put("bakici_durum","false");
-        data.put("oneri_durum",true);
+        data.put("ad", adson);
+        data.put("soyad", soyad3);
+        data.put("email", email);
+        data.put("tel", "null");
+        data.put("kişilik", "null");
+        data.put("konum", "null");
+        data.put("aciklama", "null");
+        data.put("kisilik_durum", "true");
+        data.put("bakici_durum", "false");
+        data.put("oneri_durum", true);
         firestore.collection("kullanicilar").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                //kullanıcı adı kayıt başarılı, mesaj göstermeye gerek yok
+                // Kullanıcı başarıyla kaydedildiğinde yapılacak işlemler
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private void aktivasyonEmailiGonder(FirebaseUser user, View view) {
         user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(getContext(),"Email gönderildi, hesabınızı doğrulayın.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Email gönderildi, hesabınızı doğrulayın.", Toast.LENGTH_SHORT).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Snackbar.make(view,e.getLocalizedMessage(),Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
