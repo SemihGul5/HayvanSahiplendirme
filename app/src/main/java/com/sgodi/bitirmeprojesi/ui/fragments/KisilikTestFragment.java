@@ -66,7 +66,7 @@ public class KisilikTestFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
 
-        /*getKullaniciKisilik(firestore, auth, new KisilikCallback() {
+        getKullaniciKisilik(firestore, auth, new KisilikCallback() {
             @Override
             public void onKisilikReceived(String kisilikValue) {
                 if (!kisilikValue.equals("null")) {
@@ -90,20 +90,8 @@ public class KisilikTestFragment extends Fragment {
                     });
                 }
             }
-        });*/
-        binding.kisilikTestButton.setOnClickListener(view -> {
-            try {
-                if (!checkSeekBarValues()) {
-                    Snackbar.make(view, "Tüm değerler 0'dan büyük olmalıdır", Snackbar.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(), "İşleniyor...", Toast.LENGTH_SHORT).show();
-                    tekrarDene();
-                }
-            }catch (Exception e){
-                Log.i("Mesaj",e.getMessage());
-            }
-
         });
+
         return binding.getRoot();
     }
 
