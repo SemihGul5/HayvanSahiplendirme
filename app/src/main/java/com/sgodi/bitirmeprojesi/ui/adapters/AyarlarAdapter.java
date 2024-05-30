@@ -38,6 +38,7 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
     private List<AyarlarIcerik> ayarlarList;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
+    private Boolean oneri;
 
 
     public AyarlarAdapter(Context mContext, List<AyarlarIcerik> ayarlarList,FirebaseFirestore firestore,FirebaseAuth auth) {
@@ -94,11 +95,6 @@ public class AyarlarAdapter extends RecyclerView.Adapter<AyarlarAdapter.AyarlarC
         });
 
         ayarlarIconAyarlama(icerik,holder);
-
-
-
-
-
         try {
             holder.binding.switchAyarlar.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 // Firestore'daki oneri_durumu değerini güncelleme

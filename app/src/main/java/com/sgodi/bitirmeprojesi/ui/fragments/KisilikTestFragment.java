@@ -96,29 +96,25 @@ public class KisilikTestFragment extends Fragment {
     }
 
     private void getKullaniciKisilik(FirebaseFirestore firestore, FirebaseAuth auth, KisilikCallback callback) {
-        try {
-            firestore.collection("kullanicilar")
-                    .whereEqualTo("email", auth.getCurrentUser().getEmail())
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                // Hata işleme
-                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+        firestore.collection("kullanicilar")
+                .whereEqualTo("email", auth.getCurrentUser().getEmail())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            // Hata işleme
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                            if (value != null) {
-                                for (DocumentSnapshot document : value.getDocuments()) {
-                                    String kisilik = document.getString("kişilik");
-                                    callback.onKisilikReceived(kisilik);
-                                }
+                        if (value != null) {
+                            for (DocumentSnapshot document : value.getDocuments()) {
+                                String kisilik = document.getString("kişilik");
+                                callback.onKisilikReceived(kisilik);
                             }
                         }
-                    });
-        }catch (Exception e){
-            Log.i("mesaj",e.getMessage());
-        }
+                    }
+                });
     }
 
     // Geri arama (callback) arayüzü
@@ -137,7 +133,7 @@ public class KisilikTestFragment extends Fragment {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             // İlgili belgeyi güncelle
                             String belgeId = document.getId();
-                            firestore.collection("kullanici").document(belgeId)
+                            firestore.collection("kullanicilar").document(belgeId)
                                     .update("kisilik_durum", aTrue)
                                     .addOnSuccessListener(aVoid -> {
                                         // Başarılı bir şekilde güncelleme yapıldığında yapılacak işlemler
@@ -155,7 +151,60 @@ public class KisilikTestFragment extends Fragment {
                 });
     }
 
+    @SuppressLint("ResourceAsColor")
+    private void sendTestResults() {
+        // MediaType'ı ve seekbardan alınan değerleri kullanarak RequestBody oluşturuyoruz
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = createRequestBody(mediaType);
 
+        // Request oluşturuyoruz
+        Request request = new Request.Builder()
+                .url("https://big-five-personality-test.p.rapidapi.com/submit")
+                .post(body)
+                .addHeader("content-type", "application/json")
+                .addHeader("X-RapidAPI-Key", "a06be069a4mshbb12383355b49c0p123211jsn648cf1b824ba")
+                .addHeader("X-RapidAPI-Host", "big-five-personality-test.p.rapidapi.com")
+                .build();
+
+        // Request'i gönderiyoruz
+        new Thread(() -> {
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    // Burada responseData'ı kullanarak istediğiniz işlemi yapabilirsiniz
+                    // Örneğin, bu verileri bir TextView'da gösterebilirsiniz
+                    getActivity().runOnUiThread(() -> {
+                        try {
+                            // JSON verisini JSONObject'e dönüştür
+                            JSONObject jsonObject = new JSONObject(responseData);
+
+                            // Olasılığı en yüksek olan özelliği bul
+                            String highestProbabilityTrait = findHighestProbabilityTrait(jsonObject);
+
+                            // TextView'da gösterme işlemi burada gerçekleştirilebilir
+                            binding.anketDurumText.setText(highestProbabilityTrait+" : "+getKisilikAciklama(highestProbabilityTrait,highestProbabilityTrait));
+                            binding.anketDurumText.setTextColor(ContextCompat.getColor(requireContext(), R.color.yesil));
+
+                            kisilikDurumGuncelle(highestProbabilityTrait,firestore);
+                            binding.kisilikTestButton.setEnabled(false);
+                            Toast.makeText(getContext(), "Kişilik analizi tamamlandı", Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+                    });
+                } else {
+                    // Request başarısız olduğunda yapılacak işlemler
+                    //Snackbar.make(getView(),"Bu kez olmadı, tekrar deneyeceğiz. Lütfen bekleyiniz...",Snackbar.LENGTH_SHORT).show();
+                    tekrarDene();
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
     private void tekrarDene() {
         StringRequest stringRequest=new StringRequest(com.android.volley.Request.Method.POST, "https://bitirme-proje-309030c9a303.herokuapp.com/predict", new com.android.volley.Response.Listener<String>() {
@@ -263,7 +312,7 @@ public class KisilikTestFragment extends Fragment {
     }
 
     private void kisilikDurumGuncelle(String highestProbabilityTrait, FirebaseFirestore firestore) {
-        Query query=firestore.collection("kullanicilar").whereEqualTo("email", Objects.requireNonNull(auth.getCurrentUser()).getEmail());
+        Query query=firestore.collection("kullanicilar").whereEqualTo("email",auth.getCurrentUser().getEmail());
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -297,7 +346,39 @@ public class KisilikTestFragment extends Fragment {
         return aciklama;
     }
 
+    private String findHighestProbabilityTrait(JSONObject jsonObject) throws JSONException {
+        // JSON verisinden trait'leri çıkar
+        JSONObject openness = jsonObject.getJSONObject("Openness");
+        JSONObject conscientiousness = jsonObject.getJSONObject("Conscientiousness");
+        JSONObject extroversion = jsonObject.getJSONObject("Extroversion");
+        JSONObject agreeableness = jsonObject.getJSONObject("Agreeableness");
+        JSONObject neuroticism = jsonObject.getJSONObject("Neuroticism");
 
+        // Her bir trait'in olasılığını al
+        double opennessPercentage = openness.getDouble("percentage");
+        double conscientiousnessPercentage = conscientiousness.getDouble("percentage");
+        double extroversionPercentage = extroversion.getDouble("percentage");
+        double agreeablenessPercentage = agreeableness.getDouble("percentage");
+        double neuroticismPercentage = neuroticism.getDouble("percentage");
+
+        // Olasılığı en yüksek olan trait'in adını bul
+        double maxPercentage = Math.max(opennessPercentage, Math.max(conscientiousnessPercentage, Math.max(extroversionPercentage, Math.max(agreeablenessPercentage, neuroticismPercentage))));
+        String highestProbabilityTrait = "";
+
+        if (maxPercentage == opennessPercentage) {
+            highestProbabilityTrait = "Açıklık";
+        } else if (maxPercentage == conscientiousnessPercentage) {
+            highestProbabilityTrait = "Sorumluluk";
+        } else if (maxPercentage == extroversionPercentage) {
+            highestProbabilityTrait = "Dışa Dönüklük";
+        } else if (maxPercentage == agreeablenessPercentage) {
+            highestProbabilityTrait = "Uyum";
+        } else if (maxPercentage == neuroticismPercentage) {
+            highestProbabilityTrait = "Duyarlılık";
+        }
+
+        return highestProbabilityTrait;
+    }
 
 
     private RequestBody createRequestBody(MediaType mediaType) {
