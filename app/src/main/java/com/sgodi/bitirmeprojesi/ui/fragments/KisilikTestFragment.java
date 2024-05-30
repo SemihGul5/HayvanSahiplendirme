@@ -66,7 +66,7 @@ public class KisilikTestFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
 
-        getKullaniciKisilik(firestore, auth, new KisilikCallback() {
+        /*getKullaniciKisilik(firestore, auth, new KisilikCallback() {
             @Override
             public void onKisilikReceived(String kisilikValue) {
                 if (!kisilikValue.equals("null")) {
@@ -90,8 +90,20 @@ public class KisilikTestFragment extends Fragment {
                     });
                 }
             }
-        });
+        });*/
+        binding.kisilikTestButton.setOnClickListener(view -> {
+            try {
+                if (!checkSeekBarValues()) {
+                    Snackbar.make(view, "Tüm değerler 0'dan büyük olmalıdır", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "İşleniyor...", Toast.LENGTH_SHORT).show();
+                    tekrarDene();
+                }
+            }catch (Exception e){
+                Log.i("Mesaj",e.getMessage());
+            }
 
+        });
         return binding.getRoot();
     }
 
@@ -207,6 +219,7 @@ public class KisilikTestFragment extends Fragment {
     }
 
     private void tekrarDene() {
+        binding.progressBarKisilik.setVisibility(View.VISIBLE);
         StringRequest stringRequest=new StringRequest(com.android.volley.Request.Method.POST, "https://bitirme-proje-309030c9a303.herokuapp.com/predict", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -233,8 +246,10 @@ public class KisilikTestFragment extends Fragment {
                     kisilikDurumGuncelle(kisi,firestore);
                     binding.kisilikTestButton.setEnabled(false);
                     Toast.makeText(getContext(), "Kişilik analizi tamamlandı", Toast.LENGTH_SHORT).show();
+                    binding.progressBarKisilik.setVisibility(View.GONE);
                 }catch (JSONException e){
                     e.printStackTrace();
+                    binding.progressBarKisilik.setVisibility(View.GONE);
                 }
 
             }
